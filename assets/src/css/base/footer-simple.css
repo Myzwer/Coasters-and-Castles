@@ -1,0 +1,55 @@
+@layer components {
+
+	.s-footer {
+		@apply bg-secondary;
+	}
+
+	.s-footer-outer {
+		@apply mx-auto max-w-6xl px-5 lg:px-10;
+		@apply grid grid-cols-12 gap-1;
+	}
+
+	.s-footer-logo {
+		@apply col-span-12 mx-auto text-center pt-10 pb-5;
+	}
+
+	.s-footer-logo img {
+		@apply max-w-40;
+	}
+
+	.s-footer-links {
+		@apply col-span-12;
+		@apply flex flex-col items-center gap-1;
+		@apply md:flex-row md:flex-wrap md:justify-center;
+	}
+
+	.s-footer-link {
+		@apply py-1 text-center text-white;
+	}
+
+	.s-footer-link a {
+		@apply px-3 py-2;
+		@apply text-base;
+		@apply font-normal;
+
+		/* hover state */
+		@apply rounded-md transition;
+		@apply hover:bg-white/10;
+		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+	}
+
+	.s-footer-socials {
+		@apply col-span-12;
+		@apply flex flex-wrap justify-center items-center;
+		@apply gap-3 pt-6 mx-auto pb-10;
+
+		/* Clamp the row width */
+		@apply w-full max-w-60 md:max-w-90;
+	}
+
+	.s-footer-social {
+		/* 4 per row on mobile, 6 per row from sm+ */
+		@apply basis-1/4 sm:basis-1/6;
+		@apply flex justify-center;
+	}
+}

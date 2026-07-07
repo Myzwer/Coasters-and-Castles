@@ -1,0 +1,583 @@
+@config "../../../webpack/tailwind.config.js";
+@import "tailwindcss";
+
+/* =========================================================
+   Tailwind Theme (edit points)
+   - [TOKENS]  Colors, gradients, fonts (update per site)
+   - [BEHAVIOR] Base defaults (update sometimes)
+   - [COMPONENTS] Buttons/cards/etc (update sometimes)
+   - [UTILITIES] Wrap/grid helpers (rarely change)
+   Docs: README → Tailwind Theme
+   ========================================================= */
+
+@theme {
+	/* [TOKENS] Colors + gradients (update per site)
+	   Notes:
+	   - --color-* => text-* / bg-* / border-* / utilities
+       - --background-image-* => bg-* / utilities
+	*/
+	/* Neutrals */
+	--color-black: #0F172A;
+	--color-white: #F8FAFC;
+
+	/* Brand roles (saturated) */
+	--color-primary: #63C1E9;
+	--color-secondary: #397B52;
+
+	/* Soft roles (pastels) */
+	--color-soft-1: #E0F2FE;
+	--color-soft-2: #ECFDF3;
+
+	/* Gradient endpoints */
+	--color-primary-gradient-to: #C9E9FF;
+	--color-secondary-gradient-to: #C6FFDD;
+	--color-impact-gradient-to: #28563A;
+
+	/* Gradients */
+	--background-image-primary-gradient: linear-gradient(
+		135deg,
+		var(--color-soft-1),
+		var(--color-primary-gradient-to)
+	);
+
+	--background-image-secondary-gradient: linear-gradient(
+		135deg,
+		var(--color-soft-2),
+		var(--color-secondary-gradient-to)
+	);
+
+	--background-image-impact-gradient: linear-gradient(
+		135deg,
+		var(--color-secondary),
+		var(--color-impact-gradient-to)
+	);
+
+	/* [TOKENS] Fonts (update per site) */
+	--font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+	"Apple Color Emoji", "Segoe UI Emoji";
+
+	--font-display: "DM Serif Display", Georgia, Cambria, "Times New Roman", Times, serif;
+
+	/* [TOKENS] Max-width scale (Tailwind v4 container tokens)
+     Why:
+     - Tailwind v4 emits max-w-* using CSS variables (ex: var(--container-7xl)).
+     - In some builds, specific --container-* tokens can be tree-shaken / not emitted,
+       especially when the only “usage” is via @apply inside component CSS.
+     - Defining the scale here makes max-w-* stable everywhere (markup + @apply).
+  */
+	--container-xs: 20rem;
+	--container-sm: 24rem;
+	--container-md: 28rem;
+	--container-lg: 32rem;
+	--container-xl: 36rem;
+	--container-2xl: 42rem;
+	--container-3xl: 48rem;
+	--container-4xl: 56rem;
+	--container-5xl: 64rem;
+	--container-6xl: 72rem;
+	--container-7xl: 80rem;
+}
+
+/* =========================================================
+   [BEHAVIOR] Font utilities
+   ---------------------------------------------------------
+   Use:
+   - font-body
+   - font-display
+   ========================================================= */
+
+@layer utilities {
+	.font-body {
+		font-family: var(--font-body);
+	}
+
+	.font-display {
+		font-family: var(--font-display);
+	}
+}
+
+/* =========================================================
+   [BEHAVIOR] Global typography defaults
+   ---------------------------------------------------------
+   Purpose:
+   Sets broad font-family defaults only.
+
+   Notes:
+   - This does not fully style all headings globally.
+   - Reusable visual heading styles live in `.heading-*`.
+   - WYSIWYG heading styles are mapped inside `.prose-theme`.
+   ========================================================= */
+
+@layer base {
+	body {
+		font-family: var(--font-body);
+	}
+
+	h1,
+	h2 {
+		font-family: var(--font-display);
+	}
+
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-body);
+	}
+}
+
+/* =========================================================
+   [BEHAVIOR] Base colors + theme inversion
+   ---------------------------------------------------------
+   Default: black text on white background
+   Invert:  white text on dark background
+   ========================================================= */
+
+@layer base {
+	html {
+		background-color: var(--color-white);
+		color: var(--color-black);
+	}
+}
+
+/* Apply to any section that needs white text */
+@layer utilities {
+	.theme-invert {
+		color: var(--color-white);
+	}
+}
+
+/* =========================================================
+   [COMPONENTS] Prose wrapper
+   ---------------------------------------------------------
+   Purpose:
+   Provides consistent styling for WYSIWYG/editor content.
+
+   Use:
+   - prose-theme
+     Default editor content. Includes normal prose rhythm, but
+     removes top margin from the first child and bottom margin
+     from the last child so WYSIWYG content does not control
+     outer layout spacing.
+
+   - prose-compact
+     Use for cards, FAQs, process steps, accordions, repeaters,
+     sidebars, and other marketing/content chunks where h3/h4
+     headings should sit closer to the text they introduce.
+
+   - prose-tight
+     Use for denser WYSIWYG areas where the overall vertical
+     rhythm should be slightly reduced.
+
+   - prose-no-spacing
+     Rare escape hatch. Use only where WYSIWYG content should
+     behave almost like plain template text.
+
+   House rule:
+   - Do not put `.prose-theme` on grid/wrap/layout wrappers.
+   - Put `.prose-theme` directly around actual editor/content output.
+   ========================================================= */
+
+@layer components {
+	.prose-theme {
+		@apply prose max-w-none;
+		color: var(--color-black);
+
+		/* Map typography plugin colors to theme tokens */
+		--tw-prose-body: var(--color-black);
+		--tw-prose-headings: var(--color-black);
+		--tw-prose-links: var(--color-primary);
+		--tw-prose-bold: var(--color-black);
+		--tw-prose-counters: var(--color-black);
+		--tw-prose-bullets: var(--color-black);
+		--tw-prose-hr: var(--color-black);
+		--tw-prose-quotes: var(--color-black);
+		--tw-prose-quote-borders: var(--color-black);
+		--tw-prose-captions: var(--color-black);
+		--tw-prose-code: var(--color-black);
+		--tw-prose-pre-code: var(--color-white);
+		--tw-prose-pre-bg: var(--color-black);
+	}
+
+	/* Prevent WYSIWYG content from creating outside layout spacing */
+	.prose-theme > :first-child {
+		margin-top: 0;
+	}
+
+	.prose-theme > :last-child {
+		margin-bottom: 0;
+	}
+
+	/* Baseline heading rhythm inside WYSIWYG content */
+	.prose-theme :where(h1, h2):not(:where(.not-prose, .not-prose *)) {
+		margin-bottom: 0.7em;
+	}
+
+	.prose-theme :where(h1 + p, h2 + p):not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0;
+	}
+
+	/* Tighter title-to-text rhythm for cards/repeaters/FAQs/process steps */
+	.prose-theme.prose-compact
+	:where(h3, h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
+		margin-bottom: 0.25em;
+	}
+
+	.prose-theme.prose-compact
+	:where(h3 + p, h4 + p, h5 + p, h6 + p):not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0;
+	}
+
+	/* Slightly denser overall prose rhythm */
+	.prose-theme.prose-tight :where(p):not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0.75em;
+		margin-bottom: 0.75em;
+	}
+
+	.prose-theme.prose-tight
+	:where(ul, ol):not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0.75em;
+		margin-bottom: 0.75em;
+	}
+
+	/* Nuclear option: remove most internal prose spacing */
+	.prose-theme.prose-no-spacing
+	:where(p, h1, h2, h3, h4, h5, h6, blockquote, ul, ol):not(
+			:where(.not-prose, .not-prose *)
+		) {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	/* Keep consecutive direct children from smashing together entirely */
+	.prose-theme.prose-no-spacing > :where(* + *) {
+		margin-top: 0.5em;
+	}
+
+	/* Inverted prose:
+	   Supports:
+	   - <div class="theme-invert prose-theme">
+	   - <div class="theme-invert"><div class="prose-theme">...</div></div>
+	   - <div class="prose-theme"><div class="theme-invert">...</div></div>
+	*/
+	.theme-invert.prose-theme,
+	.theme-invert .prose-theme,
+	.prose-theme .theme-invert {
+		color: var(--color-white);
+
+		--tw-prose-body: var(--color-white);
+		--tw-prose-headings: var(--color-white);
+		--tw-prose-links: var(--color-primary);
+		--tw-prose-bold: var(--color-white);
+		--tw-prose-counters: var(--color-white);
+		--tw-prose-bullets: var(--color-white);
+		--tw-prose-hr: var(--color-white);
+		--tw-prose-quotes: var(--color-white);
+		--tw-prose-quote-borders: var(--color-white);
+		--tw-prose-captions: var(--color-white);
+		--tw-prose-code: var(--color-white);
+		--tw-prose-pre-code: var(--color-black);
+		--tw-prose-pre-bg: var(--color-white);
+	}
+}
+
+/* =========================================================
+   [COMPONENTS] Typography system
+   ---------------------------------------------------------
+   Purpose:
+   Provides reusable baseline type styles for headings and
+   common content patterns.
+
+   Philosophy:
+   - HTML headings handle document structure.
+   - `.heading-*` classes handle visual style.
+   - `.prose-theme` maps WYSIWYG headings to these same
+     baseline styles so editor content matches template content.
+
+   Use:
+   - heading-1: major page/hero headings
+   - heading-2: section headings
+   - heading-3: card/repeater/subsection headings
+   - heading-4: small subsection headings
+
+   Notes:
+   - Do not `@apply heading-1` inside another selector.
+     Tailwind may treat custom component classes as unknown.
+   - Group the reusable class and prose selector together instead.
+   ========================================================= */
+
+@layer components {
+	.heading-1,
+	.prose-theme :where(h1):not(:where(.not-prose, .not-prose *)) {
+		font-family: var(--font-display);
+		@apply text-4xl leading-tight font-normal md:text-5xl lg:text-6xl;
+	}
+
+	.heading-2,
+	.prose-theme :where(h2):not(:where(.not-prose, .not-prose *)) {
+		font-family: var(--font-display);
+		@apply text-3xl leading-tight font-normal;
+	}
+
+	.heading-3,
+	.prose-theme :where(h3):not(:where(.not-prose, .not-prose *)) {
+		font-family: var(--font-body);
+		@apply text-xl leading-snug font-bold md:text-2xl;
+	}
+
+	.heading-4,
+	.prose-theme :where(h4):not(:where(.not-prose, .not-prose *)) {
+		font-family: var(--font-body);
+		@apply text-lg leading-snug font-bold md:text-xl;
+	}
+}
+
+/* =========================================================
+   [COMPONENTS] Buttons
+   ---------------------------------------------------------
+   Public classes:
+   - btn_main
+   - btn_secondary
+   - btn_light
+   - btn_dark
+   - btn_ghost_white
+   - btn_ghost_black
+
+   Notes:
+   - Shared base styles are applied via grouped selectors.
+   - Variants set explicit bg/text/border so behavior is stable
+     inside `.theme-invert` sections.
+   ========================================================= */
+
+@layer components {
+	/* Shared base for all buttons (no extra .btn class needed) */
+	.btn_main,
+	.btn_secondary,
+	.btn_light,
+	.btn_dark,
+	.btn_ghost_white,
+	.btn_ghost_black {
+		@apply inline-flex items-center justify-center gap-2
+		font-semibold no-underline
+		px-5 py-3
+		transition
+		rounded-lg
+		focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+
+		/* Keep buttons from inheriting weird text colors in nested contexts */
+		text-decoration: none;
+	}
+
+	/* Optional: keep icon alignment consistent if you use <i> prefixes */
+	.btn_main i,
+	.btn_secondary i,
+	.btn_light i,
+	.btn_dark i,
+	.btn_ghost_white i,
+	.btn_ghost_black i {
+		@apply shrink-0;
+	}
+
+	/* Main: primary background, usually black text */
+	.btn_main {
+		background-color: var(--color-primary);
+		color: var(--color-black);
+	}
+
+	.btn_main:hover {
+		filter: brightness(0.95);
+	}
+
+	/* Secondary: secondary background, usually black text */
+	.btn_secondary {
+		background-color: var(--color-secondary);
+		color: var(--color-black);
+	}
+
+	.btn_secondary:hover {
+		filter: brightness(0.95);
+	}
+
+	/* Light: always white bg + black text */
+	.btn_light {
+		background-color: var(--color-white);
+		color: var(--color-black);
+		border: 1px solid var(--color-black);
+	}
+
+	.btn_light:hover {
+		filter: brightness(0.97);
+	}
+
+	/* Dark: always black bg + white text */
+	.btn_dark {
+		background-color: var(--color-black);
+		color: var(--color-white);
+	}
+
+	.btn_dark:hover {
+		filter: brightness(1.1);
+	}
+
+	/* Ghost (white): transparent with white border/text */
+	.btn_ghost_white {
+		background-color: transparent;
+		color: var(--color-white);
+		border: 1px solid var(--color-white);
+	}
+
+	.btn_ghost_white:hover {
+		background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
+	}
+
+	/* Ghost (black): transparent with black border/text */
+	.btn_ghost_black {
+		background-color: transparent;
+		color: var(--color-black);
+		border: 1px solid var(--color-black);
+	}
+
+	.btn_ghost_black:hover {
+		background-color: color-mix(in oklab, var(--color-black) 8%, transparent);
+	}
+
+	/* Focus styling for inverted sections */
+	.theme-invert .btn_main,
+	.theme-invert .btn_secondary,
+	.theme-invert .btn_light,
+	.theme-invert .btn_dark,
+	.theme-invert .btn_ghost_white,
+	.theme-invert .btn_ghost_black {
+		@apply focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black;
+	}
+}
+
+/* =========================================================
+   [COMPONENTS] Prose protection for buttons
+   ---------------------------------------------------------
+   @tailwindcss/typography styles `.prose a` as article links.
+   This ensures button links keep their button styling.
+   ========================================================= */
+
+@layer components {
+	/* Remove typography link styling from any anchor that is a button */
+	.prose
+	:where(
+			a.btn_main,
+			a.btn_secondary,
+			a.btn_light,
+			a.btn_dark,
+			a.btn_ghost_white,
+			a.btn_ghost_black
+		),
+	.prose-theme
+	:where(
+			a.btn_main,
+			a.btn_secondary,
+			a.btn_light,
+			a.btn_dark,
+			a.btn_ghost_white,
+			a.btn_ghost_black
+		) {
+		text-decoration: none;
+	}
+
+	/* Ensure hover does not get the prose underline back */
+	.prose
+	:where(
+			a.btn_main,
+			a.btn_secondary,
+			a.btn_light,
+			a.btn_dark,
+			a.btn_ghost_white,
+			a.btn_ghost_black
+		):hover,
+	.prose-theme
+	:where(
+			a.btn_main,
+			a.btn_secondary,
+			a.btn_light,
+			a.btn_dark,
+			a.btn_ghost_white,
+			a.btn_ghost_black
+		):hover {
+		text-decoration: none;
+	}
+}
+
+/* =========================================================
+   [COMPONENTS] Alternating section backgrounds
+   ---------------------------------------------------------
+   Purpose:
+   Provides automatic alternating backgrounds for flexible
+   content sections rendered in page.php.
+
+   Implementation:
+   - page.php wraps all body sections in `.alt-bg-wrap`
+   - Background-eligible blocks are wrapped in `.bg-alternating-gradient`
+   - page.php assigns either `.bg-alternating-odd` or `.bg-alternating-even`
+   - CSS maps those odd/even classes to theme gradient tokens
+
+   Why this exists:
+   - Keeps background color logic centralized
+   - Avoids hardcoding background styles inside every flex block
+   - Uses theme tokens so color palettes remain site-specific
+   - Allows certain layouts, such as announcements, to be excluded
+     from the alternating count without disrupting the stripe pattern
+
+   Notes:
+   - Alternation is controlled by PHP, not `nth-child`
+   - Excluded blocks may still render their own internal backgrounds
+   - Empty sections should ideally be prevented at the PHP layer
+     so the alternating sequence remains correct
+   - If a new block has its own full-section background, consider
+     adding its layout slug to the excluded layouts array in page.php
+
+   Related:
+   page.php → body_sections loop
+   ========================================================= */
+
+@layer components {
+	.alt-bg-wrap > .bg-alternating-gradient.bg-alternating-odd {
+		background-image: var(--background-image-primary-gradient);
+	}
+
+	.alt-bg-wrap > .bg-alternating-gradient.bg-alternating-even {
+		background-image: var(--background-image-secondary-gradient);
+	}
+}
+
+/* =========================================================
+   [UTILITIES] Layout helpers
+   ---------------------------------------------------------
+   Use:
+   - section      => full width section wrapper
+   - wrap         => main inner container
+   - wrap-wide    => wide inner container
+   - grid-12      => 12-column grid with safe mobile gap
+
+   Notes:
+   - `.grid-12` includes `gap-4` by default.
+   - Use `md:gap-8` where a section needs more desktop breathing room.
+   ========================================================= */
+
+@layer utilities {
+	.section {
+		@apply w-full;
+	}
+
+	/* Standard inner container */
+	.wrap {
+		@apply mx-auto max-w-6xl px-5 lg:px-10;
+	}
+
+	/* Wide inner container */
+	.wrap-wide {
+		@apply mx-auto max-w-screen-2xl px-5;
+	}
+
+	/* Grid-first workflow */
+	.grid-12 {
+		@apply grid grid-cols-12 gap-4;
+	}
+}

@@ -1,0 +1,29 @@
+/**
+ * Frontend CSS Manifest
+ * =================================
+ * Purpose:
+ * - Import order control for all frontend-only CSS partials.
+ * - `frontend.ts` imports this once; add/remove partials here.
+ */
+
+/* Base / global helpers */
+@import "./base/background.css";
+@import "./base/video.css";
+
+/* Navigation */
+@import "./base/footer-simple.css";
+@import "./base/footer-complex.css";
+@import "./base/footer-credit.css";
+@import "./base/navbar.css";
+
+/* 404 */
+@import "./base/404.css";
+
+/* Components */
+@import "./components/accordion.css";
+@import "./components/cards.css";
+@import "./components/gravity-forms.css";
+@import "./components/pagination.css";
+
+/* Fonts */
+@import "./fonts/fonts.css";

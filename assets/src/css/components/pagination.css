@@ -1,0 +1,75 @@
+/**
+ * Pagination
+ * =================================
+ * Styles WordPress paginate_links() output:
+ * <nav class="pagination">
+ *   <ul class="page-numbers">
+ *     <li><a class="prev page-numbers">...</a></li>
+ *     <li><a class="page-numbers">2</a></li>
+ *     <li><span class="page-numbers dots">…</span></li>
+ *     <li><span class="page-numbers current">5</span></li>
+ *     ...
+ *   </ul>
+ * </nav>
+ */
+
+@import "./../tailwind.css";
+
+@layer components {
+	.pagination {
+		@apply mt-12;
+	}
+
+	.pagination .page-numbers {
+		@apply flex items-center justify-center gap-2;
+	}
+
+	/* Base: all pagination items */
+	/* Base: all pagination items */
+	.pagination .page-numbers a,
+	.pagination .page-numbers span {
+		@apply inline-flex items-center justify-center
+		h-10 min-w-10 px-3
+		rounded-md
+		font-semibold
+		text-black
+		transition
+		focus:outline-none
+		focus-visible:ring-2
+		focus-visible:ring-offset-2
+		focus-visible:ring-primary;
+	}
+
+	/* Number links (default state) */
+	.pagination .page-numbers a.page-numbers:not(.prev):not(.next) {
+		@apply bg-transparent;
+	}
+	.pagination .page-numbers a.page-numbers:not(.prev):not(.next):hover {
+		@apply bg-soft-1;
+	}
+
+	/* Current page (the highlighted button in your screenshot) */
+	.pagination .page-numbers .current {
+		@apply bg-primary text-black;
+	}
+
+	/* Ellipsis */
+	.pagination .page-numbers .dots {
+		@apply bg-transparent px-2 opacity-60 cursor-default;
+	}
+
+	/* Prev / Next icon buttons */
+	.pagination .page-numbers a.prev,
+	.pagination .page-numbers a.next {
+		@apply bg-primary text-black px-0 w-10;
+	}
+	.pagination .page-numbers a.prev:hover,
+	.pagination .page-numbers a.next:hover {
+		@apply brightness-95;
+	}
+
+	/* Keep FA icons centered */
+	.pagination .page-numbers i {
+		@apply leading-none;
+	}
+}

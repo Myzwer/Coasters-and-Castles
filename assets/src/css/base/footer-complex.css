@@ -1,0 +1,169 @@
+@layer components {
+	.footer {
+		@apply bg-secondary;
+	}
+
+	.footer-outer {
+		@apply mx-auto max-w-6xl px-4 py-10 md:px-0;
+	}
+
+	.footer-grid {
+		@apply grid grid-cols-12 gap-y-10 md:gap-x-8;
+	}
+
+	.footer-main {
+		@apply col-span-12 md:col-span-4;
+		@apply pr-0 md:flex md:flex-col md:items-center md:border-r md:border-white md:pr-6 md:text-center;
+	}
+
+	.footer-main-inner {
+		@apply grid grid-cols-12 gap-1;
+	}
+
+	.footer-side {
+		@apply col-span-12 md:col-span-8;
+	}
+
+	.footer-top {
+		@apply grid grid-cols-12 gap-y-8 md:gap-x-12 md:gap-y-0;
+	}
+
+	.footer-logo-wrap {
+		@apply col-span-12 mx-auto pb-6 pt-6 text-center md:pb-5 md:pt-10;
+	}
+
+	.footer-logo {
+		/* README:FOOTER_COMPLEX_LOGO_MOBILE_SIZE
+		   Mobile footer logo sizing lives here. Increase/decrease max-height
+		   if the brand mark feels too dominant or too small. */
+		@apply mx-auto h-auto max-w-full object-contain;
+		@apply max-h-24 md:max-h-20;
+	}
+
+	.footer-heading {
+		@apply pb-3 text-center text-[2rem] font-bold text-white md:pb-4 md:text-left md:text-xl;
+	}
+
+	.footer-contact {
+		@apply col-span-12 text-left text-white md:flex md:flex-col md:items-center;
+	}
+
+	.footer-contact-list {
+		@apply flex flex-col gap-3 md:items-center;
+	}
+
+	.footer-contact-item {
+		@apply flex items-center gap-3 text-lg leading-snug md:justify-center;
+	}
+
+	.footer-contact-icon {
+		@apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white;
+	}
+
+	.footer-contact-text {
+		@apply min-w-0 text-white no-underline transition wrap-break-word;
+		@apply rounded-sm hover:text-white/85;
+		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+	}
+
+	.footer-socials {
+		@apply col-span-12 mx-auto flex w-full max-w-84 flex-wrap items-center justify-center gap-y-4 pt-6 md:max-w-90;
+	}
+
+	.footer-social {
+		/* README:FOOTER_COMPLEX_SOCIALS_PER_ROW
+		   Default mobile social layout is 4 across.
+		   Change basis values here if a client commonly has fewer or more icons. */
+		@apply flex basis-1/4 justify-center md:basis-1/6;
+	}
+
+	.footer-links {
+		@apply col-span-12 pt-2 text-center md:col-span-4 md:pl-3 md:text-left;
+	}
+
+	.footer-links-grid {
+		/* README:FOOTER_COMPLEX_LINKS_LAYOUT
+		   Mobile: 2 columns to save vertical space.
+		   Desktop: single column for clearer hierarchy and better separation from legal text. */
+		@apply grid grid-cols-2 gap-x-3 gap-y-1 md:grid-cols-1 md:gap-y-2;
+	}
+
+	.footer-link {
+		@apply text-white;
+	}
+
+	.footer-link a {
+		@apply inline-flex justify-center px-3 py-2 text-base font-normal text-white no-underline transition md:w-auto md:justify-start;
+		@apply -ml-2 rounded-md hover:bg-white/10;
+		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+	}
+
+	.footer-affiliations {
+		@apply col-span-12 pt-6 md:pt-10;
+	}
+
+	.footer-affiliations-grid {
+		/* README:FOOTER_COMPLEX_AFFILIATIONS_MOBILE_COLUMNS
+		   Mobile affiliation logos default to 3 across.
+		   If the logo count looks awkward (e.g. 5 items), update columns/gap here. */
+		@apply grid grid-cols-3 gap-3 pt-3 xl:grid-cols-4;
+	}
+
+	.footer-affiliations-item {
+		@apply min-w-0;
+	}
+
+	.footer-affiliations-link {
+		/* README:FOOTER_COMPLEX_AFFILIATIONS_PADDING
+		   Tightened padding around affiliation logos so partner marks can render
+		   larger on mobile without increasing overall footer height. */
+		@apply flex min-h-16 items-center justify-center px-1 py-1 transition md:min-h-32 md:px-5 md:py-5;
+		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50;
+	}
+
+	.footer-affiliations-link-static {
+		@apply cursor-default;
+	}
+
+	.footer-affiliations-logo {
+		@apply block h-auto max-h-14 w-full object-contain md:max-h-20;
+	}
+
+	.footer-legal {
+		@apply col-span-12 text-left md:col-span-8;
+	}
+
+	.footer-legal-mobile {
+		@apply block pt-6 md:hidden;
+	}
+
+	.footer-legal-desktop {
+		@apply hidden md:block;
+	}
+
+	.footer-legal .footer-heading {
+		@apply md:mb-3;
+	}
+
+	.footer-prose {
+		/* README:FOOTER_COMPLEX_LEGAL_TEXT_COLOR
+		   Force legal copy to stay white even when prose defaults change. */
+		@apply text-white md:max-w-152;
+	}
+
+	.footer-prose,
+	.footer-prose p,
+	.footer-prose li,
+	.footer-prose strong,
+	.footer-prose a {
+		@apply text-white;
+	}
+
+	.footer-prose a {
+		@apply underline-offset-4 hover:underline;
+	}
+
+	.footer-prose > *:first-child {
+		margin-top: 0;
+	}
+}
