@@ -17,21 +17,21 @@
        - --background-image-* => bg-* / utilities
 	*/
 	/* Neutrals */
-	--color-black: #0F172A;
-	--color-white: #F8FAFC;
+	--color-black: #272D2D;
+	--color-white: #F9F7F3;
 
 	/* Brand roles (saturated) */
-	--color-primary: #63C1E9;
-	--color-secondary: #397B52;
+	--color-primary: #F82F2F;
+	--color-secondary: #001890;
 
 	/* Soft roles (pastels) */
-	--color-soft-1: #E0F2FE;
-	--color-soft-2: #ECFDF3;
+	--color-soft-1: #D6EFFF;
+	--color-soft-2: #F4EAD7;
 
 	/* Gradient endpoints */
-	--color-primary-gradient-to: #C9E9FF;
-	--color-secondary-gradient-to: #C6FFDD;
-	--color-impact-gradient-to: #28563A;
+	--color-primary-gradient-to: #B4DFFA;
+	--color-secondary-gradient-to: #F5E4C6;
+	--color-impact-gradient-to: #001582;
 
 	/* Gradients */
 	--background-image-primary-gradient: linear-gradient(
@@ -359,9 +359,9 @@
 	.btn_ghost_black {
 		@apply inline-flex items-center justify-center gap-2
 		font-semibold no-underline
-		px-5 py-3
+		px-8 py-3
 		transition
-		rounded-lg
+		rounded-xl shadow-xl
 		focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white;
 
 		/* Keep buttons from inheriting weird text colors in nested contexts */
@@ -380,8 +380,8 @@
 
 	/* Main: primary background, usually black text */
 	.btn_main {
-		background-color: var(--color-primary);
-		color: var(--color-black);
+		background-color: var(--color-secondary);
+		color: var(--color-white);
 	}
 
 	.btn_main:hover {
@@ -390,8 +390,8 @@
 
 	/* Secondary: secondary background, usually black text */
 	.btn_secondary {
-		background-color: var(--color-secondary);
-		color: var(--color-black);
+		background-color: var(--color-primary);
+		color: var(--color-white);
 	}
 
 	.btn_secondary:hover {

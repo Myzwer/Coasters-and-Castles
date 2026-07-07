@@ -13,18 +13,18 @@
 	function prelaunch_get_brand_colors(): array {
 		return [
 			// Neutrals.
-			'black'                 => '#0F172A',
-			'white'                 => '#F8FAFC',
+			'black'                 => '#272D2D',
+			'white'                 => '#F9F7F3',
 
 			// Brand roles.
-			'primary'               => '#63C1E9',
-			'secondary'             => '#397B52',
-			'soft-1'                => '#E0F2FE',
-			'soft-2'                => '#ECFDF3',
+			'primary'               => '#F82F2F',
+			'secondary'             => '#001890',
+			'soft-1'                => '#D6EFFF',
+			'soft-2'                => '#F4EAD7',
 
 			// Gradient endpoints.
-			'primary-gradient-to'   => '#C9E9FF',
-			'secondary-gradient-to' => '#C6FFDD',
-			'impact-gradient-to'    => '#28563A',
+			'primary-gradient-to'   => '#F5E4C6',
+			'secondary-gradient-to' => '#B4DFFA',
+			'impact-gradient-to'    => '#001582',
 		];
 	}
