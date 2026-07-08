@@ -310,25 +310,25 @@
 	.heading-1,
 	.prose-theme :where(h1):not(:where(.not-prose, .not-prose *)) {
 		font-family: var(--font-display);
-		@apply text-4xl leading-tight font-normal md:text-5xl lg:text-6xl;
+		@apply uppercase text-4xl leading-tight font-normal md:text-5xl lg:text-6xl;
 	}
 
 	.heading-2,
 	.prose-theme :where(h2):not(:where(.not-prose, .not-prose *)) {
 		font-family: var(--font-display);
-		@apply text-3xl leading-tight font-normal;
+		@apply uppercase text-3xl leading-tight font-bold;
 	}
 
 	.heading-3,
 	.prose-theme :where(h3):not(:where(.not-prose, .not-prose *)) {
-		font-family: var(--font-body);
-		@apply text-xl leading-snug font-bold md:text-2xl;
+		font-family: var(--font-display);
+		@apply text-xl leading-snug font-bold;
 	}
 
 	.heading-4,
 	.prose-theme :where(h4):not(:where(.not-prose, .not-prose *)) {
 		font-family: var(--font-body);
-		@apply text-lg leading-snug font-bold md:text-xl;
+		@apply text-xl leading-snug font-bold;
 	}
 }
 
