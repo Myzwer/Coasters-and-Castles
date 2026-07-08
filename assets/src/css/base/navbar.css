@@ -10,7 +10,7 @@
 	   ========================================================================== */
 	.site-header {
 		@apply relative z-50;
-		@apply bg-secondary text-white;
+		@apply bg-soft-1 text-black;
 	}
 
 	.nav-shell {
@@ -122,7 +122,7 @@
 		@apply absolute left-0 right-0 top-full;
 
 		/* Surface */
-		@apply bg-secondary text-white;
+		@apply bg-soft-1 text-black;
 		/* @apply border-t border-white/10; */ /* optional top divider */
 		@apply shadow-lg;
 
@@ -197,7 +197,7 @@
 
 		@apply px-3 py-2;
 		@apply text-base;
-		@apply font-normal;
+		@apply font-bold;
 		/* normalize WP default bolding */
 
 		/* hover state */
@@ -278,7 +278,7 @@
 		/* Reset default UL styling + define submenu surface */
 		@apply m-0 p-0 list-none;
 		@apply flex flex-col;
-		@apply bg-secondary;
+		@apply bg-soft-1;
 	}
 
 	/* Desktop-only: submenu as dropdown surface */
@@ -353,13 +353,13 @@
 		@apply gap-2;
 		@apply w-full;
 
-		@apply rounded-md;
-		@apply px-5 py-3;
+		@apply rounded-xl;
+		@apply px-8 py-3;
 		@apply leading-none;
 		@apply font-semibold;
 
-		@apply bg-primary text-black;
-		@apply border border-black/20 shadow-md;
+		@apply bg-secondary text-white;
+		@apply border border-black/20 shadow-xl;
 
 		/* hover state */
 		@apply transition;
@@ -389,15 +389,15 @@
 
 		.nav-cta-link {
 			@apply w-auto;
-			@apply rounded-md;
-			@apply px-5 py-3;
+			@apply rounded-xl shadow-xl;
+			@apply px-8 py-3;
 		}
 	}
 
 	/* CTA should not inherit the "glassy" hover background from .nav-link */
 	.nav-link.nav-cta-link:hover,
 	.nav-link.nav-cta-link:focus-visible {
-		@apply bg-primary;
+		@apply bg-secondary;
 		@apply brightness-90;
 	}
 
