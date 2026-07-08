@@ -59,6 +59,24 @@
 	  Add class 'nav-center-desktop' to <header class="site-header"> to center desktop nav items (CTA remains right-aligned).
 -->
 <header class="site-header nav-center-desktop">
+	<?php if ( has_nav_menu( 'topbar-nav' ) ) : ?>
+		<div class="site-topbar">
+			<div class="site-topbar-shell">
+				<nav class="topbar-nav" aria-label="Topbar">
+					<?php
+						wp_nav_menu( [
+							'theme_location' => 'topbar-nav',
+							'depth'          => 1,
+							'container'      => false,
+							'fallback_cb'    => false,
+							'items_wrap'     => '<ul class="topbar-list" role="list">%3$s</ul>',
+						] );
+					?>
+				</nav>
+			</div>
+		</div>
+	<?php endif; ?>
+	
 	<div class="nav-shell">
 		<a class="nav-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 			<?php

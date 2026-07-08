@@ -25,6 +25,9 @@
 	 */
 	function windpeak_register_menus(): void {
 		register_nav_menus( [
+			// Small utility/topbar navigation above the primary nav.
+			'topbar-nav'  => __( 'Topbar Navigation', 'windpeak' ),
+
 			// Main site navigation.
 			'primary-nav' => __( 'Primary Navigation', 'windpeak' ),
 		] );

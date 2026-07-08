@@ -1,0 +1,48 @@
+@reference "../tailwind.css";
+
+@layer components {
+	.site-topbar {
+		@apply bg-secondary text-white;
+	}
+
+	.site-topbar-shell {
+		@apply mx-auto flex w-full max-w-7xl items-center justify-center px-4;
+
+		min-height: 50px;
+	}
+
+	.topbar-nav {
+		@apply w-full;
+	}
+
+	.topbar-list {
+		@apply m-0 flex list-none flex-wrap items-center justify-center gap-x-6 gap-y-1 p-0;
+	}
+
+	.topbar-list .menu-item {
+		@apply m-0 p-0;
+	}
+
+	.topbar-list .menu-item > a {
+		@apply inline-flex items-center;
+		@apply px-0 py-3;
+		@apply text-sm font-bold uppercase tracking-wide no-underline;
+		@apply transition hover:opacity-80;
+		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary;
+	}
+
+	.topbar-list .current-menu-item > a,
+	.topbar-list .current-menu-ancestor > a {
+		@apply underline underline-offset-4;
+	}
+
+	@media (min-width: 1024px) {
+		.site-topbar-shell {
+			@apply justify-end;
+		}
+
+		.topbar-list {
+			@apply justify-end;
+		}
+	}
+}
