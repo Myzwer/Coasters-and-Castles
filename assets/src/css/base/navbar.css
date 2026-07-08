@@ -202,7 +202,7 @@
 
 		/* hover state */
 		@apply rounded-md transition;
-		@apply hover:bg-white/10;
+		@apply hover:bg-black/10;
 		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
 	}
 
