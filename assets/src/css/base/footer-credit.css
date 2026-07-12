@@ -15,7 +15,7 @@
 
 @layer components {
 	.footer-credit {
-		@apply bg-primary;
+		@apply bg-white text-black;
 	}
 
 	.footer-credit-outer {

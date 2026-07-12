@@ -103,7 +103,8 @@
 												'size'  => 'sm',
 												'shape' => 'circle',
 												'tab'   => 'Y',
-												'color' => 'current',
+												'bg'    => 'soft-1',
+												'fg'    => 'primary',
 											]
 										);
 									?>
