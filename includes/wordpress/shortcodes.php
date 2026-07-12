@@ -349,8 +349,9 @@
 				'tab'     => 'Y',
 				'label'   => '',
 				'shape'   => 'none',
-				'fg'      => 'black',   // used only when shape != none
-				'color'   => 'current', // used only when shape == none
+				'bg'      => 'primary',
+				'fg'      => 'black',
+				'color'   => 'current',
 			],
 			$atts,
 			'social'
@@ -423,46 +424,60 @@
 			$shape = 'none';
 		}
 
-		// Foreground/background behavior:
-		// - If shape == none: use color mapping (current|primary|black|white)
-		// - If shape != none: use bg mapping (primary|black|white) and forced contrasting text
+		// Background/foreground behavior:
+		// - If shape == none: use color mapping
+		// - If shape != none: use bg + fg mapping
 		$classes = [];
 
 		if ( $shape === 'none' ) {
 			$color     = strtolower( trim( (string) $atts['color'] ) );
 			$color_map = [
-				'current' => 'text-current',
-				'primary' => 'text-primary',
-				'black'   => 'text-black',
-				'white'   => 'text-white',
+				'current'   => 'text-current',
+				'primary'   => 'text-primary',
+				'secondary' => 'text-secondary',
+				'soft-1'    => 'text-soft-1',
+				'soft-2'    => 'text-soft-2',
+				'black'     => 'text-black',
+				'white'     => 'text-white',
 			];
+
 			$classes[] = $color_map[ $color ] ?? $color_map['current'];
 			$classes[] = $icon_size_class;
 		} else {
-			// Background is always primary when using a shape.
-			$bg_class = 'bg-primary';
+			$bg     = strtolower( trim( (string) $atts['bg'] ) );
+			$bg_map = [
+				'primary'   => 'bg-primary',
+				'secondary' => 'bg-secondary',
+				'soft-1'    => 'bg-soft-1',
+				'soft-2'    => 'bg-soft-2',
+				'black'     => 'bg-black',
+				'white'     => 'bg-white',
+			];
 
-			// Foreground (icon) color is configurable, but only black/white to keep it simple.
-			$fg       = strtolower( trim( (string) $atts['fg'] ) );
-			$fg_class = ( $fg === 'white' ) ? 'text-white' : 'text-black';
+			$fg     = strtolower( trim( (string) $atts['fg'] ) );
+			$fg_map = [
+				'primary'   => 'text-primary',
+				'secondary' => 'text-secondary',
+				'soft-1'    => 'text-soft-1',
+				'soft-2'    => 'text-soft-2',
+				'black'     => 'text-black',
+				'white'     => 'text-white',
+			];
 
 			$classes[] = 'inline-flex items-center justify-center';
 			$classes[] = $box_size_class;
-			$classes[] = $bg_class;
-			$classes[] = $fg_class;
+			$classes[] = $bg_map[ $bg ] ?? $bg_map['primary'];
+			$classes[] = $fg_map[ $fg ] ?? $fg_map['black'];
 
-			// Shape styling (circle needs a bit more breathing room than square).
 			if ( $shape === 'circle' ) {
 				$classes[] = 'rounded-full';
-				$classes[] = 'p-1'; // gives the icon a touch more space
+				$classes[] = 'p-1';
 			} else {
 				$classes[] = 'rounded-md';
 			}
 
-			// Small interaction polish (no extra choices needed)
 			$classes[] = 'transition';
 			$classes[] = 'hover:brightness-95';
-
 			$classes[] = $icon_size_class;
 		}
 
