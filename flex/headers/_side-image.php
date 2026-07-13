@@ -10,8 +10,8 @@
 
 <div class="grid grid-cols-12">
 	<div
-		class="col-span-12 text-white bg-black lg:col-span-6 bg-texture min-h-[20rem] lg:min-h-[40rem]"
-		style="--bg-texture: url('<?php echo esc_url( get_template_directory_uri() . '/assets/public/img/topography.png' ); ?>');"
+		class="col-span-12 text-white bg-impact-gradient lg:col-span-6 bg-texture min-h-[20rem] lg:min-h-[30rem]"
+		style="--bg-texture: url('<?php echo esc_url( get_template_directory_uri() . '/assets/public/img/waves.png' ); ?>');"
 	>
 		<div class="px-5 text-center content-middle text-pretty">
 			<div class="center add-padding">
@@ -26,7 +26,7 @@
 					$title = esc_html( $primary_button['title'] );
 					$target = $primary_button['target'] ? esc_attr( $primary_button['target'] ) : '_self';
 					?>
-					<a class="mr-5 btn_main" href="<?php echo $url; ?>" target="<?php echo $target; ?>">
+					<a class="btn_light" href="<?php echo $url; ?>" target="<?php echo $target; ?>">
 						<?php echo $title; ?>
 					</a>
 				<?php endif; ?>
@@ -36,7 +36,7 @@
 					$title = esc_html( $secondary_button['title'] );
 					$target = $secondary_button['target'] ? esc_attr( $secondary_button['target'] ) : '_self';
 					?>
-					<a class="btn_ghost_white" href="<?php echo $url; ?>" target="<?php echo $target; ?>">
+					<a class="btn_ghost_white ml-5" href="<?php echo $url; ?>" target="<?php echo $target; ?>">
 						<?php echo $title; ?>
 					</a>
 				<?php endif; ?>
@@ -44,7 +44,7 @@
 		</div>
 	</div>
 
-	<div class="col-span-12 bg-center bg-no-repeat bg-cover lg:col-span-6 min-h-[16rem] lg:min-h-[40rem]"
+	<div class="col-span-12 bg-center bg-no-repeat bg-cover lg:col-span-6 min-h-[16rem] lg:min-h-[30rem]"
 		 style="background-image: url('<?php echo esc_url( $side_photo ); ?>');">
 	</div>
 </div>
