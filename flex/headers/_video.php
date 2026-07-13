@@ -103,17 +103,17 @@
 					<?php endif; ?>
 
 					<?php if ( $primary_cta || $secondary_cta ) : ?>
-						<div class="grid grid-cols-1 gap-4 justify-items-center mt-8 sm:grid-cols-2">
+						<div class="grid grid-cols-1 justify-items-center gap-4 mt-10 sm:inline-grid sm:grid-cols-2">
 
-							<?php
-								if ( $primary_cta ) :
-									$primary_url = esc_url( $primary_cta['url'] ?? '' );
-									$primary_label = esc_html( $primary_cta['title'] ?? '' );
-									$primary_target = ! empty( $primary_cta['target'] ) ? esc_attr( $primary_cta['target'] ) : '_self';
-									$primary_rel = '_blank' === $primary_target ? 'noopener noreferrer' : '';
-									?>
+							<?php if ( $primary_cta ) : ?>
+								<?php
+								$primary_url    = esc_url( $primary_cta['url'] ?? '' );
+								$primary_label  = esc_html( $primary_cta['title'] ?? '' );
+								$primary_target = ! empty( $primary_cta['target'] ) ? esc_attr( $primary_cta['target'] ) : '_self';
+								$primary_rel    = '_blank' === $primary_target ? 'noopener noreferrer' : '';
+								?>
 
-									<?php if ( $primary_url && $primary_label ) : ?>
+								<?php if ( $primary_url && $primary_label ) : ?>
 									<a
 										class="btn_main min-w-56"
 										href="<?php echo $primary_url; ?>"
@@ -123,17 +123,17 @@
 										<?php echo $primary_label; ?>
 									</a>
 								<?php endif; ?>
-								<?php endif; ?>
+							<?php endif; ?>
 
-							<?php
-								if ( $secondary_cta ) :
-									$secondary_url = esc_url( $secondary_cta['url'] ?? '' );
-									$secondary_label = esc_html( $secondary_cta['title'] ?? '' );
-									$secondary_target = ! empty( $secondary_cta['target'] ) ? esc_attr( $secondary_cta['target'] ) : '_self';
-									$secondary_rel = '_blank' === $secondary_target ? 'noopener noreferrer' : '';
-									?>
+							<?php if ( $secondary_cta ) : ?>
+								<?php
+								$secondary_url    = esc_url( $secondary_cta['url'] ?? '' );
+								$secondary_label  = esc_html( $secondary_cta['title'] ?? '' );
+								$secondary_target = ! empty( $secondary_cta['target'] ) ? esc_attr( $secondary_cta['target'] ) : '_self';
+								$secondary_rel    = '_blank' === $secondary_target ? 'noopener noreferrer' : '';
+								?>
 
-									<?php if ( $secondary_url && $secondary_label ) : ?>
+								<?php if ( $secondary_url && $secondary_label ) : ?>
 									<a
 										class="btn_ghost_white min-w-56"
 										href="<?php echo $secondary_url; ?>"
@@ -143,11 +143,10 @@
 										<?php echo $secondary_label; ?>
 									</a>
 								<?php endif; ?>
-								<?php endif; ?>
+							<?php endif; ?>
 
 						</div>
 					<?php endif; ?>
-
 				</div>
 			</div>
 		</div>
