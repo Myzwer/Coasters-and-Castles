@@ -15,7 +15,7 @@
 	>
 		<div class="px-5 text-center content-middle text-pretty">
 			<div class="center add-padding">
-				<h2 class="pb-2 text-xl font-bold text-white md:text-2xl">
+				<h2 class="text-xl font-bold text-white md:text-2xl">
 					<?php the_sub_field( 'small_subtitle' ); ?>
 				</h2>
 			</div>
