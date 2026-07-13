@@ -475,18 +475,62 @@
 	}
 
 	/* ==========================================================================
-	   README:TOGGLE_CENTER_NAV
-	   Center desktop navigation
-	   Enable: add .nav-center-desktop to .site-header
-	   Goal: brand left, menu centered, CTA right
-	   Requires: CTA item is last and has .nav-cta
-	   ========================================================================== */
+   README:TOGGLE_CENTER_NAV
+   Center desktop navigation
+   Enable: add .nav-center-desktop to .site-header
+
+   Goal:
+   - Logo stays left
+   - Regular menu links are visually centered
+   - CTA stays right
+
+   Why this exists:
+   The CTA lives inside the same WordPress menu as the regular nav links.
+   That keeps the admin/menu setup simple, but it means CSS has to treat
+   the last menu item as a separate right-side action.
+
+   Without balancing, the CTA's wider button area can make the middle links
+   look slightly left of true page center. To solve that without splitting the
+   CTA into a separate menu/ACF field, we give the logo side and CTA side the
+   same "rail" width.
+
+   If a site's CTA label is unusually long or short, adjust:
+   --nav-side-width
+   ========================================================================== */
 	@media (min-width: 1024px) {
+		.site-header.nav-center-desktop {
+			/*
+			   Balanced side rail width.
+			   This should be wide enough to contain the CTA button.
+			   The logo side uses the same width so the middle nav group
+			   has equal visual weight on both sides.
+			*/
+			--nav-side-width: 18rem;
+		}
+
 		.site-header.nav-center-desktop .nav-shell {
+			/*
+			   Keep the existing header structure:
+			   brand first, nav second.
+			   The brand gets a fixed rail width; the nav fills the rest.
+			*/
 			@apply justify-start;
 		}
 
+		.site-header.nav-center-desktop .nav-brand {
+			/*
+			   Balance the left side against the CTA rail.
+			   The logo itself stays left-aligned inside this space.
+			*/
+			width: var(--nav-side-width);
+			@apply shrink-0;
+		}
+
 		.site-header.nav-center-desktop .nav {
+			/*
+			   Let the menu area take all remaining horizontal space.
+			   The nav-list handles centering links and pinning the CTA.
+			*/
 			@apply flex-1;
 		}
 
@@ -498,8 +542,10 @@
 			@apply w-full;
 		}
 
-		/* Mobile-first rules make each li/link/button full-width.
-		   For centered desktop mode we want "content width" items. */
+		/*
+		   Mobile-first rules make each li/link/button full-width.
+		   For centered desktop mode, we want content-width items.
+		*/
 		.site-header.nav-center-desktop .nav-list > .nav-item {
 			width: auto;
 		}
@@ -509,14 +555,26 @@
 			width: auto;
 		}
 
-		/* Center the non-CTA group by splitting free space */
+		/*
+		   Push the regular menu group toward the center.
+		   This works with the CTA auto margin below to split the available space.
+		*/
 		.site-header.nav-center-desktop .nav-list > .nav-item:not(.nav-cta):first-child {
 			margin-left: auto;
 		}
 
-		/* Keep CTA pinned to the far right */
 		.site-header.nav-center-desktop .nav-item.nav-cta {
+			/*
+			   Match the left brand rail width so the regular nav links are
+			   centered against equal left/right side zones.
+
+			   The CTA button itself stays pinned to the far right inside
+			   this rail.
+			*/
+			width: var(--nav-side-width);
 			margin-left: auto;
+			display: flex;
+			justify-content: flex-end;
 		}
 	}
 }
