@@ -7,10 +7,10 @@
 	$secondary_button = get_sub_field( 'secondary_button' );
 ?>
 
-<div class="bg-black">
+<div class="bg-impact-gradient">
 	<div
 		class="relative bg-no-repeat bg-cover bg-texture"
-		style="height: 30vh; --bg-texture: url('<?php echo esc_url( get_template_directory_uri() . '/assets/public/img/topography.png' ); ?>');"
+		style="height: 30vh; --bg-texture: url('');"
 	>
 		<div class="px-5 text-center content-middle text-pretty">
 			<div class="center add-padding">
@@ -26,7 +26,7 @@
 						$title = esc_html( $primary_button['title'] );
 						$target = $primary_button['target'] ? esc_attr( $primary_button['target'] ) : '_self';
 						?>
-						<a class="btn_main" href="<?php echo $url; ?>" target="<?php echo $target; ?>">
+						<a class="btn_light" href="<?php echo $url; ?>" target="<?php echo $target; ?>">
 							<?php echo $title; ?>
 						</a>
 					<?php endif; ?>
