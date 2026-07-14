@@ -31,7 +31,7 @@
 	/* Gradient endpoints */
 	--color-primary-gradient-to: #B4DFFA;
 	--color-secondary-gradient-to: #F5E4C6;
-	--color-impact-gradient-to: #001582;
+	--color-impact-gradient-to: #283ba8;
 
 	/* Gradients */
 	--background-image-primary-gradient: linear-gradient(
@@ -45,11 +45,12 @@
 		var(--color-soft-2),
 		var(--color-secondary-gradient-to)
 	);
-
-	--background-image-impact-gradient: linear-gradient(
-		135deg,
-		var(--color-secondary),
-		var(--color-impact-gradient-to)
+	
+	--background-image-impact-gradient: radial-gradient(
+		ellipse at center top,
+		var(--color-impact-gradient-to) 0%,
+		var(--color-secondary) 48%,
+		var(--color-secondary) 100%
 	);
 
 	/* [TOKENS] Fonts (update per site) */
