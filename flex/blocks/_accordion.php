@@ -25,7 +25,7 @@
 	$intro = get_sub_field( 'intro' );
 ?>
 
-<section class="pt-10 wrap accordion-block pb-15">
+<section class="pt-10 wrap accordion-block pb-10">
 	<div class="grid-12">
 		<div class="col-span-12">
 			<?php if ( $intro ) : ?>
@@ -36,7 +36,7 @@
 		</div>
 
 		<?php if ( have_rows( 'accordion_items' ) ) : ?>
-			<div class="col-span-12">
+			<div class="col-span-12 pb-10">
 				<div class="accordion" data-accordion>
 					<?php while ( have_rows( 'accordion_items' ) ) : the_row(); ?>
 						<?php
