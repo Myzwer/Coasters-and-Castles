@@ -25,8 +25,8 @@
 	$announcement = get_sub_field( 'announcement' );
 	$link         = get_sub_field( 'link' );
 ?>
-<section class="bg-secondary">
-	<div class="py-10 wrap">
+<section class="bg-impact-gradient">
+	<div class="py-15 wrap">
 		<div class="grid-12 theme-invert">
 			<div class="col-span-12">
 				<?php if ( $announcement ) : ?>
@@ -37,7 +37,7 @@
 			<?php if ( ! empty( $link['url'] ) ) : ?>
 				<div class="col-span-12 mx-auto mt-5 text-center">
 					<a
-						class="btn_main"
+						class="btn_light"
 						href="<?php echo esc_url( $link['url'] ); ?>"
 						<?php echo ! empty( $link['target'] ) ? ' target="' . esc_attr( $link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>
 					>
