@@ -208,12 +208,62 @@
 		margin-bottom: 0;
 	}
 
-	/* Baseline heading rhythm inside WYSIWYG content */
-	.prose-theme :where(h1, h2):not(:where(.not-prose, .not-prose *)) {
-		margin-bottom: 0.7em;
+	/* =========================================================
+	   Default WYSIWYG rhythm
+	   ---------------------------------------------------------
+	   Tailwind Typography's default prose spacing is a little
+	   roomy for marketing sections with normal multi-paragraph
+	   copy.
+
+	   This gives the starter theme a tighter default rhythm
+	   everywhere `.prose-theme` is used, without needing to add
+	   one-off spacing classes to every WYSIWYG field.
+
+	   Use:
+	   - `.prose-theme` = normal page/section copy
+	   - `.prose-theme prose-tight` = denser text blocks
+	   - `.prose-theme prose-compact` = cards, FAQs, accordions
+	   ========================================================= */
+	/* This is where you update the spacing between each paragraph */
+	.prose-theme :where(p):not(:where(.not-prose, .not-prose *)) {
+		margin-top: .65em;
+		margin-bottom: 0.65em;
 	}
 
-	.prose-theme :where(h1 + p, h2 + p):not(:where(.not-prose, .not-prose *)) {
+	.prose-theme :where(ul, ol):not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0.85em;
+		margin-bottom: 0.85em;
+	}
+
+	/*
+	   Headings should introduce content, not float far above it.
+	   The heading's bottom margin controls the heading-to-text gap.
+	*/
+	.prose-theme
+	:where(h1, h2, h3, h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
+		margin-bottom: 0.45em;
+	}
+
+	/*
+	   Kill the default top margin on content immediately after a heading.
+	   Otherwise the final visual gap becomes:
+	   heading margin-bottom + paragraph margin-top.
+	*/
+	.prose-theme
+	:where(h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p):not(
+			:where(.not-prose, .not-prose *)
+		) {
+		margin-top: 0;
+	}
+
+	.prose-theme
+	:where(h1 + ul, h2 + ul, h3 + ul, h4 + ul, h5 + ul, h6 + ul):not(
+			:where(.not-prose, .not-prose *)
+		),
+	.prose-theme
+	:where(h1 + ol, h2 + ol, h3 + ol, h4 + ol, h5 + ol, h6 + ol):not(
+			:where(.not-prose, .not-prose *)
+		) {
 		margin-top: 0;
 	}
 
@@ -230,14 +280,14 @@
 
 	/* Slightly denser overall prose rhythm */
 	.prose-theme.prose-tight :where(p):not(:where(.not-prose, .not-prose *)) {
-		margin-top: 0.75em;
-		margin-bottom: 0.75em;
+		margin-top: 0.65em;
+		margin-bottom: 0.65em;
 	}
 
 	.prose-theme.prose-tight
 	:where(ul, ol):not(:where(.not-prose, .not-prose *)) {
-		margin-top: 0.75em;
-		margin-bottom: 0.75em;
+		margin-top: 0.65em;
+		margin-bottom: 0.65em;
 	}
 
 	/* Nuclear option: remove most internal prose spacing */
@@ -322,7 +372,7 @@
 	.heading-3,
 	.prose-theme :where(h3):not(:where(.not-prose, .not-prose *)) {
 		font-family: var(--font-display);
-		@apply text-xl leading-snug font-bold;
+		@apply text-2xl leading-snug font-bold;
 	}
 
 	.heading-4,
