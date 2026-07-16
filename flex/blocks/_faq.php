@@ -25,7 +25,7 @@
 	$intro = get_sub_field( 'intro' );
 ?>
 
-<section class="py-10 wrap">
+<section class="pt-10 pb-15 wrap">
 	<div class="grid-12">
 		<div class="col-span-12">
 			<?php if ( $intro ) : ?>
@@ -40,9 +40,9 @@
 						<?php $question = get_sub_field( 'faq_question' ); ?>
 						<?php $answer = get_sub_field( 'faq_answer' ); ?>
 
-						<article class="col-span-12">
+						<article class="col-span-12 md:col-span-4 bg-white border-3 border-secondary rounded-xl p-6">
 							<?php if ( $question ) : ?>
-								<h4 class="heading-4"><?php echo esc_html( $question ); ?></h4>
+								<h4 class="heading-4 pb-2"><?php echo esc_html( $question ); ?></h4>
 							<?php endif; ?>
 
 							<?php if ( $answer ) : ?>
