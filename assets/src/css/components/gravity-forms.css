@@ -35,7 +35,7 @@
 	textarea,
 	select
 ) {
-	background-color: var(--color-soft-1);
+	background-color: var(--color-white);
 	color: var(--color-black);
 
 	border: 1px solid color-mix(in srgb, var(--color-black) 18%, transparent);
@@ -102,7 +102,7 @@
 
 /* Required asterisk uses theme accent */
 .gform_wrapper.gravity-theme .gfield_required {
-	color: red !important;
+	color: primary !important;
 }
 
 /* ---------------------------------------------------------
@@ -122,8 +122,8 @@
 	padding: 0.75rem 1.25rem;
 	border-radius: 0.5rem;
 
-	background-color: var(--color-primary);
-	color: var(--color-black);
+	background-color: var(--color-secondary);
+	color: var(--color-white);
 	border: 1px solid transparent;
 
 	cursor: pointer;
@@ -191,8 +191,8 @@
 	padding: 0.75rem 1.25rem;
 	margin-right: 0.75rem;
 
-	background-color: var(--color-primary);
-	color: var(--color-black);
+	background-color: var(--color-secondary);
+	color: var(--color-white);
 	border: 1px solid transparent;
 
 	cursor: pointer;
@@ -215,8 +215,8 @@
 	padding: 0.75rem 1.25rem;
 	margin-right: 0.75rem;
 
-	background-color: var(--color-primary);
-	color: var(--color-black);
+	background-color: var(--color-secondary);
+	color: var(--color-white);
 	border: 1px solid transparent;
 
 	cursor: pointer;
