@@ -31,8 +31,8 @@
 	}
 ?>
 <section class="py-10 wrap">
-	<div class="grid-12">
-		<div class="col-span-12">
+	<div class="grid grid-cols-12 gap-10">
+		<div class="col-span-12 md:col-span-6">
 			<?php
 				if ( $image_id ) :
 					echo wp_get_attachment_image(
@@ -40,16 +40,18 @@
 						'large',
 						false,
 						[
-							'class' => 'rounded-lg shadow-lg mb-0',
+							'class' => 'rounded-lg shadow-lg mb-0 aspect-[1/1] object-cover',
 						]
 					);
 				endif;
 			?>
 		</div>
 
-		<div class="col-span-12">
+		<div class="col-span-12 md:col-span-6 relative">
 			<?php if ( $content ) : ?>
-				<div class="prose-theme"><?php echo wp_kses_post( $content ); ?></div>
+				<div class="content-middle-medium">
+					<div class="prose-theme"><?php echo wp_kses_post( $content ); ?></div>
+				</div>
 			<?php endif; ?>
 		</div>
 	</div>
