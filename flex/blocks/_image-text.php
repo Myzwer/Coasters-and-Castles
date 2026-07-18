@@ -31,7 +31,7 @@
 	}
 ?>
 <section class="py-10 wrap">
-	<div class="grid grid-cols-12 gap-10">
+	<div class="grid grid-cols-12 gap-4 md:gap-10">
 		<div class="col-span-12 md:col-span-6">
 			<?php
 				if ( $image_id ) :
