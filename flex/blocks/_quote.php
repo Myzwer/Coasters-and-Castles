@@ -2,86 +2,120 @@
 	/**
 	 * Quote / testimonial block.
 	 *
-	 * Renders a highlighted quote with optional intro, image, and attribution.
-	 *
-	 * Used in:
-	 * - testimonials
-	 * - customer or member quotes
-	 * - featured statements
+	 * Renders a 3-card testimonial/review section.
 	 *
 	 * Content is sourced from ACF Flexible Content fields.
 	 *
-	 * Notes:
-	 * - Quote content uses a WYSIWYG field for basic formatting.
-	 * - Attribution may include title, company, or location.
-	 * - Optional image is displayed as a small avatar-style image.
+	 * Expected fields:
+	 * - intro: WYSIWYG
+	 * - reviews: Repeater, capped/required at 3
+	 *   - image: Image
+	 *   - name: Text
+	 *   - quote: WYSIWYG Editor
 	 */
 
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
 
-	$intro       = get_sub_field( 'intro' );
-	$quote       = get_sub_field( 'quote' );
-	$image       = get_sub_field( 'image' );
-	$image_id    = ! empty( $image['ID'] ) ? absint( $image['ID'] ) : 0;
-	$name        = get_sub_field( 'name' );
-	$attribution = get_sub_field( 'attribution' );
+	$intro = get_sub_field( 'intro' );
+
+	/*
+	 * Rotation classes are assigned by index so the repeater can stay clean.
+	 * The ACF field is capped at 3 reviews, so these map directly to:
+	 * 1 = slight left tilt
+	 * 2 = nearly straight
+	 * 3 = slight right tilt
+	 *
+	 * On mobile, rotation is removed so cards stack cleanly and don't cause
+	 * awkward overflow.
+	 */
+	$review_card_transforms = [
+		'md:-rotate-8',
+		'md:-rotate-2',
+		'md:rotate-8',
+	];
 ?>
 
-<section class="py-10 wrap">
-	<?php if ( $intro ) : ?>
-		<div class="pb-8 grid-12">
-			<div class="col-span-12 mx-auto text-center">
+<section class="py-16 wrap">
+	<div class="grid-12 gap-y-10">
+
+		<?php if ( $intro ) : ?>
+			<div class="col-span-12 mx-auto max-w-4xl text-center mb-10">
 				<div class="prose-theme">
 					<?php echo wp_kses_post( $intro ); ?>
 				</div>
 			</div>
-		</div>
-	<?php endif; ?>
+		<?php endif; ?>
 
-	<div class="grid-12">
-		<div class="col-span-12 md:col-span-10 md:col-start-2">
-			<figure class="p-6 rounded-2xl md:p-8">
-				<?php if ( $quote ) : ?>
-					<div class="prose-theme prose-compact">
-						<blockquote class="pl-5 m-0 border-l-4 border-black">
-							<?php echo wp_kses_post( $quote ); ?>
-						</blockquote>
-					</div>
-				<?php endif; ?>
+		<?php if ( have_rows( 'reviews' ) ) : ?>
+			<div class="col-span-12">
+				<div class="grid grid-cols-12 gap-y-10 md:gap-x-10 md:items-start">
 
-				<?php if ( $image_id || $name || $attribution ) : ?>
-					<figcaption class="flex gap-4 items-center mt-6">
-						<?php if ( $image_id ) : ?>
-							<div class="overflow-hidden w-16 h-16 rounded-full shrink-0">
-								<?php
-									echo wp_get_attachment_image(
-										$image_id,
-										'thumbnail',
-										false,
-										array(
-											'class' => 'h-full w-full object-cover',
-										)
-									);
-								?>
-							</div>
-						<?php endif; ?>
+					<?php
+						$review_index = 0;
 
-						<?php if ( $name || $attribution ) : ?>
-							<div>
-								<?php if ( $name ) : ?>
-									<p class="mb-0 font-bold"><?php echo esc_html( $name ); ?></p>
-								<?php endif; ?>
+						while ( have_rows( 'reviews' ) ) :
+							the_row();
 
-								<?php if ( $attribution ) : ?>
-									<p class="mb-0"><?php echo esc_html( $attribution ); ?></p>
-								<?php endif; ?>
-							</div>
-						<?php endif; ?>
-					</figcaption>
-				<?php endif; ?>
-			</figure>
-		</div>
+							$image = get_sub_field( 'image' );
+							$name  = get_sub_field( 'name' );
+							$quote = get_sub_field( 'quote' );
+
+							$image_id = ! empty( $image['ID'] ) ? absint( $image['ID'] ) : 0;
+
+							$rotation_class = $review_card_transforms[ $review_index ] ?? '';
+							$review_index ++;
+							?>
+
+							<article class="col-span-12 md:col-span-4">
+								<figure
+									class="grid min-h-full rounded-xl border-4 border-white bg-secondary p-6 text-white shadow-xl transition-transform <?php echo esc_attr( $rotation_class ); ?>">
+
+									<?php if ( $image_id || $name ) : ?>
+										<figcaption class="grid grid-cols-[auto_1fr] items-center gap-4 pb-6">
+											<?php if ( $image_id ) : ?>
+												<div class="h-18 w-18 overflow-hidden">
+													<?php
+														echo wp_get_attachment_image(
+															$image_id,
+															'thumbnail',
+															false,
+															[
+																'class' => 'h-full w-full object-cover rounded-md',
+															]
+														);
+													?>
+												</div>
+											<?php endif; ?>
+
+											<?php if ( $name ) : ?>
+												<p class="m-0 text-lg font-bold leading-tight">
+													<?php echo esc_html( $name ); ?>
+												</p>
+											<?php endif; ?>
+										</figcaption>
+									<?php endif; ?>
+
+									<?php if ( $quote ) : ?>
+										<div class="prose-theme prose-compact theme-invert text-base leading-snug">
+											<?php echo wp_kses_post( $quote ); ?>
+										</div>
+									<?php endif; ?>
+
+									<div class="mt-4 justify-self-end text-5xl font-bold leading-none"
+										 aria-hidden="true">
+										&rdquo;
+									</div>
+
+								</figure>
+							</article>
+
+						<?php endwhile; ?>
+
+				</div>
+			</div>
+		<?php endif; ?>
+
 	</div>
 </section>
