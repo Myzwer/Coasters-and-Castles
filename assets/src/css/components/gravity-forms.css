@@ -226,3 +226,38 @@
 .gform_wrapper.gravity-theme .ginput_container_fileupload input[type="file"]::-webkit-file-upload-button:hover {
 	filter: brightness(0.95);
 }
+
+/* ---------------------------------------------------------
+   Lead Capture Block form tweaks
+   ---------------------------------------------------------
+   Scoped to the lead capture block so tighter spacing does not
+   affect every Gravity Form across the site.
+*/
+
+.lead-capture-form .gform_wrapper.gravity-theme .gform_fields {
+	row-gap: 1rem !important;
+}
+
+.lead-capture-form .gform_wrapper.gravity-theme .gfield {
+	margin-bottom: 0 !important;
+}
+
+.lead-capture-form .gform_wrapper.gravity-theme .gfield_label {
+	margin-bottom: 0.4rem !important;
+	font-weight: 700;
+}
+
+.lead-capture-form .gform_wrapper.gravity-theme .ginput_complex label,
+.lead-capture-form .gform_wrapper.gravity-theme .ginput_complex legend {
+	display: none;
+}
+
+.lead-capture-form .gform_wrapper.gravity-theme .gform_footer {
+	margin-top: 1.5rem !important;
+	padding-top: 0 !important;
+}
+
+.lead-capture-form .gform_wrapper.gravity-theme .gform_footer .gform_button {
+	padding: 0.9rem 1.75rem;
+	border-radius: 0.75rem;
+}
