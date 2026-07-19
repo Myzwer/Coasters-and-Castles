@@ -10,8 +10,8 @@
 
 <div class="bg-black">
 	<div
-		class="relative bg-media bg-overlay-<?php the_sub_field( 'background_tint_level' ); ?> bg-cover bg-center bg-no-repeat"
-		style="min-height: 30vh; --bg-image: url('<?php echo esc_url( $background_photo ); ?>');"
+		class="relative min-h-[20rem] md:min-h-[30vh] bg-media bg-overlay-<?php the_sub_field( 'background_tint_level' ); ?> bg-cover bg-center bg-no-repeat"
+		style="--bg-image: url('<?php echo esc_url( $background_photo ); ?>');"
 	>
 		<div class="px-5 text-center content-middle text-pretty">
 			<div class="center add-padding">
