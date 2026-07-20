@@ -1,0 +1,33 @@
+/* =========================================================
+   WYSIWYG shortcode button spacing
+   ---------------------------------------------------------
+   [btn] shortcodes are often placed next to each other inside
+   editor content. Add spacing to the shortcode wrapper, not
+   the button classes themselves, so nav/card/template buttons
+   are unaffected.
+   ========================================================= */
+
+.prose-theme .shortcode-btn {
+	display: inline-block;
+	margin-top: 0.75rem;
+}
+
+.prose-theme .shortcode-btn + .shortcode-btn {
+	margin-left: 0.75rem;
+}
+
+.prose-theme .shortcode-btn--center {
+	display: grid;
+	justify-items: center;
+}
+
+@media (max-width: 639px) {
+	.prose-theme .shortcode-btn {
+		display: block;
+	}
+
+	.prose-theme .shortcode-btn + .shortcode-btn {
+		margin-left: 0;
+		margin-top: 0.75rem;
+	}
+}
