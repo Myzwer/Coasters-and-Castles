@@ -212,10 +212,10 @@
 		$button = '<a class="' . esc_attr( $btn_class ) . '" href="' . $href . '"' . $target . $rel . '>' . $inner . '</a>';
 
 		if ( $center ) {
-			return '<div class="flex justify-center not-prose">' . $button . '</div>';
+			return '<div class="shortcode-btn shortcode-btn--center not-prose">' . $button . '</div>';
 		}
 
-		return '<span class="inline-block not-prose">' . $button . '</span>';
+		return '<span class="shortcode-btn not-prose">' . $button . '</span>';
 	}
 
 	add_shortcode( 'btn', 'windpeak_shortcode_btn' );
