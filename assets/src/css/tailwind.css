@@ -384,25 +384,6 @@
 }
 
 /* =========================================================
-   WYSIWYG heading protection
-   ---------------------------------------------------------
-   Editors can accidentally introduce inline font weights from
-   copy/paste or toolbar styling. Inline styles beat normal CSS,
-   so prose headings need an explicit override.
-
-   Keep this scoped to `.prose-theme` so it only affects editor
-   content, not global template headings.
-   ========================================================= */
-
-.prose-theme :where(h1, h2, h3, h4):not(:where(.not-prose, .not-prose *)) {
-	font-weight: 700 !important;
-}
-
-.prose-theme :where(h1, h2, h3, h4) :where(span, strong, em):not(:where(.not-prose, .not-prose *)) {
-	font-weight: inherit !important;
-}
-
-/* =========================================================
    [COMPONENTS] Buttons
    ---------------------------------------------------------
    Public classes:
