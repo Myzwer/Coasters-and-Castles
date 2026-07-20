@@ -58,7 +58,7 @@
 ?>
 
 <section class="bg-black section theme-invert">
-	<div class="viewport-header min-h-[560px] md:min-h-[650px] lg:min-h-[720px]">
+	<div class="viewport-header min-h-[680px] md:min-h-[650px] lg:min-h-[720px]">
 
 		<div
 			class="video-hero-media"
@@ -91,19 +91,34 @@
 				<div class="grid col-span-12 justify-items-center text-center">
 
 					<?php if ( $title ) : ?>
-						<h1 class="max-w-5xl text-4xl font-bold tracking-tight text-white uppercase md:text-5xl lg:text-6xl text-balance leading-[0.95]">
+						<h1 class="max-w-5xl text-3xl font-bold tracking-tight text-white uppercase sm:text-4xl md:text-5xl lg:text-6xl text-balance leading-[0.95]">
 							<?php echo esc_html( $title ); ?>
 						</h1>
 					<?php endif; ?>
 
 					<?php if ( $subtitle ) : ?>
-						<p class="mt-5 max-w-4xl text-xl leading-snug text-white md:text-2xl lg:text-3xl text-balance">
+						<p class="mt-5 max-w-4xl text-lg leading-snug text-white sm:text-xl md:text-2xl lg:text-3xl text-balance">
 							<?php echo esc_html( $subtitle ); ?>
 						</p>
 					<?php endif; ?>
 
 					<?php if ( $primary_cta || $secondary_cta ) : ?>
-						<div class="grid grid-cols-1 justify-items-center gap-4 mt-10 sm:inline-grid sm:grid-cols-2">
+						<?php
+						$cta_count = 0;
+
+						if ( $primary_cta ) {
+							$cta_count ++;
+						}
+
+						if ( $secondary_cta ) {
+							$cta_count ++;
+						}
+
+						$cta_grid_class = $cta_count > 1 ? 'sm:grid-cols-2' : 'sm:grid-cols-1';
+						?>
+
+						<div
+							class="mx-auto grid w-fit grid-cols-1 justify-items-center gap-4 mt-10 <?php echo esc_attr( $cta_grid_class ); ?>">
 
 							<?php if ( $primary_cta ) : ?>
 								<?php
@@ -115,7 +130,7 @@
 
 								<?php if ( $primary_url && $primary_label ) : ?>
 									<a
-										class="btn_main min-w-56"
+										class="btn_main min-w-48 sm:min-w-56"
 										href="<?php echo $primary_url; ?>"
 										target="<?php echo $primary_target; ?>"
 										<?php echo $primary_rel ? 'rel="' . esc_attr( $primary_rel ) . '"' : ''; ?>
@@ -135,7 +150,7 @@
 
 								<?php if ( $secondary_url && $secondary_label ) : ?>
 									<a
-										class="btn_ghost_white min-w-56"
+										class="btn_ghost_white min-w-48 sm:min-w-56"
 										href="<?php echo $secondary_url; ?>"
 										target="<?php echo $secondary_target; ?>"
 										<?php echo $secondary_rel ? 'rel="' . esc_attr( $secondary_rel ) . '"' : ''; ?>
@@ -147,6 +162,7 @@
 
 						</div>
 					<?php endif; ?>
+
 				</div>
 			</div>
 		</div>
