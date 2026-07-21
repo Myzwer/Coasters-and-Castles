@@ -24,6 +24,7 @@
 	require_once get_theme_file_path( 'includes/wordpress/enqueue.php' );
 	require_once get_theme_file_path( 'includes/wordpress/menus.php' );
 	require_once get_theme_file_path( 'includes/wordpress/shortcodes.php' );
+	require_once get_theme_file_path( 'includes/wordpress/custom_post_types.php' );
 
 	/* Plugins / integrations */
 	require_once get_theme_file_path( 'includes/plugins/acf.php' );
