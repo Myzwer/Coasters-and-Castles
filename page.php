@@ -72,6 +72,15 @@
 			'announcement_block',
 		);
 
+		$textured_image     = function_exists( 'get_field' ) ? get_field( 'textured_image', 'option' ) : '';
+		$textured_image_url = '';
+
+		if ( is_array( $textured_image ) && ! empty( $textured_image['url'] ) ) {
+			$textured_image_url = $textured_image['url'];
+		} elseif ( is_string( $textured_image ) ) {
+			$textured_image_url = $textured_image;
+		}
+
 		echo '<div class="alt-bg-wrap">';
 
 		while ( have_rows( 'body_sections' ) ) :
@@ -112,11 +121,30 @@
 			}
 
 			$background_index ++;
-			$background_class = 0 === $background_index % 2
+
+			$is_even_background = 0 === $background_index % 2;
+
+			$background_class = $is_even_background
 				? 'bg-alternating-gradient bg-alternating-even'
 				: 'bg-alternating-gradient bg-alternating-odd';
 
-			echo '<div class="' . esc_attr( $background_class ) . '" data-layout="' . esc_attr( $layout ) . '">';
+			$background_style = '';
+
+			/*
+			 * Apply the global texture only to the first/blue alternating sections.
+			 *
+			 * Important:
+			 * - This runs after empty blocks are skipped.
+			 * - Excluded layouts do not increment $background_index.
+			 * - That means texture application follows the same alternation logic
+			 *   as the background colors.
+			 */
+			if ( ! $is_even_background && $textured_image_url ) {
+				$background_class .= ' bg-texture';
+				$background_style = ' style="--bg-texture: url(\'' . esc_url( $textured_image_url ) . '\');"';
+			}
+
+			echo '<div class="' . esc_attr( $background_class ) . '" data-layout="' . esc_attr( $layout ) . '"' . $background_style . '>';
 			echo $markup; // safe: rendered template markup
 			echo '</div>';
 

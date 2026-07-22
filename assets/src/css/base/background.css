@@ -210,7 +210,7 @@
 	background-size: auto;
 
 	/* Texture should support readability, not dominate the hero */
-	opacity: 0.25;
+	opacity: 0.05;
 
 	/* Intentional: texture integrates with underlying color/image */
 	mix-blend-mode: normal;
