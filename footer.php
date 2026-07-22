@@ -39,6 +39,9 @@
 	$privacy_policy_url = get_privacy_policy_url();
 	$accessibility_page = get_page_by_path( 'accessibility' );
 	$accessibility_url  = $accessibility_page ? get_permalink( $accessibility_page ) : home_url( '/accessibility/' );
+
+	$terms_page = get_page_by_path( 'terms' );
+	$terms_url  = $terms_page ? get_permalink( $terms_page ) : home_url( '/terms/' );
 ?>
 
 <div class="footer-credit">
@@ -57,6 +60,14 @@
 					<?php if ( ! empty( $privacy_policy_url ) ) : ?>
 						<a class="footer-credit-link" href="<?php echo esc_url( $privacy_policy_url ); ?>">
 							Privacy Policy
+						</a>
+					<?php endif; ?>
+
+					<?php if ( ! empty( $terms_url ) ) : ?>
+						<span class="footer-credit-separator" aria-hidden="true">|</span>
+
+						<a class="footer-credit-link" href="<?php echo esc_url( $terms_url ); ?>">
+							Terms &amp; Conditions
 						</a>
 					<?php endif; ?>
 
