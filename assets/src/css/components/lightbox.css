@@ -1,0 +1,116 @@
+/**
+ * Advisor gallery lightbox.
+ *
+ * Provides the visual presentation and open/close animation for the
+ * native dialog used by Advisor travel galleries.
+ *
+ * Behavior:
+ * - Centers the expanded image within the viewport.
+ * - Uses a dark translucent backdrop.
+ * - Keeps the close button large and accessible.
+ * - Supports reduced-motion preferences.
+ */
+
+@reference "../tailwind.css";
+
+@layer components {
+	.advisor-lightbox {
+		position: fixed;
+		inset: 0;
+
+		width: 100vw;
+		max-width: none;
+		height: 100dvh;
+		max-height: none;
+
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		overflow: hidden;
+
+		opacity: 0;
+		transform: scale(0.96);
+		transition: opacity 180ms ease,
+		transform 180ms ease,
+		display 180ms allow-discrete,
+		overlay 180ms allow-discrete;
+	}
+
+	.advisor-lightbox[open] {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	@starting-style {
+		.advisor-lightbox[open] {
+			opacity: 0;
+			transform: scale(0.96);
+		}
+	}
+
+	.advisor-lightbox::backdrop {
+		background-color: rgb(0 0 0 / 0%);
+		backdrop-filter: blur(0);
+		transition: background-color 180ms ease,
+		backdrop-filter 180ms ease,
+		display 180ms allow-discrete,
+		overlay 180ms allow-discrete;
+	}
+
+	.advisor-lightbox[open]::backdrop {
+		background-color: rgb(0 0 0 / 82%);
+		backdrop-filter: blur(3px);
+	}
+
+	@starting-style {
+		.advisor-lightbox[open]::backdrop {
+			background-color: rgb(0 0 0 / 0%);
+			backdrop-filter: blur(0);
+		}
+	}
+
+	.advisor-lightbox__inner {
+		@apply relative grid place-items-center;
+
+		width: 100%;
+		height: 100%;
+		padding: 2rem;
+	}
+
+	.advisor-lightbox__image {
+		display: block;
+
+		width: auto;
+		max-width: calc(100vw - 4rem);
+		height: auto;
+		max-height: calc(100dvh - 4rem);
+
+		object-fit: contain;
+		box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 45%);
+	}
+
+	.advisor-lightbox__close {
+		@apply fixed z-10 grid place-items-center;
+		@apply size-12 rounded-full;
+		@apply bg-white text-black shadow-xl;
+		@apply transition hover:brightness-95;
+		@apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/70;
+
+		top: 1rem;
+		right: 1rem;
+		font-size: 1.5rem;
+	}
+
+	body.advisor-lightbox-open {
+		overflow: hidden;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.advisor-lightbox,
+	.advisor-lightbox::backdrop,
+	.advisor-lightbox__close {
+		transition: none;
+	}
+}
