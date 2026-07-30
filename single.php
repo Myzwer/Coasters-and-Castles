@@ -48,18 +48,20 @@
 
 						<div class="grid-12">
 							<?php if ( has_post_thumbnail() ) : ?>
-								<figure class="col-span-12 mb-8">
+								<figure class="col-span-12 md:col-span-8 md:col-start-3 mb-8 blog-featured-image">
 									<?php
-										the_post_thumbnail( 'full', [
-											'class'   => 'rounded-xl shadow-xl',
+										the_post_thumbnail( 'blog-featured', [
+											'class'   => 'blog-featured-image__image',
 											'loading' => 'eager',
 										] );
 									?>
 								</figure>
 							<?php endif; ?>
 
-							<section class="col-span-12 prose-theme blog-content"
-									 aria-label="<?php esc_attr_e( 'Post content', 'prelaunch-wp' ); ?>">
+							<section
+								class="col-span-12 md:col-span-8 md:col-start-3 prose-theme blog-content"
+								aria-label="<?php esc_attr_e( 'Post content', 'prelaunch-wp' ); ?>"
+							>
 								<?php the_content(); ?>
 							</section>
 
