@@ -58,7 +58,7 @@
 								</figure>
 							<?php endif; ?>
 
-							<section class="col-span-12 prose-theme"
+							<section class="col-span-12 prose-theme blog-content"
 									 aria-label="<?php esc_attr_e( 'Post content', 'prelaunch-wp' ); ?>">
 								<?php the_content(); ?>
 							</section>
