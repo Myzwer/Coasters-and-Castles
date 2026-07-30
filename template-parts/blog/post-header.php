@@ -8,9 +8,19 @@
 	 * @var array $args Template-part arguments.
 	 */
 
-	$advisor_id   = isset( $args['advisor_id'] ) ? (int) $args['advisor_id'] : 0;
-	$advisor_name = $advisor_id ? get_the_title( $advisor_id ) : '';
-	$advisor_url  = $advisor_id ? get_permalink( $advisor_id ) : '';
+	$advisor_id = isset( $args['advisor_id'] )
+		? (int) $args['advisor_id']
+		: 0;
+
+	$is_advisor_author = $advisor_id > 0;
+
+	$author_name = $is_advisor_author
+		? get_the_title( $advisor_id )
+		: prelaunch_get_travel_team_name();
+
+	$author_url = $is_advisor_author
+		? get_permalink( $advisor_id )
+		: '';
 
 	$trip_types    = get_the_terms( get_the_ID(), 'trip_type' );
 	$article_types = get_the_terms( get_the_ID(), 'article_type' );
@@ -88,14 +98,25 @@
 			<span><?php echo esc_html( $reading_time ); ?></span>
 		<?php endif; ?>
 
-		<?php if ( $advisor_name && $advisor_url ) : ?>
+		<?php if ( $author_name ) : ?>
 			<span aria-hidden="true"> · </span>
+
 			<span>
-				<?php esc_html_e( 'Written by', 'prelaunch-wp' ); ?>
-				<a class="font-semibold underline underline-offset-2" href="<?php echo esc_url( $advisor_url ); ?>">
-					<?php echo esc_html( $advisor_name ); ?>
-				</a>
+		<?php esc_html_e( 'Written by', 'prelaunch-wp' ); ?>
+
+				<?php if ( $author_url ) : ?>
+					<a
+						class="font-semibold underline underline-offset-2"
+						href="<?php echo esc_url( $author_url ); ?>"
+					>
+				<?php echo esc_html( $author_name ); ?>
+			</a>
+				<?php else : ?>
+					<span class="font-semibold">
+				<?php echo esc_html( $author_name ); ?>
 			</span>
+				<?php endif; ?>
+	</span>
 		<?php endif; ?>
 	</p>
 </header>
