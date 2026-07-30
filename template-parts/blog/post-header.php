@@ -2,8 +2,8 @@
 	/**
 	 * Single post header.
 	 *
-	 * Displays taxonomy links, post title, publication date, reading time,
-	 * and the linked advisor byline when one exists.
+	 * Displays article classifications, post title, publication date,
+	 * reading time, and the linked advisor byline when one exists.
 	 *
 	 * @var array $args Template-part arguments.
 	 */
@@ -11,50 +11,64 @@
 	$advisor_id   = isset( $args['advisor_id'] ) ? (int) $args['advisor_id'] : 0;
 	$advisor_name = $advisor_id ? get_the_title( $advisor_id ) : '';
 	$advisor_url  = $advisor_id ? get_permalink( $advisor_id ) : '';
-	$categories   = get_the_category();
-	$tags         = get_the_tags();
+
+	$trip_types    = get_the_terms( get_the_ID(), 'trip_type' );
+	$article_types = get_the_terms( get_the_ID(), 'article_type' );
+
+	$trip_type = (
+		! is_wp_error( $trip_types )
+		&& ! empty( $trip_types )
+	)
+		? $trip_types[0]
+		: null;
+
+	$article_type = (
+		! is_wp_error( $article_types )
+		&& ! empty( $article_types )
+	)
+		? $article_types[0]
+		: null;
+
 	$reading_time = function_exists( 'prelaunch_get_reading_time' )
 		? prelaunch_get_reading_time( get_the_ID() )
 		: '';
 ?>
 
 <header class="mb-8">
-	<div class="mx-auto mb-3 text-center">
-		<?php if ( ! empty( $categories ) ) : ?>
-			<nav aria-label="<?php esc_attr_e( 'Post categories', 'prelaunch-wp' ); ?>">
-				<ul class="text-sm">
-					<?php foreach ( $categories as $category ) : ?>
-						<li class="inline-block mr-2 mb-2">
-							<a
-								class="inline-block py-1 px-3 text-black bg-soft-1 rounded-lg hover:shadow-md text-md"
-								href="<?php echo esc_url( get_category_link( (int) $category->term_id ) ); ?>"
-							>
-								<?php echo esc_html( $category->name ); ?>
-							</a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</nav>
-		<?php endif; ?>
+	<?php if ( $trip_type || $article_type ) : ?>
+		<nav
+			class="mb-4 text-center"
+			aria-label="<?php esc_attr_e( 'Article classifications', 'prelaunch-wp' ); ?>"
+		>
+			<ul class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm font-medium tracking-wide uppercase text-black/70">
+				<?php if ( $trip_type ) : ?>
+					<li>
+						<a
+							class="hover:text-black hover:underline underline-offset-4"
+							href="<?php echo esc_url( get_term_link( $trip_type ) ); ?>"
+						>
+							<?php echo esc_html( $trip_type->name ); ?>
+						</a>
+					</li>
+				<?php endif; ?>
 
-		<?php if ( ! empty( $tags ) ) : ?>
-			<nav class="pt-3 text-sm" aria-label="<?php esc_attr_e( 'Post tags', 'prelaunch-wp' ); ?>">
-				<ul>
-					<?php foreach ( $tags as $index => $tag ) : ?>
-						<li class="inline-block">
-							<?php if ( $index > 0 ) : ?>
-								<span aria-hidden="true">, </span>
-							<?php endif; ?>
+				<?php if ( $trip_type && $article_type ) : ?>
+					<li class="text-black/40" aria-hidden="true">/</li>
+				<?php endif; ?>
 
-							<a href="<?php echo esc_url( get_tag_link( (int) $tag->term_id ) ); ?>">
-								<?php echo esc_html( $tag->name ); ?>
-							</a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</nav>
-		<?php endif; ?>
-	</div>
+				<?php if ( $article_type ) : ?>
+					<li>
+						<a
+							class="hover:text-black hover:underline underline-offset-4"
+							href="<?php echo esc_url( get_term_link( $article_type ) ); ?>"
+						>
+							<?php echo esc_html( $article_type->name ); ?>
+						</a>
+					</li>
+				<?php endif; ?>
+			</ul>
+		</nav>
+	<?php endif; ?>
 
 	<h1 class="text-3xl font-semibold text-center">
 		<?php the_title(); ?>
