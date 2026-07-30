@@ -19,6 +19,25 @@
 	 * - Styling is controlled via `.card` base styles and variant classes.
 	 * - Markup is intentionally stable; visual changes should be handled in CSS.
 	 */
+
+
+	$trip_types    = get_the_terms( get_the_ID(), 'trip_type' );
+	$article_types = get_the_terms( get_the_ID(), 'article_type' );
+
+	$trip_type = (
+		! is_wp_error( $trip_types )
+		&& ! empty( $trip_types )
+	)
+		? $trip_types[0]
+		: null;
+
+	$article_type = (
+		! is_wp_error( $article_types )
+		&& ! empty( $article_types )
+	)
+		? $article_types[0]
+		: null;
+
 ?>
 
 <article class="card card--blog">
@@ -35,7 +54,7 @@
 
 	<?php else : ?>
 
-		<a href="<?php the_permalink(); ?>" class="card__media card__media--fallback bg-primary-gradient">
+		<a href="<?php the_permalink(); ?>" class="card__media card__media--fallback bg-white">
 		<span class="card__media-icon" aria-hidden="true">
 			<i class="fa-regular fa-file-lines"></i>
 		</span>
@@ -48,14 +67,40 @@
 
 
 	<div class="card__body">
-		<div class="card__cat">
-			<?php if ( function_exists( 'prelaunch_post_terms' ) ) {
-				prelaunch_post_terms( 'category', [
-					'class'     => 'post-terms post-terms--categories',
-					'separator' => ', '
-				] );
-			} ?>
-		</div>
+		<?php if ( $trip_type || $article_type ) : ?>
+			<nav
+				class="card__cat"
+				aria-label="<?php esc_attr_e( 'Article classifications', 'prelaunch-wp' ); ?>"
+			>
+				<ul class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium tracking-wide uppercase text-black/70">
+					<?php if ( $trip_type ) : ?>
+						<li>
+							<a
+								class="hover:text-black hover:underline underline-offset-4"
+								href="<?php echo esc_url( get_term_link( $trip_type ) ); ?>"
+							>
+								<?php echo esc_html( $trip_type->name ); ?>
+							</a>
+						</li>
+					<?php endif; ?>
+
+					<?php if ( $trip_type && $article_type ) : ?>
+						<li class="text-black/40" aria-hidden="true">/</li>
+					<?php endif; ?>
+
+					<?php if ( $article_type ) : ?>
+						<li>
+							<a
+								class="hover:text-black hover:underline underline-offset-4"
+								href="<?php echo esc_url( get_term_link( $article_type ) ); ?>"
+							>
+								<?php echo esc_html( $article_type->name ); ?>
+							</a>
+						</li>
+					<?php endif; ?>
+				</ul>
+			</nav>
+		<?php endif; ?>
 		<h2 class="card__title">
 			<a href="<?php the_permalink(); ?>">
 				<?php the_title(); ?>
@@ -79,9 +124,10 @@
 			<?php echo wp_kses_post( function_exists( 'prelaunch_get_excerpt' ) ? prelaunch_get_excerpt() : get_the_excerpt() ); ?>
 		</div>
 
-		<div class="">
+		<div>
 			<a class="card__cta" href="<?php the_permalink(); ?>">
 				<?php esc_html_e( 'Read more', 'prelaunch-wp' ); ?>
+				<i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
 			</a>
 		</div>
 </article>
