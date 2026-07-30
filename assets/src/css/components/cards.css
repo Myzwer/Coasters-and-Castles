@@ -10,8 +10,6 @@
 	   - .card__*     → internal parts (shared defaults)
 	   - .card--*     → context variants (differences only)
 	   ===================================================== */
-
-
 	/* -----------------------------------------------------
 	   Base card
 	   -----------------------------------------------------
@@ -19,7 +17,7 @@
 	   Keep this neutral (no context styling).
 	   ----------------------------------------------------- */
 	.card {
-		@apply border-1 shadow-xl rounded-xl overflow-hidden;
+		@apply border-3 border-secondary shadow-xl rounded-xl overflow-hidden;
 	}
 
 
@@ -30,10 +28,9 @@
 	   - Featured image rendering
 	   - Fallback "no image" rendering (gradient + icon)
 	   ----------------------------------------------------- */
-
 	/* Media container (shared) */
 	.card .card__media {
-		@apply block relative overflow-hidden rounded-t-xl;
+		@apply block relative overflow-hidden;
 	}
 
 	/* Maintain a consistent thumbnail shape */
@@ -44,7 +41,7 @@
 
 	/* Actual image */
 	.card .card__image {
-		@apply w-full h-auto block;
+		@apply block w-full h-full object-cover;
 	}
 
 	/* Fallback gradient tile (when no featured image exists) */
@@ -64,7 +61,6 @@
 	   These define the "normal" card layout and rhythm.
 	   Variants should only override these when necessary.
 	   ----------------------------------------------------- */
-
 	.card .card__body {
 		@apply p-4;
 	}
@@ -100,7 +96,6 @@
 	   Contextual differences for blog usage only.
 	   Keep this section minimal — override, don’t rewrite.
 	   ----------------------------------------------------- */
-
 	.card--blog .card__body {
 		@apply bg-white;
 	}

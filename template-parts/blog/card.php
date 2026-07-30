@@ -1,35 +1,35 @@
 <?php
 
-/**
- * Blog post card component.
- *
- * Renders a single post preview card for use in:
- * - blog index
- * - archive views
- * - search results
- * - related posts
- *
- * Relies on the global $post context provided by the loop.
- *
- * Optional $args:
- * - variant (string) Card usage variant (e.g. 'blog', 'related').
- *   Defaults to 'blog' if not provided.
- *
- * Notes:
- * - Styling is controlled via `.card` base styles and variant classes.
- * - Markup is intentionally stable; visual changes should be handled in CSS.
- */
+	/**
+	 * Blog post card component.
+	 *
+	 * Renders a single post preview card for use in:
+	 * - blog index
+	 * - archive views
+	 * - search results
+	 * - related posts
+	 *
+	 * Relies on the global $post context provided by the loop.
+	 *
+	 * Optional $args:
+	 * - variant (string) Card usage variant (e.g. 'blog', 'related').
+	 *   Defaults to 'blog' if not provided.
+	 *
+	 * Notes:
+	 * - Styling is controlled via `.card` base styles and variant classes.
+	 * - Markup is intentionally stable; visual changes should be handled in CSS.
+	 */
 ?>
 
 <article class="card card--blog">
-	<?php if( has_post_thumbnail() ) : ?>
+	<?php if ( has_post_thumbnail() ) : ?>
 
 		<a href="<?php the_permalink(); ?>" class="card__media">
 			<?php
-			the_post_thumbnail( 'medium_large', [
-				'class'   => 'card__image',
-				'loading' => 'lazy',
-			] );
+				the_post_thumbnail( 'medium_large', [
+					'class'   => 'card__image',
+					'loading' => 'lazy',
+				] );
 			?>
 		</a>
 
@@ -49,7 +49,7 @@
 
 	<div class="card__body">
 		<div class="card__cat">
-			<?php if( function_exists( 'prelaunch_post_terms' ) ) {
+			<?php if ( function_exists( 'prelaunch_post_terms' ) ) {
 				prelaunch_post_terms( 'category', [
 					'class'     => 'post-terms post-terms--categories',
 					'separator' => ', '
@@ -64,13 +64,13 @@
 
 		<div class="card__meta">
 			<?php
-			echo prelaunch_display_date();
+				echo prelaunch_display_date();
 
-			echo ' - ';
+				echo ' - ';
 
-			if( function_exists( 'prelaunch_get_reading_time' ) ) {
-				echo '<span class="post-reading-time">' . esc_html( prelaunch_get_reading_time() ) . '</span>';
-			}
+				if ( function_exists( 'prelaunch_get_reading_time' ) ) {
+					echo '<span class="post-reading-time">' . esc_html( prelaunch_get_reading_time() ) . '</span>';
+				}
 			?>
 		</div>
 
