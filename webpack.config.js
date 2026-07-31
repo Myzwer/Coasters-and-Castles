@@ -37,7 +37,7 @@ if (mode === "development") {
 // Can be overridden via .env / .env.local.
 const BS_HOST = process.env.BROWSERSYNC_HOST || "localhost";
 const BS_PORT = Number(process.env.BROWSERSYNC_PORT || 3000);
-const BS_PROXY = process.env.BROWSERSYNC_PROXY || "https://coasters.local";
+const BS_PROXY = process.env.BROWSERSYNC_PROXY || "http://coasters.local";
 const BS_FILES = process.env.BROWSERSYNC_FILES || "**/**/**.php";
 
 module.exports = {
@@ -155,7 +155,14 @@ module.exports = {
 					host: BS_HOST,
 					port: BS_PORT,
 					mode: "proxy",
-					proxy: BS_PROXY,
+					proxy: {
+						target: BS_PROXY,
+						proxyReq: [
+							(proxyReq) => {
+								proxyReq.setHeader("host", new URL(BS_PROXY).host);
+							},
+						],
+					},
 					files: BS_FILES,
 					reload: true,
 				}),
