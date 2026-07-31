@@ -124,10 +124,11 @@
 			<?php echo wp_kses_post( function_exists( 'prelaunch_get_excerpt' ) ? prelaunch_get_excerpt() : get_the_excerpt() ); ?>
 		</div>
 
-		<div>
+		<div class="card__actions">
 			<a class="card__cta" href="<?php the_permalink(); ?>">
 				<?php esc_html_e( 'Read more', 'prelaunch-wp' ); ?>
 				<i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
 			</a>
 		</div>
+	</div>
 </article>

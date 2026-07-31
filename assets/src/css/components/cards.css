@@ -17,7 +17,7 @@
 	   Keep this neutral (no context styling).
 	   ----------------------------------------------------- */
 	.card {
-		@apply border-3 border-secondary shadow-xl rounded-xl overflow-hidden;
+		@apply bg-white border-3 border-secondary shadow-xl rounded-xl overflow-hidden;
 	}
 
 
@@ -109,8 +109,20 @@
 	   Contextual differences for blog usage only.
 	   Keep this section minimal — override, don’t rewrite.
 	   ----------------------------------------------------- */
+	.card--blog {
+		display: flex;
+		height: 100%;
+		flex-direction: column;
+	}
+
 	.card--blog .card__body {
-		@apply bg-white;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+	}
+
+	.card--blog .card__actions {
+		@apply pt-2;
 	}
 
 }
