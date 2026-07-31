@@ -2,19 +2,18 @@
 	/**
 	 * Blog index (Posts page)
 	 *
-	 * Renders the main blog archive including:
-	 * - Sidebar filters (categories, tags, search)
-	 * - Post loop
+	 * Renders:
+	 * - ACF-managed blog header
+	 * - Horizontal Filter Everything controls
+	 * - Active filter chips
+	 * - Three-column post grid
 	 * - Pagination
 	 *
-	 * Notes:
-	 * - Filtering behavior is handled in queries.php (pre_get_posts).
-	 * - This file prepares selected filter state for the UI.
+	 * ACF fields are loaded from the page assigned as the WordPress Posts page:
+	 * - title
+	 * - page_description
 	 *
-	 * Related:
-	 * - template-parts/blog/filters.php
-	 * - template-parts/blog/card.php
-	 * - queries.php
+	 * Filter Everything AJAX replaces only the #blog-results container.
 	 *
 	 * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#home-php
 	 * @link https://developer.wordpress.org/themes/basics/the-loop/
@@ -22,88 +21,87 @@
 
 	get_header();
 
-	$posts_page_id  = (int) get_option( 'page_for_posts' );
-	$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
-	$page_title     = $posts_page_id ? get_the_title( $posts_page_id ) : __( 'Blog', 'prelaunch-wp' );
+	$posts_page_id = (int) get_option( 'page_for_posts' );
 
-// Preserve Filter State
-// STATE: Normalize selected filters from URL.
-	if ( function_exists( 'prelaunch_parse_id_list' ) ) {
-		$selected_cats = prelaunch_parse_id_list(
-			isset( $_GET['pl_cat'] ) ? wp_unslash( $_GET['pl_cat'] ) : []
-		);
+	$default_title = $posts_page_id
+		? get_the_title( $posts_page_id )
+		: __( 'Blog', 'prelaunch-wp' );
 
-		$selected_tags = prelaunch_parse_id_list(
-			isset( $_GET['pl_tag'] ) ? wp_unslash( $_GET['pl_tag'] ) : []
-		);
-	} else {
-		// Fallback (should not normally run).
-		$parse_id_list = static function ( $value ): array {
-			if ( is_string( $value ) ) {
-				$value = preg_split( '/\s*,\s*/', $value, - 1, PREG_SPLIT_NO_EMPTY );
-			}
-			if ( ! is_array( $value ) ) {
-				return [];
-			}
-
-			return array_values( array_filter( array_map( 'absint', $value ) ) );
-		};
-
-		$selected_cats = $parse_id_list( isset( $_GET['pl_cat'] ) ? wp_unslash( $_GET['pl_cat'] ) : [] );
-		$selected_tags = $parse_id_list( isset( $_GET['pl_tag'] ) ? wp_unslash( $_GET['pl_tag'] ) : [] );
-	}
-
-	$search_query = get_search_query();
-
-// Build "clear filters" URL (remove our filter params + search).
-	$clear_url = remove_query_arg( [ 'pl_cat', 'pl_tag', 's', 'paged' ], $posts_page_url );
-
-// Terms for the sidebar.
-	$categories = get_categories(
-		[
-			'hide_empty' => true,
-			'orderby'    => 'name',
-			'order'      => 'ASC',
-		]
-	);
-
-	$tags = get_tags(
-		[
-			'hide_empty' => true,
-			'orderby'    => 'name',
-			'order'      => 'ASC',
-		]
-	);
+	$header_title       = $posts_page_id ? get_field( 'title', $posts_page_id ) : '';
+	$page_description   = $posts_page_id ? get_field( 'page_description', $posts_page_id ) : '';
+	$header_title       = $header_title ?: $default_title;
+	$background_texture = get_template_directory_uri() . '/assets/public/img/waves.png';
 ?>
 
 	<main>
-		<section class="section">
-			<div class="py-10 wrap">
 
-				<header class="mb-8">
-					<h1 class="text-3xl font-semibold leading-tight">
-						<?php echo esc_html( $page_title ); ?>
-					</h1>
-				</header>
+		<header class="bg-impact-gradient">
+			<div
+				class="relative bg-no-repeat bg-cover bg-texture min-h-[22rem] md:min-h-[26rem]"
+				style="--bg-texture: url('<?php echo esc_url( $background_texture ); ?>');"
+			>
+				<div class="px-5 text-center content-middle text-pretty">
+					<div class="mx-auto max-w-4xl">
+
+						<h1 class="text-3xl font-bold text-white uppercase md:text-5xl">
+							<?php echo esc_html( $header_title ); ?>
+						</h1>
+
+						<?php if ( $page_description ) : ?>
+							<div class="mx-auto mt-5 max-w-3xl text-lg leading-relaxed text-white md:text-xl">
+								<?php echo wp_kses_post( wpautop( $page_description ) ); ?>
+							</div>
+						<?php endif; ?>
+
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="py-12 bg-primary-gradient md:py-16">
+			<div class="wrap">
 
 				<div class="grid-12">
-					<div class="col-span-12 mb-10 md:col-span-4">
-						<?php get_template_part(
-							'template-parts/blog/filters',
-							null,
-							[
-								'posts_page_url' => $posts_page_url,
-								'categories'     => $categories,
-								'tags'           => $tags,
-								'selected_cats'  => $selected_cats,
-								'selected_tags'  => $selected_tags,
-								'search_query'   => $search_query,
-								'clear_url'      => $clear_url,
-							]
-						); ?>
+
+					<div class="col-span-12">
+						<div class="p-6 bg-white rounded-xl border-3 border-secondary md:p-8">
+
+							<header class="mb-6">
+								<h2 class="text-2xl font-bold">
+									<?php esc_html_e( 'Filter Options', 'prelaunch-wp' ); ?>
+								</h2>
+
+								<p class="mt-2">
+									<?php
+										esc_html_e(
+											'Search for an article or narrow the articles by vacation and article type.',
+											'prelaunch-wp'
+										);
+									?>
+								</p>
+							</header>
+
+							<?php
+								if ( shortcode_exists( 'fe_widget' ) ) {
+									echo do_shortcode(
+										'[fe_widget horizontal="yes" columns="3"]'
+									);
+								}
+							?>
+
+							<?php if ( shortcode_exists( 'fe_chips' ) ) : ?>
+								<div class="mt-5">
+									<?php echo do_shortcode( '[fe_chips]' ); ?>
+								</div>
+							<?php endif; ?>
+
+						</div>
 					</div>
 
-					<div class="col-span-12 md:col-span-8">
+					<div
+						id="blog-results"
+						class="col-span-12 mt-4"
+					>
 
 						<?php if ( have_posts() ) : ?>
 
@@ -112,7 +110,7 @@
 									while ( have_posts() ) :
 										the_post();
 										?>
-										<div class="col-span-12 md:col-span-6">
+										<div class="col-span-12 md:col-span-6 lg:col-span-4">
 											<?php get_template_part( 'template-parts/blog/card' ); ?>
 										</div>
 									<?php
@@ -120,9 +118,8 @@
 								?>
 							</div>
 
-							<div class="mt-8">
+							<div class="mt-10">
 								<?php
-									// Outputs pagination for the main query (helper should handle 1-page cases).
 									if ( function_exists( 'prelaunch_pagination' ) ) {
 										prelaunch_pagination();
 									} else {
@@ -133,14 +130,29 @@
 
 						<?php else : ?>
 
-							<p class="mt-2">
-								<?php esc_html_e( "We couldn't find any posts.", 'prelaunch-wp' ); ?>
-							</p>
+							<div class="p-8 text-center bg-white rounded-xl border-3 border-secondary">
+								<h2 class="text-2xl font-semibold">
+									<?php esc_html_e( 'No articles found', 'prelaunch-wp' ); ?>
+								</h2>
+
+								<p class="mt-3">
+									<?php
+										esc_html_e(
+											'No articles matched those filters. Try removing a filter or searching for something broader.',
+											'prelaunch-wp'
+										);
+									?>
+								</p>
+							</div>
+
 						<?php endif; ?>
 
 					</div>
+
 				</div>
+			</div>
 		</section>
+
 	</main>
 
 <?php
