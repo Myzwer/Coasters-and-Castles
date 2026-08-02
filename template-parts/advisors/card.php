@@ -18,7 +18,23 @@
 
 	$advisor_id   = get_the_ID();
 	$advisor_name = get_the_title();
-	$profile_url  = get_permalink();
+
+	$external_url = get_field(
+		'advisor_external_url',
+		$advisor_id
+	);
+
+	$profile_url = $external_url
+		? $external_url
+		: get_permalink( $advisor_id );
+
+	$link_target = $external_url
+		? '_blank'
+		: '_self';
+
+	$link_rel = $external_url
+		? 'noopener noreferrer'
+		: '';
 
 	$headshot_id = get_field(
 		'advisor_professional_headshot',
@@ -64,13 +80,17 @@
 	<a
 		class="block overflow-hidden"
 		href="<?php echo esc_url( $profile_url ); ?>"
-		aria-label="<?php echo esc_attr(
-			sprintf(
-			/* translators: %s: advisor name. */
-				__( 'View the profile for %s', 'prelaunch-wp' ),
-				$advisor_name
-			)
-		); ?>"
+		target="<?php echo esc_attr( $link_target ); ?>"
+		<?php echo $link_rel ? 'rel="' . esc_attr( $link_rel ) . '"' : ''; ?>
+		aria-label="<?php
+			echo esc_attr(
+				sprintf(
+				/* translators: %s: advisor name. */
+					__( 'View the profile for %s', 'prelaunch-wp' ),
+					$advisor_name
+				)
+			);
+		?>"
 	>
 		<?php if ( $headshot_id ) : ?>
 
@@ -111,6 +131,8 @@
 				<a
 					class="hover:underline focus-visible:underline underline-offset-4"
 					href="<?php echo esc_url( $profile_url ); ?>"
+					target="<?php echo esc_attr( $link_target ); ?>"
+					<?php echo $link_rel ? 'rel="' . esc_attr( $link_rel ) . '"' : ''; ?>
 				>
 					<?php echo esc_html( $advisor_name ); ?>
 				</a>
@@ -153,17 +175,25 @@
 		<a
 			class="grid place-items-center bg-secondary px-5 py-3 text-center font-bold text-white transition hover:brightness-90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white focus-visible:brightness-90"
 			href="<?php echo esc_url( $profile_url ); ?>"
+			target="<?php echo esc_attr( $link_target ); ?>"
+			<?php echo $link_rel ? 'rel="' . esc_attr( $link_rel ) . '"' : ''; ?>
 		>
-			<span class="inline-grid grid-flow-col items-center gap-2">
-				<span>
-					<?php esc_html_e( 'View Profile', 'prelaunch-wp' ); ?>
-				</span>
+	<span class="inline-grid grid-flow-col items-center gap-2">
+		<span>
+			<?php
+				echo esc_html(
+					$external_url
+						? __( 'Visit Website', 'prelaunch-wp' )
+						: __( 'View Profile', 'prelaunch-wp' )
+				);
+			?>
+		</span>
 
-				<i
-					class="fa-solid fa-arrow-right"
-					aria-hidden="true"
-				></i>
-			</span>
+		<i
+			class="fa-solid fa-arrow-right"
+			aria-hidden="true"
+		></i>
+	</span>
 		</a>
 
 	</div>
