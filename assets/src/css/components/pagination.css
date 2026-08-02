@@ -44,13 +44,14 @@
 	.pagination .page-numbers a.page-numbers:not(.prev):not(.next) {
 		@apply bg-transparent;
 	}
+
 	.pagination .page-numbers a.page-numbers:not(.prev):not(.next):hover {
 		@apply bg-soft-1;
 	}
 
 	/* Current page (the highlighted button in your screenshot) */
 	.pagination .page-numbers .current {
-		@apply bg-primary text-black;
+		@apply bg-secondary text-white;
 	}
 
 	/* Ellipsis */
@@ -61,11 +62,12 @@
 	/* Prev / Next icon buttons */
 	.pagination .page-numbers a.prev,
 	.pagination .page-numbers a.next {
-		@apply bg-primary text-black px-0 w-10;
+		@apply bg-secondary text-white px-0 w-10;
 	}
+
 	.pagination .page-numbers a.prev:hover,
 	.pagination .page-numbers a.next:hover {
-		@apply brightness-95;
+		@apply brightness-65;
 	}
 
 	/* Keep FA icons centered */
