@@ -144,12 +144,14 @@
 						<?php esc_html_e( 'Vacation Types', 'prelaunch-wp' ); ?>
 					</h3>
 
-					<ul class="mt-2 flex flex-wrap gap-x-2 gap-y-1">
-						<?php foreach ( $vacation_types as $vacation_type ) : ?>
-							<li class="text-sm">
-								<?php echo esc_html( $vacation_type->name ); ?>
-							</li>
-						<?php endforeach; ?>
+					<ul class=" flex flex-wrap gap-x-2 gap-y-1">
+						<ul class="mt-1 grid gap-1">
+							<?php foreach ( $vacation_types as $vacation_type ) : ?>
+								<li class="text-sm leading-snug">
+									<?php echo esc_html( $vacation_type->name ); ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
 					</ul>
 				</div>
 			<?php endif; ?>
@@ -160,12 +162,14 @@
 						<?php esc_html_e( 'Group Types', 'prelaunch-wp' ); ?>
 					</h3>
 
-					<ul class="mt-2 flex flex-wrap gap-x-2 gap-y-1">
-						<?php foreach ( $group_types as $group_type ) : ?>
-							<li class="text-sm">
-								<?php echo esc_html( $group_type->name ); ?>
-							</li>
-						<?php endforeach; ?>
+					<ul class="flex flex-wrap gap-x-2 gap-y-1">
+						<ul class="mt-1 grid gap-1">
+							<?php foreach ( $group_types as $group_type ) : ?>
+								<li class="text-sm leading-snug">
+									<?php echo esc_html( $group_type->name ); ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
 					</ul>
 				</div>
 			<?php endif; ?>
