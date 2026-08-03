@@ -101,6 +101,7 @@
 				</ul>
 			</nav>
 		<?php endif; ?>
+
 		<h2 class="card__title">
 			<a href="<?php the_permalink(); ?>">
 				<?php the_title(); ?>
@@ -114,21 +115,37 @@
 				echo ' - ';
 
 				if ( function_exists( 'prelaunch_get_reading_time' ) ) {
-					echo '<span class="post-reading-time">' . esc_html( prelaunch_get_reading_time() ) . '</span>';
+					echo '<span class="post-reading-time">'
+						 . esc_html( prelaunch_get_reading_time() )
+						 . '</span>';
 				}
 			?>
 		</div>
 
-
 		<div class="card__content">
-			<?php echo wp_kses_post( function_exists( 'prelaunch_get_excerpt' ) ? prelaunch_get_excerpt() : get_the_excerpt() ); ?>
-		</div>
-
-		<div class="card__actions">
-			<a class="card__cta" href="<?php the_permalink(); ?>">
-				<?php esc_html_e( 'Read more', 'prelaunch-wp' ); ?>
-				<i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
-			</a>
+			<?php
+				echo wp_kses_post(
+					function_exists( 'prelaunch_get_excerpt' )
+						? prelaunch_get_excerpt()
+						: get_the_excerpt()
+				);
+			?>
 		</div>
 	</div>
+
+	<a
+		class="grid place-items-center bg-secondary px-5 py-3 text-center font-bold text-white transition hover:brightness-90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white focus-visible:brightness-90"
+		href="<?php the_permalink(); ?>"
+	>
+		<span class="inline-grid grid-flow-col items-center gap-2">
+			<span>
+				<?php esc_html_e( 'Read More', 'prelaunch-wp' ); ?>
+			</span>
+
+			<i
+				class="fa-solid fa-arrow-right"
+				aria-hidden="true"
+			></i>
+		</span>
+	</a>
 </article>
