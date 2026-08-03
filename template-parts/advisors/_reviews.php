@@ -11,8 +11,9 @@
 		exit;
 	}
 
-	$advisor_id = get_the_ID();
-	$reviews    = get_field( 'advisor_reviews', $advisor_id );
+	$advisor_id      = get_the_ID();
+	$reviews         = get_field( 'advisor_reviews', $advisor_id );
+	$tln_profile_url = get_field( 'tln_profile_link', $advisor_id );
 
 	$reviews = is_array( $reviews ) ? $reviews : [];
 
@@ -112,6 +113,20 @@
 			</div>
 
 		<?php endforeach; ?>
+
+		<?php if ( $tln_profile_url ) : ?>
+			<div class="col-span-12 mt-8 text-center">
+				<a
+					class="btn_main inline-flex items-center gap-2"
+					href="<?php echo esc_url( $tln_profile_url ); ?>"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<?php esc_html_e( 'See More Reviews', 'prelaunch-wp' ); ?>
+					<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+				</a>
+			</div>
+		<?php endif; ?>
 
 	</div>
 </section>
