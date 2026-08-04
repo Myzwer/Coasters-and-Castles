@@ -291,7 +291,7 @@
 		return $caps;
 	}
 
-	// add_filter( 'map_meta_cap', 'prelaunch_map_advisor_meta_caps', 20, 4 );
+	add_filter( 'map_meta_cap', 'prelaunch_map_advisor_meta_caps', 20, 4 );
 
 
 	/**
@@ -461,7 +461,7 @@
 		}
 	}
 
-	// add_action( 'admin_init', 'prelaunch_guard_advisor_admin_requests', 20 );
+	add_action( 'admin_init', 'prelaunch_guard_advisor_admin_requests', 20 );
 
 	/**
 	 * Simplify the Advisor admin menu.
