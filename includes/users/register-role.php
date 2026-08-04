@@ -23,6 +23,11 @@
 	const PRELAUNCH_POSTS_EDITOR_ROLE = 'prelaunch_posts_editor';
 
 	/**
+	 * Travel advisor role slug.
+	 */
+	const PRELAUNCH_ADVISOR_ROLE = 'prelaunch_advisor';
+
+	/**
 	 * Developer-only capability for the Tokens options page.
 	 *
 	 * This is intentionally separate from broad core capabilities such as
@@ -43,6 +48,7 @@
 		return array(
 			PRELAUNCH_CLIENT_ADMIN_ROLE,
 			PRELAUNCH_POSTS_EDITOR_ROLE,
+			PRELAUNCH_ADVISOR_ROLE,
 		);
 	}
 
@@ -55,6 +61,7 @@
 		return array(
 			PRELAUNCH_CLIENT_ADMIN_ROLE => __( 'Site Administrator', 'prelaunch-wp' ),
 			PRELAUNCH_POSTS_EDITOR_ROLE => __( 'Posts Editor', 'prelaunch-wp' ),
+			PRELAUNCH_ADVISOR_ROLE      => __( 'Advisor', 'prelaunch-wp' ),
 		);
 	}
 
@@ -90,6 +97,15 @@
 	 */
 	function prelaunch_is_posts_editor(): bool {
 		return prelaunch_user_has_role( wp_get_current_user(), PRELAUNCH_POSTS_EDITOR_ROLE );
+	}
+
+	/**
+	 * Determine whether the current user is an Advisor.
+	 *
+	 * @return bool
+	 */
+	function prelaunch_is_advisor(): bool {
+		return prelaunch_user_has_role( wp_get_current_user(), PRELAUNCH_ADVISOR_ROLE );
 	}
 
 	/**
@@ -130,6 +146,22 @@
 
 		foreach ( prelaunch_get_managed_user_roles() as $role_slug ) {
 			$managed_role = get_role( $role_slug );
+
+			/*
+			 * Advisors are intentionally created from a minimal whitelist. They must
+			 * never inherit Administrator capabilities added by WordPress or plugins.
+			 */
+			if ( PRELAUNCH_ADVISOR_ROLE === $role_slug ) {
+				if ( ! $managed_role ) {
+					add_role(
+						$role_slug,
+						$role_labels[ $role_slug ] ?? $role_slug,
+						array( 'read' => true )
+					);
+				}
+
+				continue;
+			}
 
 			if ( ! $managed_role ) {
 				add_role(

@@ -81,12 +81,17 @@
 			'can_export'       => true,
 			'delete_with_user' => false,
 
-			'capability_type' => 'post',
+			'capability_type' => array( 'advisor', 'advisors' ),
 			'map_meta_cap'    => true,
+
+			'capabilities' => array(
+				'create_posts' => 'create_advisors',
+			),
 
 			'supports' => [
 				'title',
 				'page-attributes',
+				'revisions',
 			],
 		];
 

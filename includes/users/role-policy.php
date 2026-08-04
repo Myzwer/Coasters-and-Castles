@@ -70,6 +70,21 @@
 				'settings'        => 'off',
 				'acf'             => 'off',
 			),
+
+			PRELAUNCH_ADVISOR_ROLE => array(
+				'dashboard'       => false,
+				'media'           => 'full',
+				'posts'           => false,
+				'pages'           => 'off',
+				'gravity_forms'   => 'off',
+				'appearance'      => 'off',
+				'plugins'         => 'off',
+				'plugin_settings' => 'off',
+				'users'           => 'profile_only',
+				'tools'           => 'off',
+				'settings'        => 'off',
+				'acf'             => 'off',
+			),
 		);
 	}
 
