@@ -5,7 +5,7 @@
 	 * Advisors are linked to exactly one Advisor post through the ACF field
 	 * `advisor_linked_user`. This module limits each advisor account to that
 	 * profile, isolates their Media Library, protects agency-controlled ACF
-	 * fields, and prepares the role for PublishPress Revisions Pro.
+	 * fields, and keeps administrators in full control of every Advisor profile.
 	 */
 
 	defined( 'ABSPATH' ) || exit;
@@ -45,19 +45,19 @@
 	}
 
 	/**
-	 * Sync Advisor and PublishPress revision capabilities to the roles that need
-	 * them.
+	 * Synchronize Advisor post type capabilities.
 	 *
-	 * Administrators and Site Administrators receive full Advisor and revision
-	 * control. Advisors may create and submit revisions only for their linked
-	 * profile; they cannot approve, publish, delete, or access another profile.
+	 * Administrators and Site Administrators receive full control of Advisor
+	 * profiles. Advisor accounts receive only the capabilities required to open,
+	 * edit, and upload media for their own linked profile. Object-level filters
+	 * below prevent access to any other Advisor profile and block creation or
+	 * deletion.
 	 *
 	 * @return void
 	 */
 	function prelaunch_sync_advisor_role_caps(): void {
 		$advisor_caps = prelaunch_get_advisor_post_type_caps();
-
-		$revision_caps = array(
+		$legacy_revision_caps = array(
 			'copy_advisors',
 			'copy_others_advisors',
 			'revise_advisors',
@@ -78,7 +78,11 @@
 				continue;
 			}
 
-			foreach ( array_merge( $advisor_caps, $revision_caps ) as $capability ) {
+			foreach ( $legacy_revision_caps as $capability ) {
+				$role->remove_cap( $capability );
+			}
+
+			foreach ( $advisor_caps as $capability ) {
 				$role->add_cap( $capability );
 			}
 		}
@@ -89,33 +93,17 @@
 			return;
 		}
 
-		foreach ( array_merge( $advisor_caps, $revision_caps ) as $capability ) {
+		foreach ( array_merge( $advisor_caps, $legacy_revision_caps ) as $capability ) {
 			$advisor_role->remove_cap( $capability );
 		}
 
 		$advisor_role->remove_cap( 'unfiltered_upload' );
-
-		/*
-		 * Basic WordPress access.
-		 */
 		$advisor_role->add_cap( 'read' );
 		$advisor_role->add_cap( 'upload_files' );
-
-		/*
-		 * Open and read the linked Advisor profile.
-		 *
-		 * edit_published_advisors remains temporarily until the complete revision
-		 * workflow is confirmed. Direct live saves will be disabled afterward.
-		 */
 		$advisor_role->add_cap( 'edit_advisors' );
 		$advisor_role->add_cap( 'edit_published_advisors' );
+		$advisor_role->add_cap( 'edit_private_advisors' );
 		$advisor_role->add_cap( 'read_advisor' );
-
-		/*
-		 * PublishPress Revisions permissions for the Advisor's own profile.
-		 */
-		$advisor_role->add_cap( 'copy_advisors' );
-		$advisor_role->add_cap( 'revise_advisors' );
 	}
 
 	add_action( 'init', 'prelaunch_sync_advisor_role_caps', 40 );
@@ -168,51 +156,11 @@
 	}
 
 	/**
-	 * Resolve an Advisor post or PublishPress Advisor revision to the live profile.
+	 * Enforce object-level access to Advisor posts.
 	 *
-	 * PublishPress stores editable revisions using the Advisor post type and sets
-	 * the live Advisor profile as the revision post's parent. Standard WordPress
-	 * revisions use the `revision` post type with the same parent relationship.
-	 *
-	 * @param int $post_id Advisor or revision post ID.
-	 *
-	 * @return int Live Advisor profile ID, or 0 when the post is unrelated.
-	 */
-	function prelaunch_resolve_advisor_profile_id( int $post_id ): int {
-		$post = get_post( $post_id );
-
-		if ( ! $post instanceof WP_Post ) {
-			return 0;
-		}
-
-		if ( 'revision' === $post->post_type ) {
-			$parent_id = (int) $post->post_parent;
-
-			return PRELAUNCH_ADVISOR_POST_TYPE === get_post_type( $parent_id )
-				? $parent_id
-				: 0;
-		}
-
-		if ( PRELAUNCH_ADVISOR_POST_TYPE !== $post->post_type ) {
-			return 0;
-		}
-
-		$parent_id = (int) $post->post_parent;
-
-		if ( $parent_id > 0 && PRELAUNCH_ADVISOR_POST_TYPE === get_post_type( $parent_id ) ) {
-			return $parent_id;
-		}
-
-		return (int) $post->ID;
-	}
-
-	/**
-	 * Enforce object-level access to Advisor posts and their revisions.
-	 *
-	 * PublishPress Revisions modifies WordPress's normal capability mapping to
-	 * replace direct published-post editing with its revision workflow. This
-	 * function limits that workflow to the Advisor's linked profile without
-	 * overriding PublishPress's final capability decision.
+	 * Advisors may edit and read only the Advisor profile linked to their account.
+	 * They may never delete an Advisor profile. This is enforced server-side even
+	 * when an Advisor manually changes a post ID in the URL.
 	 *
 	 * @param array<int, string> $caps Primitive capabilities WordPress requires.
 	 * @param string $cap Requested meta capability.
@@ -232,44 +180,19 @@
 		if (
 			! $user instanceof WP_User
 			|| ! prelaunch_user_has_role( $user, PRELAUNCH_ADVISOR_ROLE )
+			|| ! in_array( $cap, array( 'edit_post', 'read_post', 'delete_post' ), true )
 		) {
-			return $caps;
-		}
-
-		$supported_caps = array(
-			'edit_post',
-			'read_post',
-			'delete_post',
-			'copy_post',
-			'revise_post',
-		);
-
-		if ( ! in_array( $cap, $supported_caps, true ) ) {
 			return $caps;
 		}
 
 		$post_id = isset( $args[0] ) ? (int) $args[0] : 0;
 		$post    = get_post( $post_id );
 
-		if ( ! $post instanceof WP_Post ) {
+		if ( ! $post instanceof WP_Post || PRELAUNCH_ADVISOR_POST_TYPE !== $post->post_type ) {
 			return $caps;
 		}
 
-		/*
-		 * Resolve the published profile or either type of revision back to the
-		 * live Advisor profile used by the linked-user ownership check.
-		 */
-		$advisor_id = prelaunch_resolve_advisor_profile_id( $post_id );
-
-		if ( ! $advisor_id ) {
-			return $caps;
-		}
-
-		/*
-		 * Advisors may interact only with their linked profile and revisions of
-		 * that profile.
-		 */
-		if ( ! prelaunch_user_owns_advisor_profile( $user_id, $advisor_id ) ) {
+		if ( ! prelaunch_user_owns_advisor_profile( $user_id, $post_id ) ) {
 			return array( 'do_not_allow' );
 		}
 
@@ -281,14 +204,7 @@
 			return array( 'read' );
 		}
 
-		/*
-		 * Do not replace the capability requirements for edit_post, copy_post, or
-		 * revise_post. PublishPress Revisions filters these and decides whether the
-		 * action should open the revision workflow instead of updating the live
-		 * profile.
-		 */
-
-		return $caps;
+		return array( 'edit_advisors' );
 	}
 
 	add_filter( 'map_meta_cap', 'prelaunch_map_advisor_meta_caps', 20, 4 );
@@ -433,15 +349,15 @@
 
 		if ( 'post.php' === $pagenow ) {
 			$post_id             = (int) filter_input( INPUT_GET, 'post', FILTER_VALIDATE_INT );
-			$resolved_advisor_id = prelaunch_resolve_advisor_profile_id( $post_id );
+			$post = get_post( $post_id );
 
 			if (
-				$post_id > 0
-				&& $resolved_advisor_id > 0
-				&& $resolved_advisor_id !== $linked_advisor_id
+				$post instanceof WP_Post
+				&& PRELAUNCH_ADVISOR_POST_TYPE === $post->post_type
+				&& $post_id !== $linked_advisor_id
 			) {
 				wp_die(
-					esc_html__( 'You can only edit your own advisor profile or its revisions.', 'prelaunch-wp' ),
+					esc_html__( 'You can only edit your own advisor profile.', 'prelaunch-wp' ),
 					esc_html__( 'Access denied', 'prelaunch-wp' ),
 					array( 'response' => 403 )
 				);
@@ -725,8 +641,9 @@
 	/**
 	 * Prevent forged requests from changing agency-controlled ACF values.
 	 *
-	 * Programmatic copies performed by a revision plugin are not blocked unless
-	 * the protected field was explicitly submitted in the current ACF request.
+	 * Hidden fields are not sufficient protection. If an Advisor submits a
+	 * protected field key manually, preserve the value currently stored on the
+	 * linked live profile.
 	 *
 	 * @param mixed $value New ACF value.
 	 * @param int|string $post_id ACF post ID.
@@ -849,39 +766,7 @@
 
 	add_filter( 'map_meta_cap', 'prelaunch_map_advisor_attachment_caps', 25, 4 );
 
-	/**
-	 * Show administrators a setup warning until PublishPress Revisions Pro is active.
-	 *
-	 * @return void
-	 */
-	function prelaunch_advisor_revisions_admin_notice(): void {
-		if ( ! current_user_can( 'manage_options' ) || ! post_type_exists( PRELAUNCH_ADVISOR_POST_TYPE ) ) {
-			return;
-		}
 
-		$revisions_active = defined( 'REVISIONARY_VERSION' )
-							|| defined( 'PUBLISHPRESS_REVISIONS_VERSION' )
-							|| class_exists( 'Revisionary' )
-							|| class_exists( 'PublishPress\\Revisions\\Plugin' );
-
-		if ( $revisions_active ) {
-			return;
-		}
-		?>
-		<div class="notice notice-warning">
-			<p>
-				<?php
-					esc_html_e(
-						'Advisor access is active, but PublishPress Revisions Pro is not detected. Install and configure Revisions Pro before giving advisor accounts access to the live site.',
-						'prelaunch-wp'
-					);
-				?>
-			</p>
-		</div>
-		<?php
-	}
-
-	add_action( 'admin_notices', 'prelaunch_advisor_revisions_admin_notice' );
 
 
 	/**
@@ -911,10 +796,10 @@
 	);
 
 	/**
-	 * Hide revision history controls that Advisors do not need.
+	 * Hide WordPress revision history controls from Advisor users.
 	 *
-	 * Advisors work only with their current PublishPress revision. Past WordPress
-	 * revision comparison and the direct live-update interface are agency tools.
+	 * Revision comparison remains an administrator tool. Advisors only need the
+	 * current profile editing form during this baseline phase.
 	 *
 	 * @return void
 	 */
@@ -925,8 +810,7 @@
 		?>
 		<style>
 			.post-type-advisor #misc-publishing-actions .misc-pub-revisions,
-			.post-type-advisor #revisionsdiv,
-			.post-type-advisor .rvy-compare-past-revisions {
+			.post-type-advisor #revisionsdiv {
 				display: none !important;
 			}
 		</style>
