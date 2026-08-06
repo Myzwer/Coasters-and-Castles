@@ -37,6 +37,7 @@
 				'template-parts/advisors/_reviews',
 				'template-parts/advisors/_articles',
 				'template-parts/advisors/_gallery',
+				'template-parts/advisors/_cta',
 			];
 
 			$background_index = 0;
@@ -91,8 +92,6 @@
 					?>
 
 				</div>
-
-				<?php get_template_part( 'template-parts/advisors/_cta' ); ?>
 
 			</main>
 

@@ -10,8 +10,6 @@
 	   - .card__*     → internal parts (shared defaults)
 	   - .card--*     → context variants (differences only)
 	   ===================================================== */
-
-
 	/* -----------------------------------------------------
 	   Base card
 	   -----------------------------------------------------
@@ -19,7 +17,7 @@
 	   Keep this neutral (no context styling).
 	   ----------------------------------------------------- */
 	.card {
-		@apply border-1 shadow-xl rounded-xl overflow-hidden;
+		@apply bg-white border-3 border-secondary shadow-xl rounded-xl overflow-hidden;
 	}
 
 
@@ -30,10 +28,9 @@
 	   - Featured image rendering
 	   - Fallback "no image" rendering (gradient + icon)
 	   ----------------------------------------------------- */
-
 	/* Media container (shared) */
 	.card .card__media {
-		@apply block relative overflow-hidden rounded-t-xl;
+		@apply block relative overflow-hidden;
 	}
 
 	/* Maintain a consistent thumbnail shape */
@@ -44,7 +41,7 @@
 
 	/* Actual image */
 	.card .card__image {
-		@apply w-full h-auto block;
+		@apply block w-full h-full object-cover;
 	}
 
 	/* Fallback gradient tile (when no featured image exists) */
@@ -64,13 +61,12 @@
 	   These define the "normal" card layout and rhythm.
 	   Variants should only override these when necessary.
 	   ----------------------------------------------------- */
-
 	.card .card__body {
 		@apply p-4;
 	}
 
 	.card .card__cat {
-		@apply text-gray-700 mb-2 inline-block hover:underline;
+		@apply text-gray-700 mb-2 inline-block
 	}
 
 	.card .card__meta {
@@ -86,11 +82,24 @@
 	}
 
 	.card .card__cta {
-		@apply hover:underline;
+		@apply inline-flex items-center gap-2 font-semibold transition-colors duration-200;
+	}
+
+	.card .card__cta i {
+		transition: transform 200ms ease;
+	}
+
+	.card .card__cta:hover i,
+	.card .card__cta:focus-visible i {
+		transform: translateX(0.25rem);
+	}
+
+	.card .card__cta:hover {
+		@apply text-secondary;
 	}
 
 	.card .card__cta:focus-visible {
-		@apply outline-none ring-2 ring-offset-2 ring-primary;
+		@apply outline-2 outline-offset-4;
 	}
 
 
@@ -100,9 +109,20 @@
 	   Contextual differences for blog usage only.
 	   Keep this section minimal — override, don’t rewrite.
 	   ----------------------------------------------------- */
+	.card--blog {
+		display: flex;
+		height: 100%;
+		flex-direction: column;
+	}
 
 	.card--blog .card__body {
-		@apply bg-white;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+	}
+
+	.card--blog .card__actions {
+		@apply pt-2;
 	}
 
 }

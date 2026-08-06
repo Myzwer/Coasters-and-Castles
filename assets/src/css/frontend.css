@@ -21,8 +21,12 @@
 /* 404 */
 @import "./base/404.css";
 
+/* blog */
+@import "./base/blog.css";
+
 /* Components */
 @import "./components/accordion.css";
 @import "./components/cards.css";
 @import "./components/gravity-forms.css";
 @import "./components/pagination.css";
+@import "./components/lightbox.css";

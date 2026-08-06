@@ -1,0 +1,51 @@
+/**
+ * Blog post content and media styles.
+ */
+
+/**
+ * Keep featured media centered and prevent unusually tall uploads from
+ * dominating the initial viewport.
+ */
+.blog-featured-image {
+	@apply overflow-hidden rounded-xl shadow-xl;
+	aspect-ratio: 16 / 9;
+}
+
+.blog-featured-image__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
+/**
+ * Center Gutenberg image blocks, including images that become narrower
+ * than the reading column after the height limit is applied.
+ */
+.blog-content :where(figure.wp-block-image) {
+	@apply mx-auto my-8;
+}
+
+/**
+ * Preserve the complete image while limiting exceptionally tall uploads.
+ *
+ * Width remains automatic so portrait images shrink proportionally rather
+ * than stretching across the full reading column.
+ */
+.blog-content :where(img) {
+	@apply rounded-xl shadow-xl;
+	display: block;
+	width: auto;
+	max-width: 100%;
+	max-height: min(70vh, 44rem);
+	margin-inline: auto;
+	object-fit: contain;
+}
+
+/**
+ * Allow captions to remain associated with and centered beneath images.
+ */
+.blog-content :where(figcaption) {
+	@apply text-center;
+}

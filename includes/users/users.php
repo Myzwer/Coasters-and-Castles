@@ -33,3 +33,4 @@
 	require_once get_theme_file_path( 'includes/users/user-acf.php' );
 	require_once get_theme_file_path( 'includes/users/user-plugin-settings.php' );
 	require_once get_theme_file_path( 'includes/users/user-admin-bar.php' );
+	require_once get_theme_file_path( 'includes/users/user-advisors.php' );
