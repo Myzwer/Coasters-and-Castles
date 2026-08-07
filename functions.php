@@ -31,6 +31,7 @@
 	/* Plugins / integrations */
 	require_once get_theme_file_path( 'includes/plugins/acf.php' );
 	require_once get_theme_file_path( 'includes/plugins/seo.php' );
+	require_once get_theme_file_path( 'includes/plugins/gravity-forms-options.php' );
 
 	/* Utility functions */
 	require_once get_theme_file_path( 'includes/utility/quick_functions.php' );
