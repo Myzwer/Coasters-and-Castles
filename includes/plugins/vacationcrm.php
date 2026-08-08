@@ -4,13 +4,17 @@
 	 * VacationCRM Gravity Forms Integration
 	 *
 	 * Builds a VacationCRM PostLead payload from the main Gravity Forms lead
-	 * form. The initial implementation operates in log-only mode:
+	 * form and supports controlled delivery to VacationCRM.
+	 *
+	 * Current mode:
 	 *
 	 * - Gravity Forms saves the complete entry normally.
 	 * - The VacationCRM payload is constructed.
 	 * - Advisor routing and fallbacks are resolved.
-	 * - A private note containing the payload is added to the Gravity Forms entry.
-	 * - No request is sent to VacationCRM.
+	 * - In log-only mode, a private note containing the payload is added to the
+	 *   Gravity Forms entry and no request is sent to VacationCRM.
+	 * - In live mode, the lead is sent to VacationCRM and the result is recorded
+	 *   on the Gravity Forms entry.
 	 *
 	 * Form ID: 4
 	 *
@@ -24,9 +28,11 @@
 	 *
 	 * These values are not secrets and may remain in the theme.
 	 */
-	const PRELAUNCH_VCRM_FORM_ID       = 4;
-	const PRELAUNCH_VCRM_DEFAULT_AGENT = 'Lynne';
-	const PRELAUNCH_VCRM_MODE          = 'log_only';
+	const PRELAUNCH_VCRM_FORM_ID         = 4;
+	const PRELAUNCH_VCRM_DEFAULT_AGENT   = 'Lynne';
+	const PRELAUNCH_VCRM_MODE            = 'log_only';
+	const PRELAUNCH_VCRM_AGENT_CACHE_KEY = 'prelaunch_vcrm_agents';
+	const PRELAUNCH_VCRM_AGENT_CACHE_TTL = 12 * HOUR_IN_SECONDS;
 
 	/**
 	 * Build the VacationCRM payload after Gravity Forms saves the entry.
@@ -54,7 +60,32 @@
 			return;
 		}
 
+		$entry_id = absint(
+			rgar( $entry, 'id' )
+		);
+
+		if ( 0 === $entry_id ) {
+			return;
+		}
+
+		/*
+		 * Never automatically send the same Gravity Forms entry twice after a
+		 * confirmed successful VacationCRM delivery.
+		 */
+		if (
+			'live' === PRELAUNCH_VCRM_MODE &&
+			'success' === gform_get_meta( $entry_id, 'vcrm_status' )
+		) {
+			prelaunch_vcrm_add_entry_note(
+				$entry_id,
+				'VacationCRM delivery skipped because this entry was already marked successful.'
+			);
+
+			return;
+		}
+
 		$routing = prelaunch_vcrm_resolve_agent_routing( $entry );
+
 		$payload = prelaunch_vcrm_build_lead_payload(
 			$entry,
 			$routing['agent_code'],
@@ -71,18 +102,27 @@
 			return;
 		}
 
-		/*
-		 * Live API delivery will be added after the generated payload has been
-		 * reviewed and tested through Gravity Forms.
-		 */
+		if ( 'live' !== PRELAUNCH_VCRM_MODE ) {
+			return;
+		}
+
+		prelaunch_vcrm_send_lead(
+			$entry_id,
+			$payload,
+			$routing
+		);
 	}
 
 	/**
-	 * Resolve the VacationCRM agent for a submitted entry.
+	 * Resolve and validate the VacationCRM agent for a submitted entry.
 	 *
 	 * Field 8:
 	 * - No  = route to the default owner account.
-	 * - Yes = resolve the Advisor post selected in field 9.
+	 * - Yes = resolve the Advisor post selected in field 9 and validate its
+	 *         VacationCRM identifier against the GetAgents API response.
+	 *
+	 * Any uncertain advisor routing falls back to the agency owner rather than
+	 * risking a failed or misrouted lead.
 	 *
 	 * @param array<string, mixed> $entry Gravity Forms entry.
 	 *
@@ -152,6 +192,28 @@
 			);
 		}
 
+		$valid_agent_codes = prelaunch_vcrm_get_valid_agent_codes();
+
+		if ( is_wp_error( $valid_agent_codes ) ) {
+			return prelaunch_vcrm_get_agent_fallback(
+				'VacationCRM agent validation was unavailable, so the lead was routed to the default agent.',
+				$advisor_name
+			);
+		}
+
+		if (
+			! in_array(
+				$advisor_code,
+				$valid_agent_codes,
+				true
+			)
+		) {
+			return prelaunch_vcrm_get_agent_fallback(
+				'The selected Advisor has a VacationCRM identifier that was not returned by GetAgents.',
+				$advisor_name
+			);
+		}
+
 		return [
 			'agent_code'    => $advisor_code,
 			'advisor_name'  => $advisor_name,
@@ -186,10 +248,124 @@
 	}
 
 	/**
+	 * Get valid VacationCRM agent codes.
+	 *
+	 * The GetAgents response is cached so normal form submissions do not make an
+	 * additional VacationCRM request every time.
+	 *
+	 * @return array<int, string>|WP_Error
+	 */
+	function prelaunch_vcrm_get_valid_agent_codes() {
+		$cached_codes = get_transient(
+			PRELAUNCH_VCRM_AGENT_CACHE_KEY
+		);
+
+		if ( is_array( $cached_codes ) ) {
+			return $cached_codes;
+		}
+
+		if (
+			! defined( 'VACATIONCRM_API_KEY' ) ||
+			'' === trim( (string) VACATIONCRM_API_KEY )
+		) {
+			return new WP_Error(
+				'vcrm_missing_api_key',
+				'The VacationCRM API key is not configured.'
+			);
+		}
+
+		$url = add_query_arg(
+			[
+				'ApiKey' => VACATIONCRM_API_KEY,
+			],
+			'https://www.vacationcrm.com/api/Service/GetAgents'
+		);
+
+		$response = wp_remote_get(
+			$url,
+			[
+				'timeout' => 15,
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$status_code = wp_remote_retrieve_response_code(
+			$response
+		);
+
+		if ( 200 !== $status_code ) {
+			return new WP_Error(
+				'vcrm_agents_http_error',
+				sprintf(
+					'VacationCRM GetAgents returned HTTP %d.',
+					$status_code
+				)
+			);
+		}
+
+		$body = wp_remote_retrieve_body(
+			$response
+		);
+
+		$agents = json_decode(
+			$body,
+			true
+		);
+
+		if ( ! is_array( $agents ) ) {
+			return new WP_Error(
+				'vcrm_agents_invalid_json',
+				'VacationCRM GetAgents did not return valid JSON.'
+			);
+		}
+
+		$agent_codes = [];
+
+		foreach ( $agents as $agent ) {
+			if (
+				! is_array( $agent ) ||
+				empty( $agent['Code'] )
+			) {
+				continue;
+			}
+
+			$agent_code = trim(
+				(string) $agent['Code']
+			);
+
+			if ( '' !== $agent_code ) {
+				$agent_codes[] = $agent_code;
+			}
+		}
+
+		$agent_codes = array_values(
+			array_unique( $agent_codes )
+		);
+
+		if ( [] === $agent_codes ) {
+			return new WP_Error(
+				'vcrm_agents_empty',
+				'VacationCRM GetAgents returned no usable agent codes.'
+			);
+		}
+
+		set_transient(
+			PRELAUNCH_VCRM_AGENT_CACHE_KEY,
+			$agent_codes,
+			PRELAUNCH_VCRM_AGENT_CACHE_TTL
+		);
+
+		return $agent_codes;
+	}
+
+	/**
 	 * Build the VacationCRM PostLead payload.
 	 *
-	 * VacationType is intentionally omitted until the agency confirms how its
-	 * VacationCRM trip types should map to the website Vacation Type taxonomy.
+	 * Vacation Type and Group Type are intentionally preserved in the structured
+	 * notes rather than mapped to VacationCRM's Type field.
 	 *
 	 * @param array<string, mixed> $entry Gravity Forms entry.
 	 * @param string $agent_code VacationCRM agent code.
@@ -520,7 +696,7 @@
 		}
 
 		$note_lines = [
-			'VacationCRM Log-Only Test',
+			'VacationCRM Log-Only',
 			'',
 			'No request was sent to VacationCRM.',
 			'',
@@ -544,5 +720,214 @@
 			0,
 			'VacationCRM',
 			implode( "\n", $note_lines )
+		);
+	}
+
+	/**
+	 * Send a Gravity Forms lead to VacationCRM.
+	 *
+	 * @param int $entry_id Gravity Forms entry ID.
+	 * @param array<string, mixed> $payload VacationCRM PostLead payload.
+	 * @param array{
+	 *     agent_code: string,
+	 *     advisor_name: string,
+	 *     fallback_used: bool,
+	 *     warning: string
+	 * } $routing Advisor-routing result.
+	 */
+	function prelaunch_vcrm_send_lead(
+		int $entry_id,
+		array $payload,
+		array $routing
+	): void {
+		if (
+			! defined( 'VACATIONCRM_API_KEY' ) ||
+			'' === trim( (string) VACATIONCRM_API_KEY )
+		) {
+			prelaunch_vcrm_record_delivery_failure(
+				$entry_id,
+				$routing,
+				'VacationCRM API key is not configured.'
+			);
+
+			return;
+		}
+
+		$request_payload = $payload;
+
+		/*
+		 * The API key is added only immediately before transmission. It is never
+		 * stored in Gravity Forms notes or entry metadata.
+		 */
+		$request_payload['ApiKey'] = VACATIONCRM_API_KEY;
+
+		$response = wp_remote_post(
+			'https://www.vacationcrm.com/api/Service/PostLead/',
+			[
+				'timeout' => 20,
+				'headers' => [
+					'Content-Type' => 'application/json',
+				],
+				'body'    => wp_json_encode( $request_payload ),
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			prelaunch_vcrm_record_delivery_failure(
+				$entry_id,
+				$routing,
+				$response->get_error_message()
+			);
+
+			return;
+		}
+
+		$status_code = wp_remote_retrieve_response_code(
+			$response
+		);
+
+		$response_body = trim(
+			wp_remote_retrieve_body( $response )
+		);
+
+		/*
+		 * VacationCRM's successful PostLead response was confirmed during testing
+		 * as HTTP 200 with a response body of "Success".
+		 */
+		$normalized_response = trim(
+			$response_body,
+			" \t\n\r\0\x0B\"'"
+		);
+
+		if (
+			200 === $status_code &&
+			0 === strcasecmp( $normalized_response, 'Success' )
+		) {
+			gform_update_meta(
+				$entry_id,
+				'vcrm_status',
+				'success'
+			);
+
+			gform_update_meta(
+				$entry_id,
+				'vcrm_agent',
+				$routing['agent_code']
+			);
+
+			gform_update_meta(
+				$entry_id,
+				'vcrm_sent_at',
+				current_time( 'mysql' )
+			);
+
+			$note_lines = [
+				'VacationCRM Delivery Successful',
+				'',
+				'HTTP Status: ' . $status_code,
+				'API Response: ' . $normalized_response,
+				'Requested Advisor: ' . $routing['advisor_name'],
+				'Assigned VCRM Agent: ' . $routing['agent_code'],
+				'Routing Fallback Used: ' . (
+				$routing['fallback_used'] ? 'Yes' : 'No'
+				),
+			];
+
+			if ( '' !== $routing['warning'] ) {
+				$note_lines[] = 'Routing Warning: ' . $routing['warning'];
+			}
+
+			prelaunch_vcrm_add_entry_note(
+				$entry_id,
+				implode( "\n", $note_lines )
+			);
+
+			return;
+		}
+
+		prelaunch_vcrm_record_delivery_failure(
+			$entry_id,
+			$routing,
+			sprintf(
+				'HTTP %d — %s',
+				$status_code,
+				'' !== $normalized_response
+					? $normalized_response
+					: 'Empty response'
+			)
+		);
+	}
+
+	/**
+	 * Record a failed VacationCRM delivery.
+	 *
+	 * The complete Gravity Forms entry remains saved even when VacationCRM cannot
+	 * confirm receipt.
+	 *
+	 * @param int $entry_id Gravity Forms entry ID.
+	 * @param array $routing Advisor-routing result.
+	 * @param string $error Failure description.
+	 */
+	function prelaunch_vcrm_record_delivery_failure(
+		int $entry_id,
+		array $routing,
+		string $error
+	): void {
+		gform_update_meta(
+			$entry_id,
+			'vcrm_status',
+			'failed'
+		);
+
+		gform_update_meta(
+			$entry_id,
+			'vcrm_agent',
+			$routing['agent_code']
+		);
+
+		$note_lines = [
+			'VacationCRM Delivery Failed',
+			'',
+			'The Gravity Forms entry was saved successfully, but VacationCRM did not confirm delivery.',
+			'',
+			'Requested Advisor: ' . $routing['advisor_name'],
+			'Attempted VCRM Agent: ' . $routing['agent_code'],
+			'Routing Fallback Used: ' . (
+			$routing['fallback_used'] ? 'Yes' : 'No'
+			),
+			'Error: ' . $error,
+			'',
+			'Manual review is required before attempting another submission.',
+		];
+
+		if ( '' !== $routing['warning'] ) {
+			$note_lines[] = 'Routing Warning: ' . $routing['warning'];
+		}
+
+		prelaunch_vcrm_add_entry_note(
+			$entry_id,
+			implode( "\n", $note_lines )
+		);
+	}
+
+	/**
+	 * Add a private note to a Gravity Forms entry.
+	 *
+	 * @param int $entry_id Entry ID.
+	 * @param string $message Note contents.
+	 */
+	function prelaunch_vcrm_add_entry_note(
+		int $entry_id,
+		string $message
+	): void {
+		if ( ! class_exists( 'GFAPI' ) ) {
+			return;
+		}
+
+		GFAPI::add_note(
+			$entry_id,
+			0,
+			'VacationCRM',
+			$message
 		);
 	}
