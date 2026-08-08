@@ -375,3 +375,121 @@
 			$field->placeholder = $placeholder;
 		}
 	}
+
+
+	/**
+	 * Replace stored dynamic choice values with human-readable labels when
+	 * Gravity Forms displays entry values in wp-admin and notifications.
+	 */
+	add_filter(
+		'gform_entry_field_value',
+		'prelaunch_format_gravity_forms_dynamic_entry_value',
+		10,
+		4
+	);
+
+	/**
+	 * Format dynamic Gravity Forms entry values for humans.
+	 *
+	 * The stored entry value remains the stable WordPress object ID. This filter
+	 * changes only the displayed value when Gravity Forms renders an entry.
+	 *
+	 * @param string $value The value Gravity Forms is about to display.
+	 * @param GF_Field $field Gravity Forms field object.
+	 * @param array $entry Gravity Forms entry.
+	 * @param array $form Gravity Forms form object.
+	 *
+	 * @return string
+	 */
+	function prelaunch_format_gravity_forms_dynamic_entry_value(
+		string $value,
+		$field,
+		array $entry,
+		array $form
+	): string {
+		if ( ! is_object( $field ) ) {
+			return $value;
+		}
+
+		$css_classes = prelaunch_get_gravity_forms_field_classes( $field );
+
+		if ( in_array( 'populate-advisors', $css_classes, true ) ) {
+			$advisor_post_id = absint( $value );
+
+			if ( 0 === $advisor_post_id ) {
+				return $value;
+			}
+
+			$advisor_post = get_post( $advisor_post_id );
+
+			if (
+				! $advisor_post instanceof WP_Post ||
+				'advisor' !== $advisor_post->post_type
+			) {
+				return $value;
+			}
+
+			$advisor_name = trim(
+				wp_strip_all_tags( get_the_title( $advisor_post ) )
+			);
+
+			return '' !== $advisor_name
+				? $advisor_name
+				: $value;
+		}
+
+		if ( in_array( 'populate-vacation-types', $css_classes, true ) ) {
+			return prelaunch_get_gravity_forms_term_display_name(
+				$value,
+				'vacation_type'
+			);
+		}
+
+		if ( in_array( 'populate-group-types', $css_classes, true ) ) {
+			return prelaunch_get_gravity_forms_term_display_name(
+				$value,
+				'group_type'
+			);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Get a taxonomy term's human-readable name for Gravity Forms display.
+	 *
+	 * @param string $value Stored Gravity Forms entry value.
+	 * @param string $taxonomy Taxonomy slug.
+	 *
+	 * @return string
+	 */
+	function prelaunch_get_gravity_forms_term_display_name(
+		string $value,
+		string $taxonomy
+	): string {
+		$term_id = absint( $value );
+
+		if ( 0 === $term_id ) {
+			return $value;
+		}
+
+		$term = get_term(
+			$term_id,
+			$taxonomy
+		);
+
+		if (
+			is_wp_error( $term ) ||
+			! $term instanceof WP_Term
+		) {
+			return $value;
+		}
+
+		$term_name = trim(
+			wp_strip_all_tags( $term->name )
+		);
+
+		return '' !== $term_name
+			? $term_name
+			: $value;
+	}
