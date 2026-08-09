@@ -34,6 +34,7 @@
 			$advisor_sections = [
 				'template-parts/advisors/_bio',
 				'template-parts/advisors/_expertise',
+				'template-parts/advisors/_specialized-planning',
 				'template-parts/advisors/_reviews',
 				'template-parts/advisors/_articles',
 				'template-parts/advisors/_gallery',
