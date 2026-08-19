@@ -12,18 +12,9 @@
 
 	$advisor_id = get_the_ID();
 
-	/**
-	 * Pass the Advisor post ID to the booking page.
-	 *
-	 * Gravity Forms can later use this query value to dynamically populate
-	 * the appropriate advisor field before sending data to the CRM.
-	 */
-	$booking_url = add_query_arg(
-		[
-			'advisor' => $advisor_id,
-		],
-		home_url( '/booking/' )
-	);
+	$booking_url = function_exists( 'prelaunch_get_advisor_booking_url' )
+		? prelaunch_get_advisor_booking_url( $advisor_id )
+		: '';
 ?>
 
 <section>
@@ -55,19 +46,30 @@
 						?>
 					</p>
 
-					<a
-						class="btn_main"
-						href="<?php echo esc_url( $booking_url ); ?>"
-					>
-						<span>
-							<?php esc_html_e( 'Book with me', 'prelaunch-wp' ); ?>
-						</span>
+					<?php if ( $booking_url ) : ?>
+						<a
+							class="btn_main"
+							href="<?php echo esc_url( $booking_url ); ?>"
+						>
+							<span>
+								<?php esc_html_e( 'Book with me', 'prelaunch-wp' ); ?>
+							</span>
 
-						<i
-							class="fa-solid fa-arrow-right"
-							aria-hidden="true"
-						></i>
-					</a>
+							<i
+								class="fa-solid fa-arrow-right"
+								aria-hidden="true"
+							></i>
+						</a>
+					<?php elseif ( current_user_can( 'manage_options' ) ) : ?>
+						<p class="text-sm">
+							<?php
+								esc_html_e(
+									'Booking page is not currently configured.',
+									'prelaunch-wp'
+								);
+							?>
+						</p>
+					<?php endif; ?>
 
 				</div>
 			</div>

@@ -1001,3 +1001,60 @@
 	max-width: none !important;
 	box-sizing: border-box;
 }
+
+/* ---------------------------------------------------------
+   Dedicated booking page: advisor mode
+   --------------------------------------------------------- */
+
+/*
+ * Fields 7–9 remain in Form 4 for entry/API compatibility, but advisor booking
+ * mode locks them server-side and removes the redundant preference UI.
+ */
+.form-block .booking-advisor-field-hidden {
+	display: none !important;
+}
+
+.booking-form__eyebrow {
+	margin-bottom: 1.5rem;
+}
+
+.booking-form__advisor-photo {
+	width: min(100%, 18rem);
+	margin-bottom: 1.75rem;
+}
+
+.booking-form__advisor-image {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	border-radius: 0.9rem;
+}
+
+.booking-form__advisor-name {
+	font-size: clamp(2rem, 2.7vw, 3.15rem);
+}
+
+.booking-form__advisor-title {
+	margin: 0.65rem 0 0;
+	font-size: 1rem;
+	font-weight: 700;
+	line-height: 1.35;
+}
+
+.booking-form__advisor-copy {
+	margin-top: 1.25rem;
+}
+
+@media (max-width: 1023px) {
+	.booking-form__advisor-photo {
+		width: min(55vw, 16rem);
+	}
+}
+
+@media (max-width: 639px) {
+	.booking-form__advisor-photo {
+		width: min(70vw, 14rem);
+	}
+}

@@ -35,16 +35,15 @@
 	$group_types    = is_array( $group_types ) ? $group_types : [];
 
 	/**
-	 * Pass the Advisor post ID to the booking page.
+	 * Build the advisor-specific booking URL.
 	 *
-	 * Gravity Forms can later use this query value to populate an advisor field.
+	 * The helper finds the published Booking page and passes the Advisor
+	 * post slug as the public query value. The booking template then resolves
+	 * that slug back to the Advisor CPT before populating Gravity Forms.
 	 */
-	$booking_url = add_query_arg(
-		[
-			'advisor' => $advisor_id,
-		],
-		home_url( '/booking/' )
-	);
+	$booking_url = function_exists( 'prelaunch_get_advisor_booking_url' )
+		? prelaunch_get_advisor_booking_url( $advisor_id )
+		: '';
 
 	$advisor_background     = get_field( 'advisor_background', 'option' );
 	$advisor_background_url = '';
@@ -116,27 +115,40 @@
 						</div>
 					<?php endif; ?>
 
-					<div class="mt-8">
-						<a
-							class="btn_main w-full"
-							href="<?php echo esc_url( $booking_url ); ?>"
-						>
-							<span>
+					<?php if ( $booking_url ) : ?>
+						<div class="mt-8">
+							<a
+								class="btn_main w-full"
+								href="<?php echo esc_url( $booking_url ); ?>"
+							>
+			<span>
+				<?php
+					printf(
+					/* translators: %s: Advisor first name. */
+						esc_html__( 'Book with %s', 'prelaunch-wp' ),
+						esc_html( $advisor_first_name )
+					);
+				?>
+			</span>
+
+								<i
+									class="fa-solid fa-arrow-right"
+									aria-hidden="true"
+								></i>
+							</a>
+						</div>
+					<?php elseif ( current_user_can( 'manage_options' ) ) : ?>
+						<div class="mt-8">
+							<p class="text-sm">
 								<?php
-									printf(
-									/* translators: %s: Advisor first name. */
-										esc_html__( 'Book with %s', 'prelaunch-wp' ),
-										esc_html( $advisor_first_name )
+									esc_html_e(
+										'Booking page is not currently configured.',
+										'prelaunch-wp'
 									);
 								?>
-							</span>
-
-							<i
-								class="fa-solid fa-arrow-right"
-								aria-hidden="true"
-							></i>
-						</a>
-					</div>
+							</p>
+						</div>
+					<?php endif; ?>
 
 				</div>
 			</div>
