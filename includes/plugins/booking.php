@@ -8,7 +8,7 @@
 	 *
 	 * Advisor booking URLs use the Advisor CPT slug as the public identifier:
 	 *
-	 * /plan-your-vacation/?advisor=jane-smith
+	 * /booking/?booking_advisor=jane-smith
 	 *
 	 * The browser never needs to know the VacationCRM agent code. Form 4 continues
 	 * to submit the Advisor post ID, and vacationcrm.php resolves the CRM identifier
@@ -20,15 +20,16 @@
 	declare( strict_types=1 );
 
 	const PRELAUNCH_BOOKING_TEMPLATE       = 'template-booking.php';
-	const PRELAUNCH_BOOKING_ADVISOR_PARAM  = 'advisor';
+	const PRELAUNCH_BOOKING_ADVISOR_PARAM  = 'booking_advisor';
 	const PRELAUNCH_BOOKING_ADVISOR_POSTED = 'prelaunch_booking_advisor';
 
 	/**
 	 * Get the advisor requested for the current booking request.
 	 *
-	 * Initial page loads read ?advisor=advisor-post-slug. Gravity Forms submissions
-	 * carry the same slug in a hidden request value injected into Form 4 so the
-	 * advisor context survives validation errors without relying on the query string.
+	 * Initial page loads read ?booking_advisor=advisor-post-slug. Gravity Forms
+	 * submissions carry the same slug in a hidden request value injected into
+	 * Form 4 so the advisor context survives validation errors without relying
+	 * on the query string.
 	 */
 	function prelaunch_get_booking_advisor(): ?WP_Post {
 		$raw_slug = '';
