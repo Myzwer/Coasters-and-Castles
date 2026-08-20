@@ -3,6 +3,7 @@
 	 * Booking confirmation display.
 	 *
 	 * @var array{
+	 *     first_name?: string,
 	 *     advisor?: WP_Post|null,
 	 *     vacation_type?: WP_Term|null,
 	 *     post_context?: array{
@@ -19,6 +20,10 @@
 		exit;
 	}
 
+	$first_name = isset( $args['first_name'] )
+		? trim( (string) $args['first_name'] )
+		: '';
+
 	$advisor      = $args['advisor'] ?? null;
 	$post_context = $args['post_context'] ?? null;
 
@@ -28,11 +33,18 @@
 	 * No copy fallbacks are used here. If an ACF field is empty,
 	 * that piece of content simply does not render.
 	 */
-	$background_type     = (string) get_field( 'booking_confirmation_background_type' );
-	$background_image_id = absint( get_field( 'booking_confirmation_background_image' ) );
+	$background_type = (string) get_field(
+		'booking_confirmation_background_type'
+	);
+
+	$background_image_id = absint(
+		get_field( 'booking_confirmation_background_image' )
+	);
 
 	$success_headline = trim(
-		(string) get_field( 'booking_confirmation_success_headline' )
+		(string) get_field(
+			'booking_confirmation_success_headline'
+		)
 	);
 
 	$success_message = (string) get_field(
@@ -40,8 +52,34 @@
 	);
 
 	$done_message = trim(
-		(string) get_field( 'booking_confirmation_done_message' )
+		(string) get_field(
+			'booking_confirmation_done_message'
+		)
 	);
+
+	/*
+	 * Personalize the success headline with {fname}.
+	 *
+	 * If a first name was not carried through the confirmation redirect,
+	 * remove the token cleanly rather than displaying the placeholder.
+	 */
+	if ( '' !== $first_name ) {
+		$success_headline = str_replace(
+			'{fname}',
+			$first_name,
+			$success_headline
+		);
+	} else {
+		$success_headline = str_replace(
+			[
+				'{fname}, ',
+				'{fname} ',
+				'{fname}',
+			],
+			'',
+			$success_headline
+		);
+	}
 
 	/*
 	 * Next steps.
@@ -51,27 +89,39 @@
 	);
 
 	$step_1_title = trim(
-		(string) get_field( 'booking_confirmation_step_1_title' )
+		(string) get_field(
+			'booking_confirmation_step_1_title'
+		)
 	);
 
 	$step_1_copy = trim(
-		(string) get_field( 'booking_confirmation_step_1_copy' )
+		(string) get_field(
+			'booking_confirmation_step_1_copy'
+		)
 	);
 
 	$step_2_title = trim(
-		(string) get_field( 'booking_confirmation_step_2_title' )
+		(string) get_field(
+			'booking_confirmation_step_2_title'
+		)
 	);
 
 	$step_2_copy = trim(
-		(string) get_field( 'booking_confirmation_step_2_copy' )
+		(string) get_field(
+			'booking_confirmation_step_2_copy'
+		)
 	);
 
 	$step_3_title = trim(
-		(string) get_field( 'booking_confirmation_step_3_title' )
+		(string) get_field(
+			'booking_confirmation_step_3_title'
+		)
 	);
 
 	$step_3_copy = trim(
-		(string) get_field( 'booking_confirmation_step_3_copy' )
+		(string) get_field(
+			'booking_confirmation_step_3_copy'
+		)
 	);
 
 	/*
@@ -134,9 +184,6 @@
 		}
 	}
 
-	/*
-	 * Replace both capitalization variants.
-	 */
 	$replace_advisor_tokens = static function (
 		string $value
 	) use (
@@ -279,8 +326,22 @@
 			<div
 				class="mx-auto max-w-4xl rounded-2xl border-[3px] border-secondary bg-soft-1 p-8 text-center shadow-xl md:p-12 lg:p-16">
 
-				<div class="mx-auto grid size-20 place-items-center rounded-full bg-secondary text-white md:size-24">
-					<i class="fa-solid fa-badge-check text-5xl md:text-6xl" aria-hidden="true"></i>
+				<div
+					class="booking-confirmation__success-icon mx-auto grid size-20 place-items-center rounded-full bg-secondary text-white md:size-24">
+					<span
+						class="booking-confirmation__spark booking-confirmation__spark--one"
+						aria-hidden="true"
+					></span>
+
+					<span
+						class="booking-confirmation__spark booking-confirmation__spark--two"
+						aria-hidden="true"
+					></span>
+
+					<i
+						class="fa-solid fa-badge-check text-5xl md:text-6xl"
+						aria-hidden="true"
+					></i>
 				</div>
 
 				<?php if ( $success_headline ) : ?>
@@ -298,7 +359,11 @@
 				<?php if ( $done_message ) : ?>
 					<div
 						class="mx-auto mt-8 max-w-2xl rounded-xl border-2 border-secondary bg-white px-5 py-4 text-base font-semibold md:px-6">
-						<i class="fa-solid fa-circle-check mr-2 text-secondary" aria-hidden="true"></i>
+						<i
+							class="fa-solid fa-circle-check mr-2 text-secondary"
+							aria-hidden="true"
+						></i>
+
 						<?php echo esc_html( $done_message ); ?>
 					</div>
 				<?php endif; ?>
@@ -323,7 +388,10 @@
 									<?php echo wp_kses_post( $next_intro ); ?>
 								</div>
 
-								<div class="mt-5 h-[3px] w-16 rounded-full bg-secondary" aria-hidden="true"></div>
+								<div
+									class="mt-5 h-[3px] w-16 rounded-full bg-secondary"
+									aria-hidden="true"
+								></div>
 							<?php endif; ?>
 						</div>
 					</div>
@@ -391,9 +459,18 @@
 					</div>
 
 					<div class="mt-10 text-center">
-						<a class="btn_main" href="<?php echo esc_url( $posts_url ); ?>">
-							<span><?php esc_html_e( 'Browse all articles', 'prelaunch-wp' ); ?></span>
-							<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+						<a
+							class="btn_main"
+							href="<?php echo esc_url( $posts_url ); ?>"
+						>
+							<span>
+								<?php esc_html_e( 'Browse all articles', 'prelaunch-wp' ); ?>
+							</span>
+
+							<i
+								class="fa-solid fa-arrow-right"
+								aria-hidden="true"
+							></i>
 						</a>
 					</div>
 
