@@ -1,0 +1,85 @@
+.booking-confirmation__success-icon {
+	position: relative;
+	animation: booking-confirmation-pop 650ms ease-out 180ms both;
+}
+
+.booking-confirmation__spark {
+	position: absolute;
+	width: 0.55rem;
+	height: 0.55rem;
+	border-radius: 999px;
+	background-color: var(--color-secondary);
+	opacity: 0;
+}
+
+.booking-confirmation__spark--one {
+	top: -0.5rem;
+	right: 0.25rem;
+	animation: booking-confirmation-spark-one 500ms ease-out 500ms both;
+}
+
+.booking-confirmation__spark--two {
+	left: -0.65rem;
+	bottom: 0.5rem;
+	animation: booking-confirmation-spark-two 500ms ease-out 560ms both;
+}
+
+@keyframes booking-confirmation-pop {
+	0% {
+		transform: scale(0.75);
+		opacity: 0;
+	}
+
+	55% {
+		transform: scale(1.12);
+		opacity: 1;
+	}
+
+	75% {
+		transform: scale(0.96);
+	}
+
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes booking-confirmation-spark-one {
+	0% {
+		transform: translate(0, 0) scale(0.4);
+		opacity: 0;
+	}
+
+	40% {
+		opacity: 1;
+	}
+
+	100% {
+		transform: translate(0.7rem, -0.9rem) scale(1);
+		opacity: 0;
+	}
+}
+
+@keyframes booking-confirmation-spark-two {
+	0% {
+		transform: translate(0, 0) scale(0.4);
+		opacity: 0;
+	}
+
+	40% {
+		opacity: 1;
+	}
+
+	100% {
+		transform: translate(-0.8rem, 0.8rem) scale(1);
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.booking-confirmation__success-icon,
+	.booking-confirmation__spark {
+		animation: none;
+	}
+}
