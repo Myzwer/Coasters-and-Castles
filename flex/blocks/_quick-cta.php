@@ -26,7 +26,7 @@
 	$link    = get_sub_field( 'link' );
 ?>
 
-<section class="bg-impact-gradient text-white">
+<section class="">
 	<div class="py-20 wrap">
 		<div class="grid-12">
 			<div class="col-span-12 md:col-span-5">
@@ -38,12 +38,12 @@
 			<div class="col-span-12 grid md:col-span-6 md:col-start-7 md:items-center">
 				<div class="grid justify-items-start gap-6">
 					<?php if ( $message ) : ?>
-						<p><?php echo nl2br( esc_html( $message ) ); ?></p>
+						<p class="text-xl"><?php echo nl2br( esc_html( $message ) ); ?></p>
 					<?php endif; ?>
 
 					<?php if ( ! empty( $link['url'] ) ) : ?>
 						<a
-							class="btn_light"
+							class="btn_main"
 							href="<?php echo esc_url( $link['url'] ); ?>"
 							<?php echo ! empty( $link['target'] ) ? ' target="' . esc_attr( $link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>
 						>
