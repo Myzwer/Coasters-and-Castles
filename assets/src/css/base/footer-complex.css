@@ -117,7 +117,8 @@
 		/* README:FOOTER_COMPLEX_AFFILIATIONS_PADDING
 		   Tightened padding around affiliation logos so partner marks can render
 		   larger on mobile without increasing overall footer height. */
-		@apply flex min-h-16 items-center justify-center px-1 py-1 transition md:min-h-32 md:px-5 md:py-5;
+		@apply flex min-h-20 items-center justify-center rounded-lg bg-soft-1 px-3 py-3 transition;
+		@apply md:min-h-32 md:px-5 md:py-5;
 		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50;
 	}
 
