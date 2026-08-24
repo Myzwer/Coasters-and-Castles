@@ -37,7 +37,7 @@
 		   Mobile footer logo sizing lives here. Increase/decrease max-height
 		   if the brand mark feels too dominant or too small. */
 		@apply mx-auto h-auto max-w-full object-contain;
-		@apply max-h-24 md:max-h-36;
+		@apply max-h-36 md:max-h-36;
 	}
 
 	.footer-heading {
