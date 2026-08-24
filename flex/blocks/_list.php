@@ -39,7 +39,7 @@
 				<?php if ( have_rows( 'list_items' ) ) : ?>
 					<?php while ( have_rows( 'list_items' ) ) : the_row(); ?>
 						<article
-							class="col-span-12 pb-5 md:col-span-6 bg-white border-3 border-secondary rounded-xl shadow-xl p-3">
+							class="col-span-12 pb-5 md:col-span-6 bg-white border-3 border-secondary rounded-xl shadow-xl p-5">
 							<?php $title = get_sub_field( 'list_item_title' ); ?>
 							<?php $subtext = get_sub_field( 'list_item_subtext' ); ?>
 
