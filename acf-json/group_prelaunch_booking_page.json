@@ -1,0 +1,217 @@
+{
+    "key": "group_prelaunch_booking_page",
+    "title": "Booking Page Content",
+    "fields": [
+        {
+            "key": "field_prelaunch_booking_generic_message",
+            "label": "Generic Booking Form Copy",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "These fields control the blue information panel shown when a visitor opens the booking page without choosing a specific advisor. The booking form itself remains developer-managed.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_prelaunch_booking_generic_brand",
+            "label": "Brand Line",
+            "name": "booking_generic_brand",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Short line displayed above the main booking headline.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Coasters & Castles Travel",
+            "maxlength": "",
+            "placeholder": "Coasters & Castles Travel",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_prelaunch_booking_generic_title",
+            "label": "Headline",
+            "name": "booking_generic_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Main headline shown in the generic booking panel.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Your best trip starts here.",
+            "maxlength": "",
+            "placeholder": "Your best trip starts here.",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_prelaunch_booking_generic_copy",
+            "label": "Supporting Copy",
+            "name": "booking_generic_copy",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Supporting copy shown beneath the headline. Keep this concise; basic formatting and links are allowed.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "<p>Tell us what you’ve been dreaming about. Let us take it from there.<\/p>",
+            "allow_in_bindings": 0,
+            "tabs": "visual",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_prelaunch_booking_body_sections",
+            "label": "Content Below Booking Form",
+            "name": "booking_body_sections",
+            "aria-label": "",
+            "type": "flexible_content",
+            "instructions": "Optional content displayed below the booking form. The booking form itself is controlled by the Booking page template and cannot be moved or edited here.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layouts": {
+                "layout_prelaunch_booking_text": {
+                    "key": "layout_prelaunch_booking_text",
+                    "name": "text_block",
+                    "label": "Text Block",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_prelaunch_booking_text_content",
+                            "label": "Content",
+                            "name": "content",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "You can add headers, text and buttons using the tools below. For SEO reasons, do not use an H1.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "allow_in_bindings": 1,
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 0,
+                            "delay": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_prelaunch_booking_image_text": {
+                    "key": "layout_prelaunch_booking_image_text",
+                    "name": "image_text_block",
+                    "label": "Image + Text Block",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_prelaunch_booking_image",
+                            "label": "Image",
+                            "name": "image",
+                            "aria-label": "",
+                            "type": "image",
+                            "instructions": "Use a clear, high-quality image. Landscape images usually work best. Avoid tiny or blurry images. Large images (over 2MB) can slow down your website.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "array",
+                            "library": "all",
+                            "min_width": "",
+                            "min_height": "",
+                            "min_size": "",
+                            "max_width": "",
+                            "max_height": "",
+                            "max_size": "",
+                            "mime_types": "jpg,jpeg,png,webp",
+                            "allow_in_bindings": 1,
+                            "preview_size": "medium"
+                        },
+                        {
+                            "key": "field_prelaunch_booking_image_text_content",
+                            "label": "Content",
+                            "name": "content",
+                            "aria-label": "",
+                            "type": "wysiwyg",
+                            "instructions": "You can add additional headers, text and buttons using the tools below. For SEO reasons, do not use an H1.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "allow_in_bindings": 1,
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 0,
+                            "delay": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                }
+            },
+            "min": "",
+            "max": "",
+            "button_label": "Add Content Block"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_template",
+                "operator": "==",
+                "value": "template-booking.php"
+            }
+        ]
+    ],
+    "menu_order": 2,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": true,
+    "description": "Booking-page copy plus restricted content fields for the dedicated booking template.",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1787607647
+}

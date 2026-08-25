@@ -1,0 +1,808 @@
+{
+    "key": "group_advisor_profile",
+    "title": "Advisor Profile",
+    "fields": [
+        {
+            "key": "field_advisor_tab_general",
+            "label": "General Information",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_6a787b8372bff",
+            "label": "Note for Advisors",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Changes you make to your advisor profile are submitted for agency review before they appear on the live website. When you’re finished, submit your updates for approval. Your changes will be saved for review, but they will not go live immediately. Once approved, the updated information will replace what is currently shown on your public profile.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_advisor_headshot",
+            "label": "Advisor Headshot",
+            "name": "advisor_headshot",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Upload a fun, high-quality photo of yourself that feels personal and travel-focused. Photos taken on location while traveling are encouraged. Please avoid selfies, and make sure no other people are prominently featured in the foreground.<br \/><br \/>\r\nNote: The photo will be automatically cropped to fit the polaroid-style image at the top of your profile.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "jpg,jpeg,png,webp",
+            "allow_in_bindings": 1,
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_advisor_vacation_types",
+            "label": "Vacation Types",
+            "name": "advisor_vacation_types",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Select the vacation types you have received appropriate training for and are currently authorized to sell through the agency. These selections should reflect areas you are qualified to plan, not simply destinations or vacation styles you personally enjoy.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "vacation_type",
+            "add_term": 1,
+            "save_terms": 1,
+            "load_terms": 1,
+            "return_format": "id",
+            "field_type": "checkbox",
+            "allow_in_bindings": 1,
+            "bidirectional": 0,
+            "multiple": 0,
+            "allow_null": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_advisor_group_types",
+            "label": "Group Types",
+            "name": "advisor_group_types",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Choose up to two group types that best represent the clients you most want to work with. These selections are used in the advisor filters to help potential clients find advisors who are a strong match for their travel party. <br \/>\r\nSelecting a group type does not limit which clients you are allowed to work with. Think of these as your visibility preferences: choose the two groups you would most like to have finding and contacting you.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "group_type",
+            "add_term": 1,
+            "save_terms": 1,
+            "load_terms": 1,
+            "return_format": "id",
+            "field_type": "checkbox",
+            "allow_in_bindings": 1,
+            "bidirectional": 0,
+            "multiple": 0,
+            "allow_null": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_advisor_bio",
+            "label": "Biography",
+            "name": "advisor_bio",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Write your biography from your own point of view, as if you are speaking directly to a potential client. For example, use wording like “I love helping families plan…” rather than “Sarah loves helping families plan…” <br \/><br \/>\r\n\r\nIntroduce yourself, your approach to travel planning, the types of trips you enjoy working on, and what clients can expect when they work with you.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 1,
+            "tabs": "visual",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_6a697cb1e2165",
+            "label": "Socials",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_6a697cbae2166",
+            "label": "Facebook",
+            "name": "facebook",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Add the full URL for your Facebook profile or business page.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_6a697ce9e2167",
+            "label": "Instagram",
+            "name": "instagram",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Add the full URL for your Instagram profile.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_6a697cf3e2168",
+            "label": "Tiktok",
+            "name": "tiktok",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Add the full URL for your TikTok profile.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_6a697d36e2169",
+            "label": "YouTube",
+            "name": "youtube",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Add the full URL for your YouTube channel or profile.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_advisor_tab_expertise",
+            "label": "Travel Expertise",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_advisor_training",
+            "label": "Professional Training",
+            "name": "advisor_training",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "List meaningful professional training, credentials, or certifications you have completed.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Training",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_advisor_training_name",
+                    "label": "Training or Credential",
+                    "name": "training_name",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Universal Orlando Resort Specialist",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_advisor_training"
+                }
+            ]
+        },
+        {
+            "key": "field_advisor_firsthand_experience",
+            "label": "Firsthand Experience",
+            "name": "advisor_firsthand_experience",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "List only firsthand vacations related to the travel you currently sell. Format each entry as: Year - Vacation (Vendor, if applicable).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Experience",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_advisor_experience",
+                    "label": "Experience",
+                    "name": "experience",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "2025 - Icon of the Seas (RCL)",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_advisor_firsthand_experience"
+                }
+            ]
+        },
+        {
+            "key": "field_advisor_tab_specialized_planning",
+            "label": "Specialized Planning Support",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_advisor_specialized_planning",
+            "label": "Specialized Planning Support",
+            "name": "advisor_specialized_planning",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Add any areas where you have meaningful experience supporting travelers with accessibility, sensory, dietary, mobility, medical, or other specialized planning needs. Use one entry for each area you want to highlight, or one broader entry if that better reflects your experience.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_advisor_specialized_planning_title",
+            "button_label": "Add Support Area",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_advisor_specialized_planning_title",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Name the area you want to highlight, such as Mobility & Wheelchair Accessibility, Autism & Sensory Needs, or Food Allergies & Dietary Needs.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Autism & Sensory-Friendly Travel",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_advisor_specialized_planning"
+                },
+                {
+                    "key": "field_advisor_specialized_planning_description",
+                    "label": "Description",
+                    "name": "description",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Describe your relevant experience and the kinds of planning support you can provide.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "rows": 5,
+                    "placeholder": "",
+                    "new_lines": "wpautop",
+                    "parent_repeater": "field_advisor_specialized_planning"
+                }
+            ]
+        },
+        {
+            "key": "field_advisor_tab_reviews",
+            "label": "Reviews",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_advisor_reviews",
+            "label": "Reviews",
+            "name": "advisor_reviews",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Add up to three client reviews you would like displayed on your advisor profile.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 3,
+            "collapsed": "field_advisor_reviewer_name",
+            "button_label": "Add Review",
+            "rows_per_page": 3,
+            "sub_fields": [
+                {
+                    "key": "field_advisor_review_text",
+                    "label": "Review",
+                    "name": "review_text",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Use a focused testimonial rather than a full email or long-form story.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 1200,
+                    "rows": 6,
+                    "placeholder": "",
+                    "new_lines": "wpautop",
+                    "parent_repeater": "field_advisor_reviews"
+                },
+                {
+                    "key": "field_advisor_reviewer_name",
+                    "label": "Reviewer Name",
+                    "name": "reviewer_name",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Margaret H.",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_advisor_reviews"
+                },
+                {
+                    "key": "field_advisor_review_trip_details",
+                    "label": "Trip Details",
+                    "name": "review_trip_details",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Describe the client's trip using Group Type + Vacation Type phrasing.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Multigenerational Royal Caribbean Cruise",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_advisor_reviews"
+                },
+                {
+                    "key": "field_advisor_review_source",
+                    "label": "Review Source",
+                    "name": "review_source",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Enter where the review came from, such as Google, Facebook, or Client Email.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Google, Facebook, Client Email",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_advisor_reviews"
+                },
+                {
+                    "key": "field_advisor_review_url",
+                    "label": "Review URL",
+                    "name": "review_url",
+                    "aria-label": "",
+                    "type": "url",
+                    "instructions": "If the review is publicly available online, add the direct URL here.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "parent_repeater": "field_advisor_reviews"
+                }
+            ]
+        },
+        {
+            "key": "field_advisor_tab_gallery",
+            "label": "Gallery",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_advisor_gallery",
+            "label": "Travel Gallery",
+            "name": "advisor_gallery",
+            "aria-label": "",
+            "type": "gallery",
+            "instructions": "Add a curated set of your personal travel photos. The gallery section will remain hidden when this field is empty.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min": 0,
+            "max": 6,
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "jpg,jpeg,png,webp",
+            "insert": "append",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_advisor_tab_agency",
+            "label": "Agency Settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "advisor-agency-settings",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_advisor_professional_headshot",
+            "label": "Professional Headshot",
+            "name": "advisor_professional_headshot",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Professional image used on the main Advisors archive and advisor cards.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "advisor-admin-only",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "jpg,jpeg,png,webp",
+            "allow_in_bindings": 1,
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_advisor_title",
+            "label": "Professional Title",
+            "name": "advisor_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Agency-controlled title shown on the advisor profile.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "advisor-admin-only",
+                "id": ""
+            },
+            "default_value": "Travel Advisor",
+            "maxlength": "",
+            "placeholder": "Travel Advisor",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6a6fe1054a41a",
+            "label": "Email",
+            "name": "email",
+            "aria-label": "",
+            "type": "email",
+            "instructions": "Advisor official agency email",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": "advisor@coastersandcastlestravel.com",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_advisor_linked_user",
+            "label": "Linked WordPress User",
+            "name": "advisor_linked_user",
+            "aria-label": "",
+            "type": "user",
+            "instructions": "Connect this advisor profile to the advisor's WordPress user account. Blog posts can then be loaded automatically from posts authored by that user.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "advisor-admin-only",
+                "id": ""
+            },
+            "role": [],
+            "return_format": "id",
+            "multiple": 0,
+            "allow_null": 1,
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_6a6fe28e2433f",
+            "label": "TLN Profile Link",
+            "name": "tln_profile_link",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Provide the advisors TLN profile URL. No button will appear if this link isn't present.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_advisor_external_url",
+            "label": "External Advisor Website",
+            "name": "advisor_external_url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Enter a URL only when this advisor should link to an offsite microsite instead of their profile page on this website. Leave blank to use the standard advisor profile.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "advisor-admin-only",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": ""
+        },
+        {
+            "key": "field_advisor_crm_id",
+            "label": "CRM Advisor Identifier",
+            "name": "advisor_crm_id",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional internal identifier for future form or CRM routing. This is not displayed publicly.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "advisor-admin-only",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "advisor"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "author",
+        "format",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "Structured profile fields for the Advisor custom post type.",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1787607462
+}

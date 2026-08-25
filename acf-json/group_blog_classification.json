@@ -1,0 +1,83 @@
+{
+    "key": "group_blog_classification",
+    "title": "Blog Classification",
+    "fields": [
+        {
+            "key": "field_blog_trip_type",
+            "label": "Vacation Type",
+            "name": "blog_trip_type",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Choose the one vacation type that best matches what this article is trying to promote. If it discusses two, pick the more relevant of the two.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "trip_type",
+            "add_term": 0,
+            "save_terms": 1,
+            "load_terms": 1,
+            "return_format": "id",
+            "field_type": "radio",
+            "allow_null": 0,
+            "allow_in_bindings": 1,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_blog_article_type",
+            "label": "Article Type",
+            "name": "blog_article_type",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Select the single option that best describes what this article is.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "article_type",
+            "add_term": 0,
+            "save_terms": 1,
+            "load_terms": 1,
+            "return_format": "id",
+            "field_type": "radio",
+            "allow_null": 0,
+            "allow_in_bindings": 1,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "categories",
+        "tags"
+    ],
+    "active": true,
+    "description": "Controlled vacation and article classifications for blog posts.",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1787607486
+}

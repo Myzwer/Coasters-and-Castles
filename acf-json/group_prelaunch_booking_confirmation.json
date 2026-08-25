@@ -1,0 +1,368 @@
+{
+    "key": "group_prelaunch_booking_confirmation",
+    "title": "Booking Confirmation",
+    "fields": [
+        {
+            "key": "field_booking_confirmation_tab_complete",
+            "label": "Completion",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_booking_confirmation_background_type",
+            "label": "Background",
+            "name": "booking_confirmation_background_type",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "generic": "Generic White Background",
+                "image": "Image Background"
+            },
+            "default_value": "generic",
+            "return_format": "value",
+            "allow_null": 0,
+            "other_choice": 0,
+            "layout": "vertical",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_booking_confirmation_background_image",
+            "label": "Background Image",
+            "name": "booking_confirmation_background_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_booking_confirmation_background_type",
+                        "operator": "==",
+                        "value": "image"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "jpg,jpeg,png,webp",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_booking_confirmation_success_headline",
+            "label": "Success Headline",
+            "name": "booking_confirmation_success_headline",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "You’re all set.",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_booking_confirmation_done_message",
+            "label": "Done Message",
+            "name": "booking_confirmation_done_message",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "You can close this tab now — we have everything we need.",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_booking_confirmation_success_message",
+            "label": "Success Message",
+            "name": "booking_confirmation_success_message",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "visual",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_booking_confirmation_tab_next",
+            "label": "Next Steps",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_booking_confirmation_next_intro",
+            "label": "Section Intro",
+            "name": "booking_confirmation_next_intro",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_booking_confirmation_step_1_title",
+            "label": "Step 1 Title",
+            "name": "booking_confirmation_step_1_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "You can use {advisor} or {Advisor} to insert the selected advisor’s first name. For generic bookings, these become “your advisor” \/ “Your advisor”.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "We review your trip",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_booking_confirmation_step_1_copy",
+            "label": "Step 1 Copy",
+            "name": "booking_confirmation_step_1_copy",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "You can use {advisor} or {Advisor} to insert the selected advisor’s first name. For generic bookings, these become “your advisor” \/ “Your advisor”.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "rows": 3,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_booking_confirmation_step_2_title",
+            "label": "Step 2 Title",
+            "name": "booking_confirmation_step_2_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "You can still use {advisor} or {Advisor} here.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "{advisor} reaches out",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_booking_confirmation_step_2_copy",
+            "label": "Step 2 Copy",
+            "name": "booking_confirmation_step_2_copy",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "You can still use {advisor} or {Advisor} here.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "rows": 3,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_booking_confirmation_step_3_title",
+            "label": "Step 3 Title",
+            "name": "booking_confirmation_step_3_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "You can still use {advisor} or {Advisor} here.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "You start planning",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_booking_confirmation_step_3_copy",
+            "label": "Step 3 Copy",
+            "name": "booking_confirmation_step_3_copy",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "You can still use {advisor} or {Advisor} here.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "rows": 3,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_booking_confirmation_tab_articles",
+            "label": "Articles",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_booking_confirmation_articles_intro",
+            "label": "Article Intro",
+            "name": "booking_confirmation_articles_intro",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 0,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "template-booking-confirmation.php"
+            }
+        ]
+    ],
+    "menu_order": 2,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1787607643
+}

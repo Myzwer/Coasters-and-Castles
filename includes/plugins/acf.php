@@ -1,8 +1,10 @@
 <?php
 	/**
-	 * ACF options page registration.
+	 * ACF options page registration and JSON sync.
 	 *
-	 * Registers Prelaunch ACF options pages used for site-wide configuration.
+	 * Registers Prelaunch ACF options pages used for site-wide configuration,
+	 * and points ACF Local JSON at the theme's `acf-json/` directory so field
+	 * groups can be versioned with the theme.
 	 *
 	 * Capability rules:
 	 * - Client-facing options pages should use `read` so they remain accessible
@@ -10,14 +12,51 @@
 	 * - Developer-only options pages should use a dedicated custom capability so
 	 *   they stay private even when managed roles retain broader admin access.
 	 *
-	 * This file is intentionally limited to options-page registration. Access to
-	 * the core ACF admin UI (Field Groups, Tools, etc.) is controlled separately
-	 * by the user-access modules.
+	 * Access to the core ACF admin UI (Field Groups, Tools, etc.) is controlled
+	 * separately by the user-access modules.
 	 */
 
 	declare( strict_types=1 );
 
 	defined( 'ABSPATH' ) || exit;
+
+	/**
+	 * Absolute path to the theme ACF Local JSON directory.
+	 *
+	 * @return string
+	 */
+	function prelaunch_get_acf_json_path(): string {
+		return get_stylesheet_directory() . '/acf-json';
+	}
+
+	/**
+	 * Tell ACF where to save Local JSON field group files.
+	 *
+	 * @return string
+	 */
+	function prelaunch_acf_json_save_point(): string {
+		return prelaunch_get_acf_json_path();
+	}
+
+	add_filter( 'acf/settings/save_json', 'prelaunch_acf_json_save_point' );
+
+	/**
+	 * Tell ACF where to load Local JSON field group files.
+	 *
+	 * Replaces the default load path so groups resolve from this theme only.
+	 *
+	 * @param array<int, string> $paths Existing load paths.
+	 *
+	 * @return array<int, string>
+	 */
+	function prelaunch_acf_json_load_point( array $paths ): array {
+		unset( $paths[0] );
+		$paths[] = prelaunch_get_acf_json_path();
+
+		return $paths;
+	}
+
+	add_filter( 'acf/settings/load_json', 'prelaunch_acf_json_load_point' );
 
 	/**
 	 * Register a Prelaunch ACF options page.
