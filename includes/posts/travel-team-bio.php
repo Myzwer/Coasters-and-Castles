@@ -149,7 +149,9 @@
 					)
 					: '',
 				'primary_link'   => [
-					'url'    => home_url( '/booking/' ),
+					'url'    => function_exists( 'prelaunch_get_advisor_booking_url' )
+						? prelaunch_get_advisor_booking_url( $advisor_id )
+						: '',
 					'title'  => __( 'Book With Me', 'prelaunch-wp' ),
 					'target' => '',
 				],
