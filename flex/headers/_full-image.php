@@ -14,11 +14,13 @@
 		style="--bg-image: url('<?php echo esc_url( $background_photo ); ?>');"
 	>
 		<div class="px-5 text-center content-middle text-pretty">
-			<div class="center add-padding">
-				<h2 class="text-xl font-bold text-white md:text-2xl">
-					<?php the_sub_field( 'small_subtitle' ); ?>
-				</h2>
-			</div>
+			<?php if ( get_sub_field( 'small_subtitle' ) ) : ?>
+				<div class="center add-padding">
+					<p class="text-xl font-bold text-white md:text-2xl">
+						<?php the_sub_field( 'small_subtitle' ); ?>
+					</p>
+				</div>
+			<?php endif; ?>
 
 			<h1 class="text-3xl font-bold text-white uppercase md:text-5xl">
 				<?php the_sub_field( 'main_title' ); ?>

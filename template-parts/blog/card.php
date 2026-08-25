@@ -43,24 +43,32 @@
 <article class="card card--blog">
 	<?php if ( has_post_thumbnail() ) : ?>
 
-		<a href="<?php the_permalink(); ?>" class="card__media">
+		<a
+			href="<?php the_permalink(); ?>"
+			class="card__media"
+			aria-hidden="true"
+			tabindex="-1"
+		>
 			<?php
 				the_post_thumbnail( 'medium_large', [
 					'class'   => 'card__image',
 					'loading' => 'lazy',
+					'alt'     => '',
 				] );
 			?>
 		</a>
 
 	<?php else : ?>
 
-		<a href="<?php the_permalink(); ?>" class="card__media card__media--fallback bg-white">
-		<span class="card__media-icon" aria-hidden="true">
-			<i class="fa-regular fa-file-lines"></i>
-		</span>
-			<span class="sr-only">
-			<?php esc_html_e( 'View post', 'prelaunch-wp' ); ?>
-		</span>
+		<a
+			href="<?php the_permalink(); ?>"
+			class="card__media card__media--fallback bg-white"
+			aria-hidden="true"
+			tabindex="-1"
+		>
+			<span class="card__media-icon" aria-hidden="true">
+				<i class="fa-regular fa-file-lines"></i>
+			</span>
 		</a>
 
 	<?php endif; ?>
@@ -136,6 +144,7 @@
 	<a
 		class="grid place-items-center bg-secondary px-5 py-3 text-center font-bold text-white transition hover:brightness-90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white focus-visible:brightness-90"
 		href="<?php the_permalink(); ?>"
+		aria-label="<?php echo esc_attr( sprintf( __( 'Read more: %s', 'prelaunch-wp' ), get_the_title() ) ); ?>"
 	>
 		<span class="inline-grid grid-flow-col items-center gap-2">
 			<span>

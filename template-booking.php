@@ -25,7 +25,11 @@
 	}
 
 	get_header();
+?>
 
+<main id="main-content">
+
+<?php
 	$booking_advisor = function_exists( 'prelaunch_get_booking_advisor' )
 		? prelaunch_get_booking_advisor()
 		: null;
@@ -113,5 +117,9 @@
 
 		echo '</div>';
 	endif;
+?>
 
+</main>
+
+<?php
 	get_footer();

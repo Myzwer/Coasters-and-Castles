@@ -53,7 +53,9 @@
 	$post_id        = $selected_post->ID;
 	$post_title     = get_the_title( $post_id );
 	$post_url       = get_permalink( $post_id );
-	$posts_url      = get_post_type_archive_link( 'post' ) ?: home_url( '/posts/' );
+	$posts_url      = get_permalink( (int) get_option( 'page_for_posts' ) )
+		?: get_post_type_archive_link( 'post' )
+		?: home_url( '/articles/' );
 	$featured_image = get_post_thumbnail_id( $post_id );
 
 	$post_excerpt = get_the_excerpt( $post_id );

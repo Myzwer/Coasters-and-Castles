@@ -160,6 +160,12 @@ function prelaunch_clean_text(string $text): string
     $text = strip_shortcodes($text);
     $text = wp_strip_all_tags($text);
     $text = trim((string) preg_replace('/\s+/', ' ', $text));
+
+    // Ignore bare URLs (common when image fields leak into generated descriptions).
+    if ($text !== '' && (bool) preg_match('#^https?://\S+$#i', $text)) {
+        return '';
+    }
+
     return $text;
 }
 

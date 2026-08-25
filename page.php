@@ -17,7 +17,11 @@
 	 */
 
 	get_header();
+?>
 
+<main id="main-content">
+
+<?php
 	/**
 	 * Convert an ACF layout name into a template partial path.
 	 *
@@ -154,5 +158,7 @@
 
 	endif;
 ?>
+
+</main>
 
 <?php get_footer(); ?>

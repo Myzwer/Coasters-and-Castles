@@ -48,6 +48,8 @@
 <body <?php body_class( 'tracking-normal leading-normal' ); ?>>
 <?php wp_body_open(); ?>
 
+<a class="skip-link" href="#main-content"><?php esc_html_e( 'Skip to content', 'prelaunch-wp' ); ?></a>
+
 
 <!--
 	Start Navbar
@@ -78,7 +80,7 @@
 	<?php endif; ?>
 	
 	<div class="nav-shell">
-		<a class="nav-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+		<a class="nav-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
 			<?php
 				$logo = function_exists( 'get_field' ) ? get_field( 'site_nav_logo', 'option' ) : null;
 
@@ -109,7 +111,7 @@
 				</span>
 			</button>
 
-			<div class="nav-panel" id="nav-panel">
+			<div class="nav-panel" id="nav-panel" hidden>
 				<?php
 					wp_nav_menu( [
 						'theme_location' => 'primary-nav',

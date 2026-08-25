@@ -7,6 +7,7 @@
  */
 
 /* Base / global helpers */
+@import "./base/skip-link.css";
 @import "./base/background.css";
 @import "./base/video.css";
 @import "./base/wysiwyg.css";

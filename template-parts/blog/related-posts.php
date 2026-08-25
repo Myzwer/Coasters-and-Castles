@@ -17,9 +17,9 @@
 	}
 ?>
 
-<section class="mt-10 mb-10" aria-label="<?php esc_attr_e( 'Related posts', 'prelaunch-wp' ); ?>">
+<section class="mt-10 mb-10" aria-label="<?php esc_attr_e( 'Related articles', 'prelaunch-wp' ); ?>">
 	<h2 class="mb-6 text-xl font-semibold">
-		<?php esc_html_e( 'Related Posts', 'prelaunch-wp' ); ?>
+		<?php esc_html_e( 'Related Articles', 'prelaunch-wp' ); ?>
 	</h2>
 
 	<div class="grid-12">

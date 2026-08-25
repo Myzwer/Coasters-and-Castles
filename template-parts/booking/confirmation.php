@@ -256,8 +256,9 @@
 		? $post_context['query']
 		: null;
 
-	$posts_url = get_post_type_archive_link( 'post' )
-		?: home_url( '/posts/' );
+	$posts_url = get_permalink( (int) get_option( 'page_for_posts' ) )
+		?: get_post_type_archive_link( 'post' )
+		?: home_url( '/articles/' );
 
 	/*
 	 * Primary-gradient sections use the same optional global
@@ -316,7 +317,7 @@
 	}
 ?>
 
-<main id="primary" class="booking-confirmation">
+<main id="main-content" class="booking-confirmation">
 
 	<section
 		class="<?php echo esc_attr( $completion_background_class ); ?> py-16 md:py-24"

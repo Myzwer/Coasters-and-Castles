@@ -29,12 +29,18 @@
 	if ( ! $content && ! $image_id ) {
 		return;
 	}
+
+	$has_image   = (bool) $image_id;
+	$image_class = 'col-span-12 md:col-span-6';
+	$text_class  = $has_image
+		? 'col-span-12 md:col-span-6 relative'
+		: 'col-span-12 relative';
 ?>
 <section class="py-10 wrap">
 	<div class="grid grid-cols-12 gap-4 md:gap-10">
-		<div class="col-span-12 md:col-span-6">
-			<?php
-				if ( $image_id ) :
+		<?php if ( $has_image ) : ?>
+			<div class="<?php echo esc_attr( $image_class ); ?>">
+				<?php
 					echo wp_get_attachment_image(
 						$image_id,
 						'large',
@@ -43,16 +49,16 @@
 							'class' => 'rounded-lg shadow-lg mb-0 aspect-[1/1] object-cover',
 						]
 					);
-				endif;
-			?>
-		</div>
+				?>
+			</div>
+		<?php endif; ?>
 
-		<div class="col-span-12 md:col-span-6 relative">
-			<?php if ( $content ) : ?>
+		<?php if ( $content ) : ?>
+			<div class="<?php echo esc_attr( $text_class ); ?>">
 				<div class="content-middle-medium">
 					<div class="prose-theme"><?php echo wp_kses_post( $content ); ?></div>
 				</div>
-			<?php endif; ?>
-		</div>
+			</div>
+		<?php endif; ?>
 	</div>
 </section>

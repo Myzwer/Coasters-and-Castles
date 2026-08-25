@@ -44,7 +44,7 @@
 			$background_index = 0;
 			?>
 
-			<main id="primary">
+			<main id="main-content">
 
 				<?php get_template_part( 'template-parts/advisors/_header' ); ?>
 

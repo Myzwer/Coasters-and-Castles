@@ -47,7 +47,7 @@
 						  . '/assets/public/img/waves.png';
 ?>
 
-	<main>
+	<main id="main-content">
 
 		<header class="bg-impact-gradient">
 			<div

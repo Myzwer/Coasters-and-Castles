@@ -11,7 +11,7 @@
 	get_header();
 ?>
 
-<main id="primary" class="site-main bg-secondary-gradient">
+<main id="main-content" class="site-main bg-secondary-gradient">
 	<section class="section py-10">
 		<div class="wrap">
 			<?php if ( have_posts() ) : ?>

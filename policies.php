@@ -8,6 +8,8 @@
 
 	get_header(); ?>
 
+	<main id="main-content">
+
 	<div
 		class="relative"
 		style="
@@ -35,5 +37,6 @@
 		</div>
 	</div>
 
+	</main>
 
 <?php get_footer();

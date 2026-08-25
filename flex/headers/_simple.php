@@ -13,9 +13,11 @@
 		style="--bg-texture: url('<?php echo esc_url( get_template_directory_uri() . '/assets/public/img/waves.png' ); ?>');"
 	>
 		<div class="px-5 text-center content-middle text-pretty">
-			<div class="center add-padding">
-				<h2 class="pb-1 text-xl font-bold text-white md:text-2xl"><?php the_sub_field( 'small_subtitle' ); ?></h2>
-			</div>
+			<?php if ( get_sub_field( 'small_subtitle' ) ) : ?>
+				<div class="center add-padding">
+					<p class="pb-1 text-xl font-bold text-white md:text-2xl"><?php the_sub_field( 'small_subtitle' ); ?></p>
+				</div>
+			<?php endif; ?>
 
 			<h1 class="text-3xl font-bold text-white uppercase md:text-5xl"><?php the_sub_field( 'main_title' ); ?></h1>
 
