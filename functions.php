@@ -48,3 +48,6 @@
 
 	/* Register User Roles */
 	require_once get_theme_file_path( 'includes/users/users.php' );
+
+	/* Plugin integrations that depend on user/role helpers */
+	require_once get_theme_file_path( 'includes/plugins/filebird.php' );
