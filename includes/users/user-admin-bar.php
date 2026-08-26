@@ -61,6 +61,11 @@
 		 */
 		$wp_admin_bar->remove_node( 'new-media' );
 
+		if ( 'full' !== prelaunch_get_current_role_policy_value( 'plugin_settings', 'off' ) ) {
+			$wp_admin_bar->remove_node( 'new-filter-set' );
+			$wp_admin_bar->remove_node( 'new-filter-seo-rule' );
+		}
+
 		/*
 		 * Remove the parent "+ New" menu if nothing meaningful remains.
 		 */

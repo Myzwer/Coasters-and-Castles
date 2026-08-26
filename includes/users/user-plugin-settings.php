@@ -16,6 +16,8 @@
 	 *    - admin.php?page=example-slug  -> page slug is "example-slug"
 	 *    - options-general.php?page=foo -> parent is "options-general.php", page slug is "foo"
 	 *    - tools.php?page=bar           -> parent is "tools.php", page slug is "bar"
+	 *    - edit.php?post_type=example   -> menu_slug and parent_slug are that URL,
+	 *      and post_types lists the CPT(s) to block by direct URL
 	 * 3. Add the plugin page to the registry below.
 	 *
 	 * Notes:
@@ -57,21 +59,31 @@
 	 * - parent_slug: admin parent page slug
 	 * - menu_slug: page slug used by WordPress
 	 * - approved: whether the page is allowed in approved_only mode
+	 * - pages: optional extra `page=` query slugs to block
+	 * - post_types: optional CPT slugs whose admin screens should also be blocked
 	 *
 	 * @return array<string, array<string, mixed>>
 	 */
 	function prelaunch_get_plugin_settings_registry(): array {
 		return array(
-			'filebird' => array(
+			'filebird'           => array(
 				'label'       => 'FileBird',
 				'parent_slug' => 'filebird-settings',
 				'menu_slug'   => 'filebird-settings',
 				'approved'    => false,
 			),
-			'tsf'      => array(
+			'tsf'                => array(
 				'label'       => 'The SEO Framework',
 				'parent_slug' => 'theseoframework-settings',
 				'menu_slug'   => 'theseoframework-settings',
+				'approved'    => false,
+			),
+			'filter_everything'  => array(
+				'label'       => 'Filter Everything',
+				'parent_slug' => 'edit.php?post_type=filter-set',
+				'menu_slug'   => 'edit.php?post_type=filter-set',
+				'pages'       => array( 'filters-settings' ),
+				'post_types'  => array( 'filter-set', 'filter', 'filter-seo-rule' ),
 				'approved'    => false,
 			),
 		);
@@ -142,6 +154,61 @@
 	add_action( 'admin_menu', 'prelaunch_customize_plugin_settings_admin_menu', 1000 );
 
 	/**
+	 * Determine whether the current request targets a hidden plugin screen.
+	 *
+	 * @param array<string, mixed> $page_config Registry entry.
+	 *
+	 * @return bool
+	 */
+	function prelaunch_is_hidden_plugin_settings_request( array $page_config ): bool {
+		global $pagenow;
+
+		if ( ! is_string( $pagenow ) || '' === $pagenow ) {
+			return false;
+		}
+
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$page = is_string( $page ) ? $page : '';
+
+		$menu_slug = isset( $page_config['menu_slug'] ) ? (string) $page_config['menu_slug'] : '';
+		$pages     = isset( $page_config['pages'] ) && is_array( $page_config['pages'] )
+			? array_map( 'strval', $page_config['pages'] )
+			: array();
+
+		if ( '' !== $page && ( $page === $menu_slug || in_array( $page, $pages, true ) ) ) {
+			return true;
+		}
+
+		$post_types = isset( $page_config['post_types'] ) && is_array( $page_config['post_types'] )
+			? array_map( 'strval', $page_config['post_types'] )
+			: array();
+
+		if ( empty( $post_types ) ) {
+			return false;
+		}
+
+		$request_post_type = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$request_post_type = is_string( $request_post_type ) ? $request_post_type : '';
+
+		if (
+			in_array( $pagenow, array( 'edit.php', 'post-new.php' ), true )
+			&& in_array( $request_post_type, $post_types, true )
+		) {
+			return true;
+		}
+
+		if ( 'post.php' === $pagenow ) {
+			$post_id = (int) filter_input( INPUT_GET, 'post', FILTER_VALIDATE_INT );
+
+			if ( $post_id > 0 && in_array( (string) get_post_type( $post_id ), $post_types, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Block direct access to hidden plugin settings pages.
 	 *
 	 * @return void
@@ -157,22 +224,8 @@
 			return;
 		}
 
-		global $pagenow;
-
-		if ( ! is_string( $pagenow ) || '' === $pagenow ) {
-			return;
-		}
-
-		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-
-		if ( ! is_string( $page ) || '' === $page ) {
-			return;
-		}
-
 		foreach ( prelaunch_get_hidden_plugin_settings_pages( $access_level ) as $page_config ) {
-			$menu_slug = isset( $page_config['menu_slug'] ) ? (string) $page_config['menu_slug'] : '';
-
-			if ( $page !== $menu_slug ) {
+			if ( ! prelaunch_is_hidden_plugin_settings_request( $page_config ) ) {
 				continue;
 			}
 
