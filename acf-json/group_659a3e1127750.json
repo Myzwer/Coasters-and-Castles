@@ -1398,7 +1398,7 @@
                             "name": "intro",
                             "aria-label": "",
                             "type": "wysiwyg",
-                            "instructions": "You can add additional headers, text and buttons using the tools below. For SEO reasons, do not use an H1.",
+                            "instructions": "You can add additional headers, text and buttons using the tools below. Alignment is controlled in the editor — this block does not center the intro. For SEO reasons, do not use an H1.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -1414,12 +1414,12 @@
                             "delay": 0
                         },
                         {
-                            "key": "field_plwp_1013",
-                            "label": "List Items",
-                            "name": "list_items",
+                            "key": "field_plwp_1050",
+                            "label": "Photos",
+                            "name": "photos",
                             "aria-label": "",
                             "type": "repeater",
-                            "instructions": "",
+                            "instructions": "Optional polaroid photos. Up to 3. On mobile, only the first two are shown.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -1427,20 +1427,47 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "min": 1,
-                            "max": 0,
+                            "min": 0,
+                            "max": 3,
                             "layout": "block",
-                            "button_label": "Add List Item",
-                            "collapsed": "",
+                            "button_label": "Add Photo",
+                            "collapsed": "field_plwp_1052",
                             "rows_per_page": 20,
                             "sub_fields": [
                                 {
-                                    "key": "field_plwp_1011",
-                                    "label": "List Item Title",
-                                    "name": "list_item_title",
+                                    "key": "field_plwp_1051",
+                                    "label": "Photo",
+                                    "name": "photo",
+                                    "aria-label": "",
+                                    "type": "image",
+                                    "instructions": "Square images work best. Large images (over 2MB) can slow down your website.",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "50",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "return_format": "array",
+                                    "library": "all",
+                                    "min_width": "",
+                                    "min_height": "",
+                                    "min_size": "",
+                                    "max_width": "",
+                                    "max_height": "",
+                                    "max_size": "",
+                                    "mime_types": "jpg,jpeg,png,webp",
+                                    "allow_in_bindings": 1,
+                                    "preview_size": "medium",
+                                    "parent_repeater": "field_plwp_1050"
+                                },
+                                {
+                                    "key": "field_plwp_1052",
+                                    "label": "Photo Title",
+                                    "name": "photo_title",
                                     "aria-label": "",
                                     "type": "text",
-                                    "instructions": "",
+                                    "instructions": "Short caption written on the polaroid, e.g. Carnival.",
                                     "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
@@ -1454,39 +1481,17 @@
                                     "placeholder": "",
                                     "prepend": "",
                                     "append": "",
-                                    "parent_repeater": "field_plwp_1013"
-                                },
-                                {
-                                    "key": "field_plwp_1012",
-                                    "label": "List Item Subtext",
-                                    "name": "list_item_subtext",
-                                    "aria-label": "",
-                                    "type": "wysiwyg",
-                                    "instructions": "",
-                                    "required": 0,
-                                    "conditional_logic": 0,
-                                    "wrapper": {
-                                        "width": "50",
-                                        "class": "",
-                                        "id": ""
-                                    },
-                                    "default_value": "",
-                                    "allow_in_bindings": 1,
-                                    "tabs": "all",
-                                    "toolbar": "full",
-                                    "media_upload": 0,
-                                    "delay": 0,
-                                    "parent_repeater": "field_plwp_1013"
+                                    "parent_repeater": "field_plwp_1050"
                                 }
                             ]
                         },
                         {
-                            "key": "field_plwp_1014",
-                            "label": "Button (Optional)",
-                            "name": "link",
+                            "key": "field_plwp_1013",
+                            "label": "List Items",
+                            "name": "list_items",
                             "aria-label": "",
-                            "type": "link",
-                            "instructions": "",
+                            "type": "repeater",
+                            "instructions": "Each item is a short title shown as a pill. Longer titles wrap to a second line.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -1494,7 +1499,69 @@
                                 "class": "",
                                 "id": ""
                             },
+                            "min": 1,
+                            "max": 0,
+                            "layout": "table",
+                            "button_label": "Add List Item",
+                            "collapsed": "field_plwp_1011",
+                            "rows_per_page": 20,
+                            "sub_fields": [
+                                {
+                                    "key": "field_plwp_1011",
+                                    "label": "List Item Title",
+                                    "name": "list_item_title",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "maxlength": "",
+                                    "allow_in_bindings": 1,
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "parent_repeater": "field_plwp_1013"
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_plwp_1014",
+                            "label": "Primary Button (Optional)",
+                            "name": "link",
+                            "aria-label": "",
+                            "type": "link",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
                             "return_format": "array"
+                        },
+                        {
+                            "key": "field_plwp_1053",
+                            "label": "Secondary Button (Optional)",
+                            "name": "secondary_link",
+                            "aria-label": "",
+                            "type": "link",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "array",
+                            "allow_in_bindings": 0
                         }
                     ],
                     "min": "",
@@ -1659,5 +1726,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787607639
+    "modified": 1787791014
 }

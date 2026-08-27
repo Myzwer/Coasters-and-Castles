@@ -2,7 +2,8 @@
 	/**
 	 * List content block.
 	 *
-	 * Renders a repeating list of titled items with optional descriptive text.
+	 * Renders intro copy, an optional polaroid photo row, titled list pills,
+	 * and optional primary/secondary CTAs.
 	 *
 	 * Used in:
 	 * - service lists
@@ -11,63 +12,202 @@
 	 *
 	 * Content is sourced from ACF Flexible Content fields.
 	 *
+	 * Expected fields:
+	 * - intro: WYSIWYG
+	 * - photos: Repeater (max 3)
+	 *   - photo: Image
+	 *   - photo_title: Text
+	 * - list_items: Repeater
+	 *   - list_item_title: Text
+	 * - link: Link, optional primary CTA
+	 * - secondary_link: Link, optional secondary CTA
+	 *
 	 * Notes:
-	 * - Items are generated from a repeater field.
-	 * - Item descriptions use WYSIWYG editors for light formatting.
-	 * - Optional button may appear after the list.
+	 * - Intro alignment is left to the WYSIWYG editor, not forced in code.
+	 * - Photos cap at three, hide the third on mobile, and skip the gallery
+	 *   entirely when none are selected.
+	 * - List items are title-only pills.
 	 */
 
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
 
+	$intro          = get_sub_field( 'intro' );
+	$link           = get_sub_field( 'link' );
+	$secondary_link = get_sub_field( 'secondary_link' );
 
-	$intro = get_sub_field( 'intro' );
-	$link  = get_sub_field( 'link' );
+	$photos = get_sub_field( 'photos' );
+	$photos = is_array( $photos ) ? $photos : [];
+
+	$photos = array_values(
+		array_filter(
+			$photos,
+			static function ( $row ) {
+				$image = $row['photo'] ?? null;
+
+				if ( is_array( $image ) ) {
+					return ! empty( $image['ID'] ) || ! empty( $image['url'] );
+				}
+
+				return ! empty( $image );
+			}
+		)
+	);
+
+	$photos      = array_slice( $photos, 0, 3 );
+	$photo_count = count( $photos );
+
+	$desktop_layouts = [
+		1 => [
+			'md:col-span-4 md:col-start-5 md:-rotate-2',
+		],
+		2 => [
+			'md:col-span-5 md:col-start-2 md:-rotate-3',
+			'md:col-span-5 md:col-start-7 md:rotate-2',
+		],
+		3 => [
+			'md:col-span-4 md:-rotate-3',
+			'md:col-span-4 md:rotate-2',
+			'md:col-span-4 md:-rotate-1',
+		],
+	];
+
+	$desktop_classes = $desktop_layouts[ $photo_count ] ?? [];
+
+	$get_image_id = static function ( $image ): int {
+		if ( is_array( $image ) ) {
+			return absint( $image['ID'] ?? 0 );
+		}
+
+		return absint( $image );
+	};
 ?>
 
 <section class="py-10 wrap">
-	<div class="grid-12">
-		<div class="col-span-12">
-			<?php if ( $intro ) : ?>
-				<div class="prose-theme"><?php echo wp_kses_post( $intro ); ?></div>
-			<?php endif; ?>
-		</div>
+	<div class="grid-12 gap-y-10">
 
-		<div class="col-span-12">
-			<div class="grid-12">
-				<?php if ( have_rows( 'list_items' ) ) : ?>
-					<?php while ( have_rows( 'list_items' ) ) : the_row(); ?>
-						<article
-							class="col-span-12 pb-5 md:col-span-6 bg-white border-3 border-secondary rounded-xl shadow-xl p-5">
-							<?php $title = get_sub_field( 'list_item_title' ); ?>
-							<?php $subtext = get_sub_field( 'list_item_subtext' ); ?>
+		<?php if ( $intro ) : ?>
+			<div class="col-span-12">
+				<div class="prose-theme">
+					<?php echo wp_kses_post( $intro ); ?>
+				</div>
+			</div>
+		<?php endif; ?>
 
-							<?php if ( $title ) : ?>
-								<h4 class="heading-4"><?php echo esc_html( $title ); ?></h4>
+		<?php if ( $photo_count ) : ?>
+			<div class="col-span-12">
+				<div class="grid grid-cols-2 gap-4 md:grid-cols-12 md:gap-x-5 md:gap-y-10 md:py-4">
+
+					<?php foreach ( $photos as $index => $photo ) : ?>
+						<?php
+						$image_id    = $get_image_id( $photo['photo'] ?? null );
+						$photo_title = isset( $photo['photo_title'] ) ? (string) $photo['photo_title'] : '';
+
+						$mobile_classes = 'col-span-1';
+
+						if ( 2 === $index ) {
+							$mobile_classes = 'hidden md:block';
+						} elseif ( 1 === $photo_count ) {
+							$mobile_classes = 'col-span-2 mx-auto w-1/2 md:mx-0 md:w-auto';
+						}
+
+						$image_classes = trim(
+							$mobile_classes . ' ' . ( $desktop_classes[ $index ] ?? '' )
+						);
+						?>
+
+						<figure class="<?php echo esc_attr( $image_classes ); ?> relative bg-white p-2 pb-8 shadow-xl md:p-3 md:pb-10">
+							<?php
+							if ( $image_id ) {
+								echo wp_get_attachment_image(
+									$image_id,
+									'large',
+									false,
+									[
+										'class'    => 'aspect-square h-full w-full object-cover',
+										'loading'  => 'lazy',
+										'decoding' => 'async',
+										'sizes'    => '(min-width: 768px) 33vw, 50vw',
+									]
+								);
+							}
+							?>
+
+							<?php if ( $photo_title ) : ?>
+								<figcaption class="mt-2 px-1 text-center font-display text-sm italic text-black md:text-base">
+									<?php echo esc_html( $photo_title ); ?>
+								</figcaption>
 							<?php endif; ?>
+						</figure>
+					<?php endforeach; ?>
 
-							<?php if ( $subtext ) : ?>
-								<div class="prose-theme"><?php echo wp_kses_post( $subtext ); ?></div>
-							<?php endif; ?>
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<?php
+		$list_items = get_sub_field( 'list_items' );
+		$list_items = is_array( $list_items ) ? $list_items : [];
+		$list_items = array_values(
+			array_filter(
+				$list_items,
+				static function ( $row ) {
+					return ! empty( $row['list_item_title'] );
+				}
+			)
+		);
+		$list_count = count( $list_items );
+		?>
+
+		<?php if ( $list_count ) : ?>
+			<div class="col-span-12">
+				<div class="grid grid-cols-12 gap-3 md:gap-4">
+
+					<?php foreach ( $list_items as $index => $item ) : ?>
+						<?php
+						$is_last_odd = ( 1 === $list_count % 2 && $index === $list_count - 1 );
+						$item_classes = 'col-span-12 md:col-span-6 grid min-h-14 place-items-center rounded-xl border-3 border-secondary bg-white px-5 py-3 text-center shadow-lg';
+
+						if ( $is_last_odd ) {
+							$item_classes .= ' md:col-start-4';
+						}
+						?>
+
+						<article class="<?php echo esc_attr( $item_classes ); ?>">
+							<p class="m-0 text-base font-semibold leading-snug md:text-lg">
+								<?php echo esc_html( $item['list_item_title'] ); ?>
+							</p>
 						</article>
-					<?php endwhile; ?>
-				<?php endif; ?>
-			</div>
+					<?php endforeach; ?>
 
-			<div class="grid-12">
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $link['url'] ) || ! empty( $secondary_link['url'] ) ) : ?>
+			<div class="col-span-12 mt-2 flex flex-wrap items-center justify-center gap-4">
 				<?php if ( ! empty( $link['url'] ) ) : ?>
-					<div class="col-span-12 mx-auto text-center mt-8">
-						<a
-							class="btn_main"
-							href="<?php echo esc_url( $link['url'] ); ?>"
-							<?php echo ! empty( $link['target'] ) ? ' target="' . esc_attr( $link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>
-						>
-							<span><?php echo esc_html( $link['title'] ?: 'Learn More' ); ?></span>
-						</a>
-					</div>
+					<a
+						class="btn_main"
+						href="<?php echo esc_url( $link['url'] ); ?>"
+						<?php echo ! empty( $link['target'] ) ? ' target="' . esc_attr( $link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>
+					>
+						<span><?php echo esc_html( $link['title'] ?: 'Learn More' ); ?></span>
+					</a>
+				<?php endif; ?>
+
+				<?php if ( ! empty( $secondary_link['url'] ) ) : ?>
+					<a
+						class="btn_ghost_black"
+						href="<?php echo esc_url( $secondary_link['url'] ); ?>"
+						<?php echo ! empty( $secondary_link['target'] ) ? ' target="' . esc_attr( $secondary_link['target'] ) . '" rel="noopener noreferrer"' : ''; ?>
+					>
+						<span><?php echo esc_html( $secondary_link['title'] ?: 'Learn More' ); ?></span>
+					</a>
 				<?php endif; ?>
 			</div>
-		</div>
+		<?php endif; ?>
+
 	</div>
 </section>
