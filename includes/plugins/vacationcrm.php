@@ -27,9 +27,13 @@
 	 * Main VacationCRM lead-form configuration.
 	 *
 	 * These values are not secrets and may remain in the theme.
+	 *
+	 * PRELAUNCH_VCRM_DEFAULT_AGENT is the VacationCRM agent code used when no
+	 * preferred advisor is selected, or when advisor routing cannot be resolved.
+	 * "Agency" is the shared account that notifies both owners.
 	 */
 	const PRELAUNCH_VCRM_FORM_ID         = 4;
-	const PRELAUNCH_VCRM_DEFAULT_AGENT   = 'Lynne';
+	const PRELAUNCH_VCRM_DEFAULT_AGENT   = 'Agency';
 	const PRELAUNCH_VCRM_MODE            = 'log_only';
 	const PRELAUNCH_VCRM_AGENT_CACHE_KEY = 'prelaunch_vcrm_agents';
 	const PRELAUNCH_VCRM_AGENT_CACHE_TTL = 12 * HOUR_IN_SECONDS;
@@ -117,11 +121,11 @@
 	 * Resolve and validate the VacationCRM agent for a submitted entry.
 	 *
 	 * Field 8:
-	 * - No  = route to the default owner account.
+	 * - No  = route to Agency, the shared account for both owners.
 	 * - Yes = resolve the Advisor post selected in field 9 and validate its
 	 *         VacationCRM identifier against the GetAgents API response.
 	 *
-	 * Any uncertain advisor routing falls back to the agency owner rather than
+	 * Any uncertain advisor routing falls back to Agency rather than
 	 * risking a failed or misrouted lead.
 	 *
 	 * @param array<string, mixed> $entry Gravity Forms entry.
@@ -196,7 +200,7 @@
 
 		if ( is_wp_error( $valid_agent_codes ) ) {
 			return prelaunch_vcrm_get_agent_fallback(
-				'VacationCRM agent validation was unavailable, so the lead was routed to the default agent.',
+				'VacationCRM agent validation was unavailable, so the lead was routed to Agency.',
 				$advisor_name
 			);
 		}
@@ -223,7 +227,7 @@
 	}
 
 	/**
-	 * Get the default-agent routing result after an advisor-routing problem.
+	 * Get the Agency shared-account routing result after an advisor-routing problem.
 	 *
 	 * @param string $warning Internal routing warning.
 	 * @param string $advisor_name Requested advisor name.
@@ -497,7 +501,7 @@
 			$lines[] = '';
 			$lines[] = 'ROUTING FALLBACK:';
 			$lines[] = 'The requested advisor could not be routed automatically.';
-			$lines[] = 'This inquiry was assigned to the agency owner for review.';
+			$lines[] = 'This inquiry was assigned to Agency for review by both owners.';
 		}
 
 		return implode(
