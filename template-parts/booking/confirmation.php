@@ -146,6 +146,12 @@
 	 *
 	 * These placeholders may be used in any of the three
 	 * next-step titles or descriptions.
+	 *
+	 * {booking-link} may be used in next-step copy. When a preferred
+	 * advisor is selected and they have a Booking Link on their
+	 * profile, it is replaced with hardcoded scheduling copy and a
+	 * link. Otherwise the token is removed and that extra section is
+	 * not shown.
 	 */
 	$advisor_token_lower = __(
 		'your advisor',
@@ -227,21 +233,109 @@
 		$step_3_copy
 	);
 
+	$scheduling_url = function_exists( 'prelaunch_get_advisor_scheduling_url' )
+		? prelaunch_get_advisor_scheduling_url(
+			$advisor instanceof WP_Post ? $advisor : null
+		)
+		: '';
+
+	$booking_link_html = '';
+
+	if (
+		$advisor instanceof WP_Post &&
+		'' !== $scheduling_url
+	) {
+		$booking_link_html =
+			'<p>'
+			. esc_html__(
+				'Want to get a head start?',
+				'prelaunch-wp'
+			)
+			. '</p><p><a href="'
+			. esc_url( $scheduling_url )
+			. '" target="_blank" rel="noopener noreferrer">'
+			. esc_html(
+				sprintf(
+					/* translators: %s: advisor first name */
+					__(
+						'Schedule a time with %s',
+						'prelaunch-wp'
+					),
+					$advisor_token_lower
+				)
+			)
+			. '</a></p>';
+	}
+
+	$format_step_copy = static function (
+		string $value
+	) use (
+		$booking_link_html
+	): string {
+		$value = trim( $value );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		$parts = preg_split(
+			'/\s*\{booking-link\}\s*/i',
+			$value
+		);
+
+		if (
+			! is_array( $parts ) ||
+			1 === count( $parts )
+		) {
+			return '<p>'
+				. nl2br( esc_html( $value ), false )
+				. '</p>';
+		}
+
+		$html_parts = [];
+
+		foreach ( $parts as $index => $part ) {
+			$part = trim( $part );
+
+			if ( '' !== $part ) {
+				$html_parts[] = '<p>'
+					. nl2br( esc_html( $part ), false )
+					. '</p>';
+			}
+
+			if (
+				$index < ( count( $parts ) - 1 ) &&
+				'' !== $booking_link_html
+			) {
+				$html_parts[] = $booking_link_html;
+			}
+		}
+
+		return implode(
+			'',
+			$html_parts
+		);
+	};
+
+	$step_1_copy_html = $format_step_copy( $step_1_copy );
+	$step_2_copy_html = $format_step_copy( $step_2_copy );
+	$step_3_copy_html = $format_step_copy( $step_3_copy );
+
 	/*
 	 * Build the three next-step cards.
 	 */
 	$steps = [
 		[
 			'title' => $step_1_title,
-			'copy'  => $step_1_copy,
+			'copy'  => $step_1_copy_html,
 		],
 		[
 			'title' => $step_2_title,
-			'copy'  => $step_2_copy,
+			'copy'  => $step_2_copy_html,
 		],
 		[
 			'title' => $step_3_title,
-			'copy'  => $step_3_copy,
+			'copy'  => $step_3_copy_html,
 		],
 	];
 
@@ -421,9 +515,7 @@
 										<?php endif; ?>
 
 										<?php if ( $step['copy'] ) : ?>
-											<p>
-												<?php echo nl2br( esc_html( $step['copy'] ) ); ?>
-											</p>
+											<?php echo $step['copy']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML is escaped when the step copy is built. ?>
 										<?php endif; ?>
 									</div>
 								</article>

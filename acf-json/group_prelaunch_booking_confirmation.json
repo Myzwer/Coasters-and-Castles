@@ -235,7 +235,7 @@
             "default_value": "",
             "maxlength": "",
             "allow_in_bindings": 1,
-            "placeholder": "{advisor} reaches out",
+            "placeholder": "{Advisor} reaches out",
             "prepend": "",
             "append": ""
         },
@@ -245,7 +245,7 @@
             "name": "booking_confirmation_step_2_copy",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "You can still use {advisor} or {Advisor} here.",
+            "instructions": "You can still use {advisor} or {Advisor} here. Place {booking-link} on its own line to add an optional “Want to get a head start?” scheduling prompt. That extra section only appears when a preferred advisor was selected and that advisor has a Booking Link on their profile. If neither is true, {booking-link} is omitted.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -256,8 +256,8 @@
             "default_value": "",
             "maxlength": "",
             "allow_in_bindings": 1,
-            "rows": 3,
-            "placeholder": "",
+            "rows": 4,
+            "placeholder": "{Advisor} will contact you using the preference you selected on the form.\n{booking-link}",
             "new_lines": ""
         },
         {
@@ -364,5 +364,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787607643
+    "modified": 1787770800
 }

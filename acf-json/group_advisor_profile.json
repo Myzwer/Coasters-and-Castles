@@ -138,6 +138,24 @@
             "delay": 0
         },
         {
+            "key": "field_advisor_booking_link",
+            "label": "Booking Link",
+            "name": "advisor_booking_link",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Paste the full URL for your personal scheduling calendar (for example, Calendly). When a traveler chooses you as their preferred advisor on the booking form, this link can appear on the confirmation page so they can schedule a time with you while they wait to hear back. If this field is empty, that extra prompt will not be shown.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": "https://"
+        },
+        {
             "key": "field_6a697cb1e2165",
             "label": "Socials",
             "name": "",
@@ -804,5 +822,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787607462
+    "modified": 1787770800
 }

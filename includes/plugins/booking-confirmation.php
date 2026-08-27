@@ -167,6 +167,40 @@
 	}
 
 	/**
+	 * Get an advisor’s personal scheduling URL from their profile.
+	 *
+	 * This is distinct from the site booking-page URL. An empty string means
+	 * the confirmation page should not render the {booking-link} section.
+	 */
+	function prelaunch_get_advisor_scheduling_url( ?WP_Post $advisor ): string {
+		if (
+			! $advisor instanceof WP_Post ||
+			'advisor' !== $advisor->post_type
+		) {
+			return '';
+		}
+
+		$url = trim(
+			(string) get_field(
+				'advisor_booking_link',
+				$advisor->ID
+			)
+		);
+
+		if ( '' === $url ) {
+			return '';
+		}
+
+		$safe_url = esc_url_raw( $url );
+
+		if ( '' === $safe_url ) {
+			return '';
+		}
+
+		return $safe_url;
+	}
+
+	/**
 	 * Get the submitted Vacation Type term represented by the confirmation URL.
 	 */
 	function prelaunch_get_booking_confirmation_vacation_type(): ?WP_Term {
