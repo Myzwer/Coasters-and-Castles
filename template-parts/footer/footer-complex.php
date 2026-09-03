@@ -3,7 +3,7 @@
 	 * Complex Footer
 	 *
 	 * Full footer layout used when the site needs more than the simple footer.
-	 * Renders the footer logo, contact details, social icons, quick links,
+	 * Renders the footer logo, contact details, social icons, footer links,
 	 * legal copy, and affiliation logos.
 	 *
 	 * This template is selected from the ACF Globals options page.
@@ -158,49 +158,61 @@
 					</div>
 				</div>
 
-				<div class="footer-affiliations">
-					<?php if ( get_field( 'footer_affiliations_heading', 'option' ) ) : ?>
-						<h3 class="footer-heading">
-							<?php the_field( 'footer_affiliations_heading', 'option' ); ?>
-						</h3>
-					<?php endif; ?>
+				<?php if ( get_field( 'footer_show_affiliations', 'option' ) ) : ?>
+					<div class="footer-affiliations">
+						<?php if ( get_field( 'footer_affiliations_heading', 'option' ) ) : ?>
+							<h3 class="footer-heading">
+								<?php the_field( 'footer_affiliations_heading', 'option' ); ?>
+							</h3>
+						<?php endif; ?>
 
-					<?php if ( have_rows( 'footer_affiliation_logos', 'option' ) ) : ?>
-						<div class="footer-affiliations-grid">
-							<?php
-								while ( have_rows( 'footer_affiliation_logos', 'option' ) ) :
-									the_row();
+						<?php if ( have_rows( 'footer_affiliation_logos', 'option' ) ) : ?>
+							<div class="footer-affiliations-grid">
+								<?php
+									while ( have_rows( 'footer_affiliation_logos', 'option' ) ) :
+										the_row();
 
-									$logo = get_sub_field( 'logo' );
-									$name = get_sub_field( 'name' );
-									$link = get_sub_field( 'link' );
+										$logo = get_sub_field( 'logo' );
+										$name = get_sub_field( 'name' );
+										$link = get_sub_field( 'link' );
 
-									if ( empty( $logo ) ) {
-										continue;
-									}
+										if ( empty( $logo ) ) {
+											continue;
+										}
 
-									$logo_url = ! empty( $logo['url'] ) ? $logo['url'] : '';
-									$logo_alt = ! empty( $logo['alt'] ) ? $logo['alt'] : $name;
+										$logo_url = ! empty( $logo['url'] ) ? $logo['url'] : '';
+										$logo_alt = ! empty( $logo['alt'] ) ? $logo['alt'] : $name;
 
-									if ( empty( $logo_url ) ) {
-										continue;
-									}
-									?>
-									<div class="footer-affiliations-item">
-										<?php if ( $link ) : ?>
-											<?php
-											$link_url    = ! empty( $link['url'] ) ? $link['url'] : '';
-											$link_target = ! empty( $link['target'] ) ? $link['target'] : '_self';
-											$link_title  = ! empty( $link['title'] ) ? $link['title'] : $name;
+										if ( empty( $logo_url ) ) {
+											continue;
+										}
+										?>
+										<div class="footer-affiliations-item">
+											<?php if ( $link ) : ?>
+												<?php
+												$link_url    = ! empty( $link['url'] ) ? $link['url'] : '';
+												$link_target = ! empty( $link['target'] ) ? $link['target'] : '_self';
+												$link_title  = ! empty( $link['title'] ) ? $link['title'] : $name;
 
-											if ( $link_url ) :
-												?>
-												<a
-													class="footer-affiliations-link"
-													href="<?php echo esc_url( $link_url ); ?>"
-													target="<?php echo esc_attr( $link_target ); ?>"
-													aria-label="<?php echo esc_attr( $link_title ); ?>"
-												>
+												if ( $link_url ) :
+													?>
+													<a
+														class="footer-affiliations-link"
+														href="<?php echo esc_url( $link_url ); ?>"
+														target="<?php echo esc_attr( $link_target ); ?>"
+														aria-label="<?php echo esc_attr( $link_title ); ?>"
+													>
+														<img
+															class="footer-affiliations-logo"
+															src="<?php echo esc_url( $logo_url ); ?>"
+															alt="<?php echo esc_attr( $logo_alt ); ?>"
+															loading="lazy"
+															decoding="async"
+														/>
+													</a>
+												<?php endif; ?>
+											<?php else : ?>
+												<div class="footer-affiliations-link footer-affiliations-link-static">
 													<img
 														class="footer-affiliations-logo"
 														src="<?php echo esc_url( $logo_url ); ?>"
@@ -208,24 +220,14 @@
 														loading="lazy"
 														decoding="async"
 													/>
-												</a>
+												</div>
 											<?php endif; ?>
-										<?php else : ?>
-											<div class="footer-affiliations-link footer-affiliations-link-static">
-												<img
-													class="footer-affiliations-logo"
-													src="<?php echo esc_url( $logo_url ); ?>"
-													alt="<?php echo esc_attr( $logo_alt ); ?>"
-													loading="lazy"
-													decoding="async"
-												/>
-											</div>
-										<?php endif; ?>
-									</div>
-								<?php endwhile; ?>
-						</div>
-					<?php endif; ?>
-				</div>
+										</div>
+									<?php endwhile; ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 
 				<div class="footer-legal footer-legal-mobile">
 					<h3 class="footer-heading">Legal Information</h3>

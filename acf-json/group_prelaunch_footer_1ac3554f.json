@@ -30,7 +30,7 @@
             "required": 1,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "33",
                 "class": "",
                 "id": ""
             },
@@ -55,7 +55,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "34",
                 "class": "",
                 "id": ""
             },
@@ -81,7 +81,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "33",
                 "class": "",
                 "id": ""
             },
@@ -114,7 +114,7 @@
                 "class": "",
                 "id": ""
             },
-            "placement": "top",
+            "placement": "left",
             "endpoint": 0,
             "selected": 0
         },
@@ -140,7 +140,7 @@
                 "class": "",
                 "id": ""
             },
-            "layout": "row",
+            "layout": "table",
             "pagination": 0,
             "min": 0,
             "max": 4,
@@ -170,7 +170,7 @@
         },
         {
             "key": "field_5377717b",
-            "label": "Legal \/ Copyright Text",
+            "label": "Legal / Copyright Text",
             "name": "footer_simple_legal_text",
             "aria-label": "",
             "type": "textarea",
@@ -219,57 +219,9 @@
                 "class": "",
                 "id": ""
             },
-            "placement": "top",
+            "placement": "left",
             "endpoint": 0,
             "selected": 0
-        },
-        {
-            "key": "field_79803372",
-            "label": "Quick Links (max 3)",
-            "name": "footer_complex_quick_links",
-            "aria-label": "",
-            "type": "repeater",
-            "instructions": "These are the “top 3” links shown prominently in the footer.",
-            "required": 0,
-            "conditional_logic": [
-                [
-                    {
-                        "field": "field_2c070b68",
-                        "operator": "==",
-                        "value": "complex"
-                    }
-                ]
-            ],
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "collapsed": "",
-            "min": 0,
-            "max": 3,
-            "layout": "row",
-            "button_label": "Add Link",
-            "rows_per_page": 20,
-            "sub_fields": [
-                {
-                    "key": "field_447af3f0",
-                    "label": "Link",
-                    "name": "link",
-                    "aria-label": "",
-                    "type": "link",
-                    "instructions": "",
-                    "required": 1,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "return_format": "array",
-                    "parent_repeater": "field_79803372"
-                }
-            ]
         },
         {
             "key": "field_10e0822a",
@@ -277,7 +229,7 @@
             "name": "footer_complex_links",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "Additional footer links (can be longer).",
+            "instructions": "Footer navigation links shown in the Quick Links column.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -296,7 +248,7 @@
             "collapsed": "",
             "min": 0,
             "max": 0,
-            "layout": "row",
+            "layout": "table",
             "button_label": "Add Link",
             "rows_per_page": 20,
             "sub_fields": [
@@ -325,7 +277,7 @@
             "name": "footer_complex_legal",
             "aria-label": "",
             "type": "wysiwyg",
-            "instructions": "Use bold\/italics and links as needed. Media uploads are disabled.",
+            "instructions": "Use bold/italics and links as needed. Media uploads are disabled.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -369,7 +321,7 @@
                 "class": "",
                 "id": ""
             },
-            "placement": "top",
+            "placement": "left",
             "endpoint": 0,
             "selected": 0
         },
@@ -379,7 +331,7 @@
             "name": "footer_show_affiliations",
             "aria-label": "",
             "type": "true_false",
-            "instructions": "Enable the logo grid panel for affiliations \/ certifications.",
+            "instructions": "Enable the logo grid panel for affiliations / certifications.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -391,7 +343,7 @@
                 ]
             ],
             "wrapper": {
-                "width": "",
+                "width": "30",
                 "class": "",
                 "id": ""
             },
@@ -424,7 +376,7 @@
                 ]
             ],
             "wrapper": {
-                "width": "",
+                "width": "70",
                 "class": "",
                 "id": ""
             },
@@ -440,7 +392,7 @@
             "name": "footer_affiliation_logos",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "Logos will be displayed in a responsive grid. Use “Featured” for logos that need extra space.",
+            "instructions": "Logos display in a responsive grid in the footer.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -461,7 +413,7 @@
                 "class": "",
                 "id": ""
             },
-            "layout": "block",
+            "layout": "table",
             "pagination": 0,
             "min": 0,
             "max": 0,
@@ -475,11 +427,11 @@
                     "name": "logo",
                     "aria-label": "",
                     "type": "image",
-                    "instructions": "Upload a logo for an affiliation \/ certification \/ partner.",
+                    "instructions": "Upload a logo for an affiliation / certification / partner.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "30",
                         "class": "",
                         "id": ""
                     },
@@ -493,7 +445,7 @@
                     "max_size": "",
                     "mime_types": "",
                     "allow_in_bindings": 1,
-                    "preview_size": "medium",
+                    "preview_size": "thumbnail",
                     "parent_repeater": "field_eaeefbac"
                 },
                 {
@@ -506,7 +458,7 @@
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "35",
                         "class": "",
                         "id": ""
                     },
@@ -527,7 +479,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "35",
                         "class": "",
                         "id": ""
                     },
@@ -558,5 +510,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787607651
+    "modified": 1788411289
 }
