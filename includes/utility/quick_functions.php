@@ -12,6 +12,7 @@
 	 * - Alphabetize page templates in the Page Attributes template dropdown.
 	 * - Display a non-production environment badge in the admin bar.
 	 * - Disable comments site-wide (UI + front end + admin cleanup).
+	 * - Limit advisor Group Types to two and hide the booking-form "I'm Not Sure" term.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/add_theme_support/
 	 * @link https://developer.wordpress.org/reference/hooks/theme_page_templates/
@@ -181,10 +182,156 @@
 	add_action( 'admin_init', 'windpeak_disable_comments_admin_redirect' );
 
 	/**
-	 * Limit Advisor Group Type selections to two.
+	 * Term ID for the client-form "I'm Not Sure" group type escape hatch.
+	 *
+	 * That term must remain in the taxonomy so booking forms can offer it, but
+	 * advisors should never select it as a profile specialty.
+	 *
+	 * @return int Term ID, or 0 when the term is missing.
+	 */
+	function windpeak_get_group_type_im_not_sure_term_id(): int {
+		static $term_id = null;
+
+		if ( null !== $term_id ) {
+			return $term_id;
+		}
+
+		$term_id = 0;
+
+		if ( ! taxonomy_exists( 'group_type' ) ) {
+			return $term_id;
+		}
+
+		$terms = get_terms(
+			[
+				'taxonomy'   => 'group_type',
+				'hide_empty' => false,
+			]
+		);
+
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return $term_id;
+		}
+
+		$normalize = static function ( string $label ): string {
+			if ( function_exists( 'prelaunch_normalize_gravity_forms_choice_label' ) ) {
+				return prelaunch_normalize_gravity_forms_choice_label( $label );
+			}
+
+			$label = str_replace( [ '’', '‘', '`' ], "'", wp_strip_all_tags( $label ) );
+
+			return strtolower( trim( $label ) );
+		};
+
+		foreach ( $terms as $term ) {
+			if ( ! $term instanceof WP_Term ) {
+				continue;
+			}
+
+			if ( "i'm not sure" === $normalize( $term->name ) ) {
+				$term_id = (int) $term->term_id;
+				break;
+			}
+		}
+
+		return $term_id;
+	}
+
+	/**
+	 * Hide "I'm Not Sure" from the advisor Group Types checkbox list.
+	 *
+	 * @param array<string, mixed> $args wp_list_categories args.
+	 * @param array<string, mixed> $field ACF field settings.
+	 *
+	 * @return array<string, mixed>
+	 */
+	function windpeak_exclude_im_not_sure_from_advisor_group_types_list(
+		array $args,
+		array $field
+	): array {
+		$exclude_id = windpeak_get_group_type_im_not_sure_term_id();
+
+		if ( ! $exclude_id ) {
+			return $args;
+		}
+
+		$existing = [];
+
+		if ( ! empty( $args['exclude'] ) ) {
+			$existing = array_filter(
+				array_map(
+					'absint',
+					is_array( $args['exclude'] )
+						? $args['exclude']
+						: explode( ',', (string) $args['exclude'] )
+				)
+			);
+		}
+
+		$existing[]      = $exclude_id;
+		$args['exclude'] = implode( ',', array_unique( $existing ) );
+
+		return $args;
+	}
+
+	add_filter(
+		'acf/fields/taxonomy/wp_list_categories/name=advisor_group_types',
+		'windpeak_exclude_im_not_sure_from_advisor_group_types_list',
+		10,
+		2
+	);
+
+	/**
+	 * Exclude "I'm Not Sure" from advisor Group Types AJAX / query-driven UIs.
+	 *
+	 * @param array<string, mixed> $args get_terms / WP_Term_Query args.
+	 * @param array<string, mixed> $field ACF field settings.
+	 *
+	 * @return array<string, mixed>
+	 */
+	function windpeak_exclude_im_not_sure_from_advisor_group_types_query(
+		array $args,
+		array $field
+	): array {
+		$exclude_id = windpeak_get_group_type_im_not_sure_term_id();
+
+		if ( ! $exclude_id ) {
+			return $args;
+		}
+
+		$existing = [];
+
+		if ( ! empty( $args['exclude'] ) ) {
+			$existing = array_filter(
+				array_map(
+					'absint',
+					is_array( $args['exclude'] )
+						? $args['exclude']
+						: explode( ',', (string) $args['exclude'] )
+				)
+			);
+		}
+
+		$existing[]      = $exclude_id;
+		$args['exclude'] = array_values( array_unique( $existing ) );
+
+		return $args;
+	}
+
+	add_filter(
+		'acf/fields/taxonomy/query/name=advisor_group_types',
+		'windpeak_exclude_im_not_sure_from_advisor_group_types_query',
+		10,
+		3
+	);
+
+	/**
+	 * Limit Advisor Group Type selections to two and block "I'm Not Sure".
 	 *
 	 * ACF taxonomy checkbox fields do not include a native maximum-selection
 	 * setting, so this validates the submitted value before the post is saved.
+	 * "I'm Not Sure" is a booking-form escape hatch and is not a valid advisor
+	 * specialty, even if submitted outside the visible checkbox list.
 	 *
 	 * @param bool|string $valid Current validation result.
 	 * @param mixed $value Submitted field value.
@@ -210,6 +357,19 @@
 		}
 
 		$selected_terms = is_array( $value ) ? $value : [ $value ];
+		$selected_terms = array_map( 'absint', $selected_terms );
+
+		$im_not_sure_id = windpeak_get_group_type_im_not_sure_term_id();
+
+		if (
+			$im_not_sure_id
+			&& in_array( $im_not_sure_id, $selected_terms, true )
+		) {
+			return __(
+				'“I’m Not Sure” is not available as an advisor group type.',
+				'prelaunch-wp'
+			);
+		}
 
 		if ( count( $selected_terms ) > 2 ) {
 			return __(
