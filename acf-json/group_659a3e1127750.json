@@ -453,7 +453,7 @@
                         },
                         {
                             "key": "field_6a604ccac59a3",
-                            "label": "Image 1 \/ 5",
+                            "label": "Image 1 / 5",
                             "name": "image_1",
                             "aria-label": "",
                             "type": "image",
@@ -479,7 +479,7 @@
                         },
                         {
                             "key": "field_6a604ce2c59a4",
-                            "label": "Image 2 \/ 5",
+                            "label": "Image 2 / 5",
                             "name": "image_2",
                             "aria-label": "",
                             "type": "image",
@@ -505,7 +505,7 @@
                         },
                         {
                             "key": "field_6a604d01c59a5",
-                            "label": "Image 3 \/ 5",
+                            "label": "Image 3 / 5",
                             "name": "image_3",
                             "aria-label": "",
                             "type": "image",
@@ -531,7 +531,7 @@
                         },
                         {
                             "key": "field_6a604d11c59a6",
-                            "label": "Image 4 \/ 5",
+                            "label": "Image 4 / 5",
                             "name": "image_4",
                             "aria-label": "",
                             "type": "image",
@@ -557,7 +557,7 @@
                         },
                         {
                             "key": "field_6a604d1fc59a7",
-                            "label": "Image 5 \/ 5",
+                            "label": "Image 5 / 5",
                             "name": "image_5",
                             "aria-label": "",
                             "type": "image",
@@ -987,7 +987,7 @@
                             "name": "form_id",
                             "aria-label": "",
                             "type": "number",
-                            "instructions": "Enter the ID of the Gravity Form you want to display. You can find this in the Forms menu — the ID number appears in the list of forms.",
+                            "instructions": "Enter the ID of the Gravity Form you want to display. You can find this in the Forms menu \u2014 the ID number appears in the list of forms.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -1234,11 +1234,11 @@
                             "name": "form_id",
                             "aria-label": "",
                             "type": "number",
-                            "instructions": "Enter the ID of the Gravity Form you want to display. You can find this in the Forms menu — the ID number appears in the list of forms.",
+                            "instructions": "Enter the ID of the Gravity Form you want to display. You can find this in the Forms menu \u2014 the ID number appears in the list of forms.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "",
+                                "width": "25",
                                 "class": "",
                                 "id": ""
                             },
@@ -1249,69 +1249,6 @@
                             "placeholder": "",
                             "prepend": "",
                             "append": ""
-                        },
-                        {
-                            "key": "field_6a83c4e302629",
-                            "label": "Title",
-                            "name": "title",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "maxlength": "",
-                            "allow_in_bindings": 0,
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
-                        },
-                        {
-                            "key": "field_6a83c4fb0262a",
-                            "label": "Subtitle",
-                            "name": "subtitle",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "maxlength": "",
-                            "allow_in_bindings": 0,
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": ""
-                        },
-                        {
-                            "key": "field_6a83c5030262b",
-                            "label": "Copy",
-                            "name": "copy",
-                            "aria-label": "",
-                            "type": "wysiwyg",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "allow_in_bindings": 0,
-                            "tabs": "all",
-                            "toolbar": "full",
-                            "media_upload": 1,
-                            "delay": 0
                         }
                     ],
                     "min": "",
@@ -1398,7 +1335,7 @@
                             "name": "intro",
                             "aria-label": "",
                             "type": "wysiwyg",
-                            "instructions": "You can add additional headers, text and buttons using the tools below. Alignment is controlled in the editor — this block does not center the intro. For SEO reasons, do not use an H1.",
+                            "instructions": "You can add additional headers, text and buttons using the tools below. Alignment is controlled in the editor \u2014 this block does not center the intro. For SEO reasons, do not use an H1.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -1726,5 +1663,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787791014
+    "modified": 1788411790
 }
