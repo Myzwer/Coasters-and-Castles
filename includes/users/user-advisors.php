@@ -48,10 +48,10 @@
 	 * Synchronize Advisor post type capabilities.
 	 *
 	 * Administrators and Site Administrators receive full control of Advisor
-	 * profiles. Advisor accounts receive only the capabilities required to open,
-	 * edit, and upload media for their own linked profile. Object-level filters
-	 * below prevent access to any other Advisor profile and block creation or
-	 * deletion.
+	 * profiles. Every Advisor-family role receives only the capabilities required
+	 * to open, edit, and upload media for their own linked profile. Object-level
+	 * filters below prevent access to any other Advisor profile and block
+	 * creation or deletion.
 	 *
 	 * @return void
 	 */
@@ -87,26 +87,54 @@
 			}
 		}
 
-		$advisor_role = get_role( PRELAUNCH_ADVISOR_ROLE );
+		foreach ( prelaunch_get_advisor_family_roles() as $role_slug ) {
+			$advisor_role = get_role( $role_slug );
 
-		if ( ! $advisor_role ) {
-			return;
+			if ( ! $advisor_role ) {
+				continue;
+			}
+
+			foreach ( array_merge( $advisor_caps, $legacy_revision_caps ) as $capability ) {
+				$advisor_role->remove_cap( $capability );
+			}
+
+			$advisor_role->remove_cap( 'unfiltered_upload' );
+			$advisor_role->add_cap( 'read' );
+			$advisor_role->add_cap( 'upload_files' );
+			$advisor_role->add_cap( 'edit_advisors' );
+			$advisor_role->add_cap( 'edit_published_advisors' );
+			$advisor_role->add_cap( 'edit_private_advisors' );
+			$advisor_role->add_cap( 'read_advisor' );
 		}
-
-		foreach ( array_merge( $advisor_caps, $legacy_revision_caps ) as $capability ) {
-			$advisor_role->remove_cap( $capability );
-		}
-
-		$advisor_role->remove_cap( 'unfiltered_upload' );
-		$advisor_role->add_cap( 'read' );
-		$advisor_role->add_cap( 'upload_files' );
-		$advisor_role->add_cap( 'edit_advisors' );
-		$advisor_role->add_cap( 'edit_published_advisors' );
-		$advisor_role->add_cap( 'edit_private_advisors' );
-		$advisor_role->add_cap( 'read_advisor' );
 	}
 
 	add_action( 'init', 'prelaunch_sync_advisor_role_caps', 40 );
+
+	/**
+	 * Whether Advisor-family media should be limited to the current user's uploads.
+	 *
+	 * Profile-focused Advisors (off/credit Posts levels) stay in their own
+	 * library. Writers and editors need the shared Media Library for blog work.
+	 *
+	 * @param string|null $role_slug Role slug. Defaults to the current managed role.
+	 *
+	 * @return bool
+	 */
+	function prelaunch_advisor_media_is_isolated( ?string $role_slug = null ): bool {
+		if ( null === $role_slug ) {
+			$role_slug = prelaunch_get_current_managed_role();
+		}
+
+		if ( ! $role_slug || ! in_array( $role_slug, prelaunch_get_advisor_family_roles(), true ) ) {
+			return false;
+		}
+
+		return in_array(
+			prelaunch_get_posts_access_level( $role_slug ),
+			array( 'off', 'credit' ),
+			true
+		);
+	}
 
 	/**
 	 * Get the Advisor post linked to a user.
@@ -179,7 +207,7 @@
 
 		if (
 			! $user instanceof WP_User
-			|| ! prelaunch_user_has_role( $user, PRELAUNCH_ADVISOR_ROLE )
+			|| ! prelaunch_user_has_advisor_family_role( $user )
 			|| ! in_array( $cap, array( 'edit_post', 'read_post', 'delete_post' ), true )
 		) {
 			return $caps;
@@ -553,7 +581,7 @@
 	 * @return string
 	 */
 	function prelaunch_redirect_advisor_after_login( string $redirect_to, string $requested_redirect_to, $user ): string {
-		if ( ! $user instanceof WP_User || ! prelaunch_user_has_role( $user, PRELAUNCH_ADVISOR_ROLE ) ) {
+		if ( ! $user instanceof WP_User || ! prelaunch_user_has_advisor_family_role( $user ) ) {
 			return $redirect_to;
 		}
 
@@ -699,7 +727,7 @@
 	 * @return array<string, mixed>
 	 */
 	function prelaunch_limit_advisor_media_modal( array $query ): array {
-		if ( prelaunch_is_advisor() ) {
+		if ( prelaunch_advisor_media_is_isolated() ) {
 			$query['author'] = get_current_user_id();
 		}
 
@@ -716,7 +744,7 @@
 	 * @return void
 	 */
 	function prelaunch_limit_advisor_media_list( WP_Query $query ): void {
-		if ( ! is_admin() || ! prelaunch_is_advisor() || ! $query->is_main_query() ) {
+		if ( ! is_admin() || ! prelaunch_advisor_media_is_isolated() || ! $query->is_main_query() ) {
 			return;
 		}
 
@@ -742,7 +770,20 @@
 	function prelaunch_map_advisor_attachment_caps( array $caps, string $cap, int $user_id, array $args ): array {
 		$user = get_userdata( $user_id );
 
-		if ( ! $user instanceof WP_User || ! prelaunch_user_has_role( $user, PRELAUNCH_ADVISOR_ROLE ) ) {
+		if ( ! $user instanceof WP_User || ! prelaunch_user_has_advisor_family_role( $user ) ) {
+			return $caps;
+		}
+
+		$actor_role = null;
+
+		foreach ( prelaunch_get_advisor_family_roles() as $role_slug ) {
+			if ( prelaunch_user_has_role( $user, $role_slug ) ) {
+				$actor_role = $role_slug;
+				break;
+			}
+		}
+
+		if ( ! $actor_role || ! prelaunch_advisor_media_is_isolated( $actor_role ) ) {
 			return $caps;
 		}
 

@@ -31,9 +31,13 @@
 		}
 
 		/*
-		 * Posts are binary in the current policy system.
+		 * Posts: show "+ New > Post" only for submit/edit/full access.
+		 * Credit-only roles are author-eligible but cannot open Posts.
 		 */
-		if ( ! prelaunch_current_user_has_feature_access( 'posts' ) ) {
+		$current_role = prelaunch_get_current_managed_role();
+		$posts_level  = $current_role ? prelaunch_get_posts_access_level( $current_role ) : 'off';
+
+		if ( ! in_array( $posts_level, array( 'full', 'edit', 'submit' ), true ) ) {
 			$wp_admin_bar->remove_node( 'new-post' );
 		}
 

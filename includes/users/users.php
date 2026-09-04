@@ -12,6 +12,9 @@
 	 *
 	 * Example:
 	 * wp role delete prelaunch_client_admin
+	 * wp role delete prelaunch_advisor_byline
+	 * wp role delete prelaunch_advisor_writer
+	 * wp role delete prelaunch_advisor_editor
 	 * wp eval 'do_action("init");'
 	 */
 

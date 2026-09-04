@@ -347,7 +347,7 @@
 	 * Keep the current Advisor's default FileBird folder in sync on admin load.
 	 */
 	function prelaunch_sync_current_advisor_filebird_folder(): void {
-		if ( ! is_admin() || ! prelaunch_is_advisor() || wp_doing_ajax() ) {
+		if ( ! is_admin() || ! prelaunch_advisor_media_is_isolated() || wp_doing_ajax() ) {
 			return;
 		}
 
@@ -403,7 +403,7 @@
 	 * cannot remain Uncategorized or land in a folder the advisor clicked.
 	 */
 	function prelaunch_assign_advisor_upload_to_filebird_folder( int $attachment_id ): void {
-		if ( ! prelaunch_filebird_is_available() || ! prelaunch_is_advisor() ) {
+		if ( ! prelaunch_filebird_is_available() || ! prelaunch_advisor_media_is_isolated() ) {
 			return;
 		}
 
@@ -448,7 +448,7 @@
 
 		$user = get_userdata( $user_id );
 
-		if ( ! $user instanceof WP_User || ! prelaunch_user_has_role( $user, PRELAUNCH_ADVISOR_ROLE ) ) {
+		if ( ! $user instanceof WP_User || ! prelaunch_user_has_advisor_family_role( $user ) ) {
 			return $folder_id;
 		}
 

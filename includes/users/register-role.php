@@ -23,9 +23,24 @@
 	const PRELAUNCH_POSTS_EDITOR_ROLE = 'prelaunch_posts_editor';
 
 	/**
-	 * Travel advisor role slug.
+	 * Base travel advisor role slug (profile only).
 	 */
 	const PRELAUNCH_ADVISOR_ROLE = 'prelaunch_advisor';
+
+	/**
+	 * Advisor who can be credited as a blog author but has no Posts access.
+	 */
+	const PRELAUNCH_ADVISOR_BYLINE_ROLE = 'prelaunch_advisor_byline';
+
+	/**
+	 * Advisor who can write and submit their own posts for review.
+	 */
+	const PRELAUNCH_ADVISOR_WRITER_ROLE = 'prelaunch_advisor_writer';
+
+	/**
+	 * Advisor who can edit anyone's posts but cannot publish.
+	 */
+	const PRELAUNCH_ADVISOR_EDITOR_ROLE = 'prelaunch_advisor_editor';
 
 	/**
 	 * Developer-only capability for the Tokens options page.
@@ -49,6 +64,26 @@
 			PRELAUNCH_CLIENT_ADMIN_ROLE,
 			PRELAUNCH_POSTS_EDITOR_ROLE,
 			PRELAUNCH_ADVISOR_ROLE,
+			PRELAUNCH_ADVISOR_BYLINE_ROLE,
+			PRELAUNCH_ADVISOR_WRITER_ROLE,
+			PRELAUNCH_ADVISOR_EDITOR_ROLE,
+		);
+	}
+
+	/**
+	 * Get all Advisor-family role slugs.
+	 *
+	 * These roles are built from the minimal Advisor whitelist (not cloned from
+	 * Administrator) and share Advisor profile locking behavior.
+	 *
+	 * @return array<int, string>
+	 */
+	function prelaunch_get_advisor_family_roles(): array {
+		return array(
+			PRELAUNCH_ADVISOR_ROLE,
+			PRELAUNCH_ADVISOR_BYLINE_ROLE,
+			PRELAUNCH_ADVISOR_WRITER_ROLE,
+			PRELAUNCH_ADVISOR_EDITOR_ROLE,
 		);
 	}
 
@@ -59,9 +94,12 @@
 	 */
 	function prelaunch_get_managed_role_labels(): array {
 		return array(
-			PRELAUNCH_CLIENT_ADMIN_ROLE => __( 'Site Administrator', 'prelaunch-wp' ),
-			PRELAUNCH_POSTS_EDITOR_ROLE => __( 'Posts Editor', 'prelaunch-wp' ),
-			PRELAUNCH_ADVISOR_ROLE      => __( 'Advisor', 'prelaunch-wp' ),
+			PRELAUNCH_CLIENT_ADMIN_ROLE     => __( 'Site Administrator', 'prelaunch-wp' ),
+			PRELAUNCH_POSTS_EDITOR_ROLE     => __( 'Posts Editor', 'prelaunch-wp' ),
+			PRELAUNCH_ADVISOR_ROLE          => __( 'Advisor', 'prelaunch-wp' ),
+			PRELAUNCH_ADVISOR_BYLINE_ROLE   => __( 'Byline Advisor', 'prelaunch-wp' ),
+			PRELAUNCH_ADVISOR_WRITER_ROLE   => __( 'Advisor Writer', 'prelaunch-wp' ),
+			PRELAUNCH_ADVISOR_EDITOR_ROLE   => __( 'Advisor Editor', 'prelaunch-wp' ),
 		);
 	}
 
@@ -79,6 +117,21 @@
 		}
 
 		return in_array( $role_slug, (array) $user->roles, true );
+	}
+
+	/**
+	 * Determine whether a user has any Advisor-family role.
+	 *
+	 * @param WP_User|null $user User object.
+	 *
+	 * @return bool
+	 */
+	function prelaunch_user_has_advisor_family_role( ?WP_User $user ): bool {
+		if ( ! $user instanceof WP_User ) {
+			return false;
+		}
+
+		return (bool) array_intersect( prelaunch_get_advisor_family_roles(), (array) $user->roles );
 	}
 
 	/**
@@ -100,12 +153,15 @@
 	}
 
 	/**
-	 * Determine whether the current user is an Advisor.
+	 * Determine whether the current user has any Advisor-family role.
+	 *
+	 * Profile locks, media isolation rules, and Advisor CPT guards apply to the
+	 * whole Advisor family, not only the base Advisor role.
 	 *
 	 * @return bool
 	 */
 	function prelaunch_is_advisor(): bool {
-		return prelaunch_user_has_role( wp_get_current_user(), PRELAUNCH_ADVISOR_ROLE );
+		return prelaunch_user_has_advisor_family_role( wp_get_current_user() );
 	}
 
 	/**
@@ -126,12 +182,17 @@
 	/**
 	 * Register or sync all Prelaunch-managed roles.
 	 *
-	 * Each managed role is cloned from the default Administrator role first.
-	 * Feature modules then remove or re-apply capabilities based on role policy.
+	 * Non-advisor managed roles are cloned from the default Administrator role
+	 * first. Feature modules then remove or re-apply capabilities based on role
+	 * policy.
 	 *
-	 * If a role already exists, any missing Administrator capabilities are added
-	 * so the role stays in sync with plugin-added caps before module restrictions
-	 * are applied.
+	 * Advisor-family roles are intentionally created from a minimal whitelist.
+	 * They must never inherit Administrator capabilities added by WordPress or
+	 * plugins.
+	 *
+	 * If a non-advisor role already exists, any missing Administrator capabilities
+	 * are added so the role stays in sync with plugin-added caps before module
+	 * restrictions are applied.
 	 *
 	 * @return void
 	 */
@@ -142,16 +203,13 @@
 			return;
 		}
 
-		$role_labels = prelaunch_get_managed_role_labels();
+		$role_labels     = prelaunch_get_managed_role_labels();
+		$advisor_family  = prelaunch_get_advisor_family_roles();
 
 		foreach ( prelaunch_get_managed_user_roles() as $role_slug ) {
 			$managed_role = get_role( $role_slug );
 
-			/*
-			 * Advisors are intentionally created from a minimal whitelist. They must
-			 * never inherit Administrator capabilities added by WordPress or plugins.
-			 */
-			if ( PRELAUNCH_ADVISOR_ROLE === $role_slug ) {
+			if ( in_array( $role_slug, $advisor_family, true ) ) {
 				if ( ! $managed_role ) {
 					add_role(
 						$role_slug,

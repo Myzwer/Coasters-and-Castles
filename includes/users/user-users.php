@@ -84,6 +84,99 @@
 	add_action( 'init', 'prelaunch_sync_managed_role_users_caps', 30 );
 
 	/**
+	 * Prevent managed roles with Users access from assigning the owner Administrator role.
+	 *
+	 * Site Administrators can manage users, but they must not escalate accounts to
+	 * the developer-owned Administrator role.
+	 *
+	 * @param array<string, array<string, mixed>> $roles Editable roles.
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	function prelaunch_filter_editable_roles_for_managed_users( array $roles ): array {
+		if ( ! prelaunch_current_user_has_managed_role() ) {
+			return $roles;
+		}
+
+		$access_level = prelaunch_get_current_role_policy_value( 'users', 'profile_only' );
+
+		if ( 'full' !== $access_level ) {
+			return $roles;
+		}
+
+		unset( $roles[ PRELAUNCH_OWNER_ROLE ] );
+
+		return $roles;
+	}
+
+	add_filter( 'editable_roles', 'prelaunch_filter_editable_roles_for_managed_users' );
+
+	/**
+	 * Block managed roles from editing, deleting, or promoting owner Administrators.
+	 *
+	 * Hiding Administrator from the role dropdown is not enough on its own. This
+	 * also prevents direct edits against existing Administrator accounts.
+	 *
+	 * @param array<int, string> $caps Primitive capabilities WordPress requires.
+	 * @param string $cap Meta capability being checked.
+	 * @param int $user_id Current user ID.
+	 * @param array<int, mixed> $args Additional arguments. User ID is typically $args[0].
+	 *
+	 * @return array<int, string>
+	 */
+	function prelaunch_map_users_meta_caps_for_managed_roles( array $caps, string $cap, int $user_id, array $args ): array {
+		$protected_caps = array(
+			'edit_user',
+			'delete_user',
+			'promote_user',
+			'remove_user',
+		);
+
+		if ( ! in_array( $cap, $protected_caps, true ) ) {
+			return $caps;
+		}
+
+		$actor = get_userdata( $user_id );
+
+		if ( ! $actor instanceof WP_User ) {
+			return $caps;
+		}
+
+		$actor_role = null;
+
+		foreach ( prelaunch_get_managed_user_roles() as $role_slug ) {
+			if ( prelaunch_user_has_role( $actor, $role_slug ) ) {
+				$actor_role = $role_slug;
+				break;
+			}
+		}
+
+		if ( ! $actor_role || 'full' !== prelaunch_get_role_policy_value( $actor_role, 'users', 'profile_only' ) ) {
+			return $caps;
+		}
+
+		$target_user_id = isset( $args[0] ) ? (int) $args[0] : 0;
+
+		if ( $target_user_id <= 0 || $target_user_id === $user_id ) {
+			return $caps;
+		}
+
+		$target = get_userdata( $target_user_id );
+
+		if ( ! $target instanceof WP_User ) {
+			return $caps;
+		}
+
+		if ( prelaunch_user_has_role( $target, PRELAUNCH_OWNER_ROLE ) ) {
+			$caps[] = 'do_not_allow';
+		}
+
+		return $caps;
+	}
+
+	add_filter( 'map_meta_cap', 'prelaunch_map_users_meta_caps_for_managed_roles', 20, 4 );
+
+	/**
 	 * Customize the Users admin menu for managed roles.
 	 *
 	 * - full: leave Users as-is

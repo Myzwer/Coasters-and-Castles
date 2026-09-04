@@ -2,24 +2,68 @@
 	/**
 	 * WordPress post-editor access rules for Prelaunch-managed roles.
 	 *
-	 * This module controls access to the built-in "Posts" content system.
-	 * It is intentionally binary for now:
-	 *
-	 * - true: role keeps normal post access
-	 * - false: role cannot access Posts in admin
+	 * Supported policy levels:
+	 * - full: normal Posts access, including publish
+	 * - edit: edit anyone's posts, but cannot publish or schedule
+	 * - submit: create and edit own drafts, submit for review
+	 * - credit: appear as a post author only; no Posts admin access
+	 * - off: no Posts access and not listed as an author
 	 */
 
 	defined( 'ABSPATH' ) || exit;
 
 	/**
-	 * Determine whether a managed role should have access to Posts.
+	 * Get the Posts access level for a managed role.
+	 *
+	 * Legacy boolean policies are normalized:
+	 * - true  → full
+	 * - false → off
+	 *
+	 * @param string $role_slug Role slug.
+	 *
+	 * @return string
+	 */
+	function prelaunch_get_posts_access_level( string $role_slug ): string {
+		$level = prelaunch_get_role_policy_value( $role_slug, 'posts', 'off' );
+
+		if ( true === $level ) {
+			return 'full';
+		}
+
+		if ( false === $level || null === $level ) {
+			return 'off';
+		}
+
+		if ( ! is_string( $level ) ) {
+			return 'off';
+		}
+
+		$allowed_levels = array(
+			'full',
+			'edit',
+			'submit',
+			'credit',
+			'off',
+		);
+
+		return in_array( $level, $allowed_levels, true ) ? $level : 'off';
+	}
+
+	/**
+	 * Determine whether a managed role should have Posts admin access.
+	 *
+	 * Credit is intentionally excluded: those users are author-eligible only.
 	 *
 	 * @param string $role_slug Role slug.
 	 *
 	 * @return bool
 	 */
 	function prelaunch_role_has_posts_access( string $role_slug ): bool {
-		return prelaunch_role_has_feature_access( $role_slug, 'posts' );
+		return in_array(
+			prelaunch_get_posts_access_level( $role_slug ),
+			array( 'full', 'edit', 'submit' ),
+			true
+		);
 	}
 
 	/**
@@ -48,8 +92,10 @@
 	/**
 	 * Sync post capabilities for all Prelaunch-managed roles.
 	 *
-	 * Because managed roles are cloned from Administrator, this module removes
-	 * or restores Posts access per role based on the central policy layer.
+	 * Because managed non-advisor roles are cloned from Administrator, this
+	 * module removes every Posts capability it owns before re-applying the
+	 * correct policy level. Advisor-family roles start from a minimal whitelist
+	 * and receive only the caps their Posts level requires.
 	 *
 	 * @return void
 	 */
@@ -63,16 +109,50 @@
 				continue;
 			}
 
-			if ( prelaunch_role_has_posts_access( $role_slug ) ) {
-				foreach ( $post_caps as $cap ) {
-					$role->add_cap( $cap );
-				}
-
-				continue;
-			}
-
 			foreach ( $post_caps as $cap ) {
 				$role->remove_cap( $cap );
+			}
+
+			switch ( prelaunch_get_posts_access_level( $role_slug ) ) {
+				case 'full':
+					foreach ( $post_caps as $cap ) {
+						$role->add_cap( $cap );
+					}
+					break;
+
+				case 'edit':
+					$role->add_cap( 'edit_posts' );
+					$role->add_cap( 'edit_others_posts' );
+					$role->add_cap( 'edit_published_posts' );
+					$role->add_cap( 'edit_private_posts' );
+					$role->add_cap( 'delete_posts' );
+					$role->add_cap( 'delete_others_posts' );
+					$role->add_cap( 'delete_private_posts' );
+					$role->add_cap( 'read_private_posts' );
+					$role->add_cap( 'manage_categories' );
+					/*
+					 * Intentionally not granted:
+					 * - publish_posts
+					 * - delete_published_posts
+					 */
+					break;
+
+				case 'submit':
+					$role->add_cap( 'edit_posts' );
+					$role->add_cap( 'delete_posts' );
+					break;
+
+				case 'credit':
+					/*
+					 * edit_posts is required for WordPress author dropdowns and the
+					 * REST authors list. Posts admin UI is blocked separately.
+					 */
+					$role->add_cap( 'edit_posts' );
+					break;
+
+				case 'off':
+				default:
+					break;
 			}
 		}
 	}
@@ -80,9 +160,7 @@
 	add_action( 'init', 'prelaunch_sync_managed_role_posts_caps', 30 );
 
 	/**
-	 * Remove the Posts admin menu for managed users when Posts are disabled.
-	 *
-	 * This is admin UX cleanup only. Capability enforcement is handled separately.
+	 * Remove the Posts admin menu for managed users without Posts admin access.
 	 *
 	 * @return void
 	 */
@@ -91,7 +169,9 @@
 			return;
 		}
 
-		if ( prelaunch_current_user_has_feature_access( 'posts' ) ) {
+		$current_role = prelaunch_get_current_managed_role();
+
+		if ( ! $current_role || prelaunch_role_has_posts_access( $current_role ) ) {
 			return;
 		}
 
@@ -101,9 +181,7 @@
 	add_action( 'admin_menu', 'prelaunch_maybe_hide_posts_admin_menu', 999 );
 
 	/**
-	 * Block direct wp-admin access to the Posts area for managed users when disabled.
-	 *
-	 * This prevents manually navigating to post-management screens by URL.
+	 * Block direct wp-admin access to the Posts area when disabled or credit-only.
 	 *
 	 * @return void
 	 */
@@ -112,7 +190,9 @@
 			return;
 		}
 
-		if ( prelaunch_current_user_has_feature_access( 'posts' ) ) {
+		$current_role = prelaunch_get_current_managed_role();
+
+		if ( ! $current_role || prelaunch_role_has_posts_access( $current_role ) ) {
 			return;
 		}
 
@@ -148,3 +228,166 @@
 	}
 
 	add_action( 'current_screen', 'prelaunch_maybe_block_posts_admin_screens' );
+
+	/**
+	 * Keep credit-only users out of Posts at runtime while leaving them author-eligible.
+	 *
+	 * WordPress author dropdowns and the REST authors list read role capabilities
+	 * from the database, so edit_posts stays on the role. Runtime capability checks
+	 * for the credit user themselves are stripped so they cannot open or create posts.
+	 *
+	 * @param array<string, bool> $allcaps All capabilities for the user.
+	 * @param array<int, string> $caps Primitive caps being checked.
+	 * @param array<int, mixed> $args Capability check arguments.
+	 * @param WP_User $user User object.
+	 *
+	 * @return array<string, bool>
+	 */
+	function prelaunch_filter_credit_role_runtime_caps( array $allcaps, array $caps, array $args, WP_User $user ): array {
+		unset( $caps, $args );
+
+		$actor_role = null;
+
+		foreach ( prelaunch_get_managed_user_roles() as $role_slug ) {
+			if ( prelaunch_user_has_role( $user, $role_slug ) ) {
+				$actor_role = $role_slug;
+				break;
+			}
+		}
+
+		if ( ! $actor_role || 'credit' !== prelaunch_get_posts_access_level( $actor_role ) ) {
+			return $allcaps;
+		}
+
+		unset( $allcaps['edit_posts'] );
+		unset( $allcaps['publish_posts'] );
+		unset( $allcaps['delete_posts'] );
+
+		return $allcaps;
+	}
+
+	add_filter( 'user_has_cap', 'prelaunch_filter_credit_role_runtime_caps', 10, 4 );
+
+	/**
+	 * Prevent edit-level roles from publishing or scheduling posts.
+	 *
+	 * Content edits to already-published posts remain published. New or draft
+	 * posts that attempt to publish are forced to pending review instead.
+	 *
+	 * @param array<string, mixed> $data Sanitized post data.
+	 * @param array<string, mixed> $postarr Raw post array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	function prelaunch_prevent_post_publishing_for_edit_level( array $data, array $postarr ): array {
+		if ( ! is_admin() && ! ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return $data;
+		}
+
+		if ( ! prelaunch_current_user_has_managed_role() ) {
+			return $data;
+		}
+
+		$current_role = prelaunch_get_current_managed_role();
+
+		if ( ! $current_role || 'edit' !== prelaunch_get_posts_access_level( $current_role ) ) {
+			return $data;
+		}
+
+		if ( 'post' !== ( $data['post_type'] ?? '' ) ) {
+			return $data;
+		}
+
+		$requested_status = $data['post_status'] ?? '';
+
+		if ( ! in_array( $requested_status, array( 'publish', 'future' ), true ) ) {
+			return $data;
+		}
+
+		$existing_id     = isset( $postarr['ID'] ) ? (int) $postarr['ID'] : 0;
+		$existing_status = $existing_id > 0 ? get_post_status( $existing_id ) : '';
+
+		if ( 'publish' === $existing_status ) {
+			$data['post_status'] = 'publish';
+			return $data;
+		}
+
+		$data['post_status'] = 'pending';
+
+		return $data;
+	}
+
+	add_filter( 'wp_insert_post_data', 'prelaunch_prevent_post_publishing_for_edit_level', 10, 2 );
+
+	/**
+	 * Prevent submit-level roles from publishing their own posts.
+	 *
+	 * @param array<string, mixed> $data Sanitized post data.
+	 * @param array<string, mixed> $postarr Raw post array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	function prelaunch_prevent_post_publishing_for_submit_level( array $data, array $postarr ): array {
+		unset( $postarr );
+
+		if ( ! is_admin() && ! ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return $data;
+		}
+
+		if ( ! prelaunch_current_user_has_managed_role() ) {
+			return $data;
+		}
+
+		$current_role = prelaunch_get_current_managed_role();
+
+		if ( ! $current_role || 'submit' !== prelaunch_get_posts_access_level( $current_role ) ) {
+			return $data;
+		}
+
+		if ( 'post' !== ( $data['post_type'] ?? '' ) ) {
+			return $data;
+		}
+
+		$requested_status = $data['post_status'] ?? '';
+
+		if ( in_array( $requested_status, array( 'publish', 'future', 'private' ), true ) ) {
+			$data['post_status'] = 'pending';
+		}
+
+		return $data;
+	}
+
+	add_filter( 'wp_insert_post_data', 'prelaunch_prevent_post_publishing_for_submit_level', 10, 2 );
+
+	/**
+	 * Determine whether the current admin request is for the Post post type.
+	 *
+	 * @return bool
+	 */
+	function prelaunch_is_current_admin_screen_for_posts(): bool {
+		global $typenow, $pagenow;
+
+		if ( 'post' === $typenow ) {
+			return true;
+		}
+
+		if ( 'post-new.php' === $pagenow ) {
+			$post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : 'post';
+
+			return 'post' === $post_type;
+		}
+
+		if ( 'post.php' === $pagenow && isset( $_GET['post'] ) ) {
+			$post_id = absint( wp_unslash( $_GET['post'] ) );
+
+			return $post_id > 0 && 'post' === get_post_type( $post_id );
+		}
+
+		if ( 'edit.php' === $pagenow ) {
+			$post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : 'post';
+
+			return 'post' === $post_type;
+		}
+
+		return false;
+	}

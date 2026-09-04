@@ -18,6 +18,31 @@
 	defined( 'ABSPATH' ) || exit;
 
 	/**
+	 * Shared policy baseline for every Advisor-family role.
+	 *
+	 * Advisor variants build on this profile-first baseline. Posts/media levels
+	 * are overridden per role rather than inheriting Administrator caps.
+	 *
+	 * @return array<string, mixed>
+	 */
+	function prelaunch_get_advisor_family_base_policy(): array {
+		return array(
+			'dashboard'       => false,
+			'media'           => 'full',
+			'posts'           => 'off',
+			'pages'           => 'off',
+			'gravity_forms'   => 'off',
+			'appearance'      => 'off',
+			'plugins'         => 'off',
+			'plugin_settings' => 'off',
+			'users'           => 'profile_only',
+			'tools'           => 'off',
+			'settings'        => 'off',
+			'acf'             => 'off',
+		);
+	}
+
+	/**
 	 * Get the Prelaunch feature policy map by role.
 	 *
 	 * Keep this intentionally simple. Binary features can use booleans.
@@ -26,7 +51,7 @@
 	 * Current supported values:
 	 * - dashboard: true|false
 	 * - media: off|browse_only|full
-	 * - posts: true|false
+	 * - posts: off|credit|submit|edit|full
 	 * - pages: off|draft_only|full
 	 * - gravity_forms: off|manager|full
 	 * - appearance: off|menus_only|full
@@ -40,17 +65,19 @@
 	 * @return array<string, array<string, mixed>>
 	 */
 	function prelaunch_get_role_policy(): array {
+		$advisor_base = prelaunch_get_advisor_family_base_policy();
+
 		return array(
 			PRELAUNCH_CLIENT_ADMIN_ROLE => array(
 				'dashboard'       => true,
 				'media'           => 'full',
-				'posts'           => false,
+				'posts'           => 'full',
 				'pages'           => 'full',
 				'gravity_forms'   => 'full',
 				'appearance'      => 'menus_only',
 				'plugins'         => 'off',
 				'plugin_settings' => 'approved_only',
-				'users'           => 'profile_only',
+				'users'           => 'full',
 				'tools'           => 'off',
 				'settings'        => 'off',
 				'acf'             => 'options_only',
@@ -59,7 +86,7 @@
 			PRELAUNCH_POSTS_EDITOR_ROLE => array(
 				'dashboard'       => false,
 				'media'           => 'off',
-				'posts'           => true,
+				'posts'           => 'full',
 				'pages'           => 'off',
 				'gravity_forms'   => 'off',
 				'appearance'      => 'off',
@@ -71,19 +98,27 @@
 				'acf'             => 'off',
 			),
 
-			PRELAUNCH_ADVISOR_ROLE => array(
-				'dashboard'       => false,
-				'media'           => 'full',
-				'posts'           => false,
-				'pages'           => 'off',
-				'gravity_forms'   => 'off',
-				'appearance'      => 'off',
-				'plugins'         => 'off',
-				'plugin_settings' => 'off',
-				'users'           => 'profile_only',
-				'tools'           => 'off',
-				'settings'        => 'off',
-				'acf'             => 'off',
+			PRELAUNCH_ADVISOR_ROLE => $advisor_base,
+
+			PRELAUNCH_ADVISOR_BYLINE_ROLE => array_merge(
+				$advisor_base,
+				array(
+					'posts' => 'credit',
+				)
+			),
+
+			PRELAUNCH_ADVISOR_WRITER_ROLE => array_merge(
+				$advisor_base,
+				array(
+					'posts' => 'submit',
+				)
+			),
+
+			PRELAUNCH_ADVISOR_EDITOR_ROLE => array_merge(
+				$advisor_base,
+				array(
+					'posts' => 'edit',
+				)
 			),
 		);
 	}
