@@ -26,6 +26,7 @@
 	 * - Intro alignment is left to the WYSIWYG editor, not forced in code.
 	 * - Photos cap at three, hide the third on mobile, and skip the gallery
 	 *   entirely when none are selected.
+	 * - Photos open in the same native lightbox used by advisor galleries.
 	 * - List items are title-only pills.
 	 */
 
@@ -104,6 +105,21 @@
 						$image_id    = $get_image_id( $photo['photo'] ?? null );
 						$photo_title = isset( $photo['photo_title'] ) ? (string) $photo['photo_title'] : '';
 
+						if ( ! $image_id ) {
+							continue;
+						}
+
+						$full_image_url = wp_get_attachment_image_url( $image_id, 'full' );
+						$image_alt      = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+
+						if ( ! $full_image_url ) {
+							continue;
+						}
+
+						if ( '' === $image_alt && $photo_title ) {
+							$image_alt = $photo_title;
+						}
+
 						$mobile_classes = 'col-span-1';
 
 						if ( 2 === $index ) {
@@ -117,33 +133,64 @@
 						);
 						?>
 
-						<figure class="<?php echo esc_attr( $image_classes ); ?> relative bg-white p-2 pb-8 shadow-xl md:p-3 md:pb-10">
-							<?php
-							if ( $image_id ) {
-								echo wp_get_attachment_image(
-									$image_id,
-									'large',
-									false,
-									[
-										'class'    => 'aspect-square h-full w-full object-cover',
-										'loading'  => 'lazy',
-										'decoding' => 'async',
-										'sizes'    => '(min-width: 768px) 33vw, 50vw',
-									]
-								);
-							}
-							?>
+						<figure class="<?php echo esc_attr( $image_classes ); ?> relative">
+							<button
+								class="advisor-lightbox-trigger block w-full cursor-zoom-in text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-secondary focus-visible:ring-offset-4"
+								type="button"
+								data-lightbox-image="<?php echo esc_url( $full_image_url ); ?>"
+								data-lightbox-alt="<?php echo esc_attr( $image_alt ); ?>"
+								aria-label="<?php esc_attr_e( 'View larger image', 'prelaunch-wp' ); ?>"
+							>
+								<span class="block bg-white p-2 pb-8 shadow-xl transition-shadow hover:shadow-2xl md:p-3 md:pb-10">
+									<?php
+									echo wp_get_attachment_image(
+										$image_id,
+										'large',
+										false,
+										[
+											'class'    => 'aspect-square h-full w-full object-cover',
+											'loading'  => 'lazy',
+											'decoding' => 'async',
+											'sizes'    => '(min-width: 768px) 33vw, 50vw',
+										]
+									);
+									?>
 
-							<?php if ( $photo_title ) : ?>
-								<figcaption class="mt-2 px-1 text-center font-display text-sm italic text-black md:text-base">
-									<?php echo esc_html( $photo_title ); ?>
-								</figcaption>
-							<?php endif; ?>
+									<?php if ( $photo_title ) : ?>
+										<span class="mt-2 block px-1 text-center font-display text-sm italic text-black md:text-base">
+											<?php echo esc_html( $photo_title ); ?>
+										</span>
+									<?php endif; ?>
+								</span>
+							</button>
 						</figure>
 					<?php endforeach; ?>
 
 				</div>
 			</div>
+
+			<dialog
+				class="advisor-lightbox"
+				aria-label="<?php esc_attr_e( 'Expanded image', 'prelaunch-wp' ); ?>"
+			>
+				<div class="advisor-lightbox__inner">
+
+					<button
+						class="advisor-lightbox__close"
+						type="button"
+						aria-label="<?php esc_attr_e( 'Close image', 'prelaunch-wp' ); ?>"
+					>
+						<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+					</button>
+
+					<img
+						class="advisor-lightbox__image"
+						src=""
+						alt=""
+					/>
+
+				</div>
+			</dialog>
 		<?php endif; ?>
 
 		<?php
