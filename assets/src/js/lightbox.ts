@@ -64,12 +64,19 @@ const initializeAdvisorLightboxes = (): void => {
 
 		closeButton.addEventListener('click', closeDialog);
 
+		const inner = dialog.querySelector<HTMLElement>(
+			'.advisor-lightbox__inner',
+		);
+
 		dialog.addEventListener('click', (event: MouseEvent) => {
 			/*
-			 * The dialog element itself represents the backdrop-click area.
-			 * Clicks inside .advisor-lightbox__inner should not close it.
+			 * .advisor-lightbox__inner fills the dialog, so "off image"
+			 * clicks land on the inner (or the dialog), not the image.
+			 * Only the image and close button should keep it open.
 			 */
-			if (event.target === dialog) {
+			const target = event.target as Node | null;
+
+			if (target === dialog || target === inner) {
 				closeDialog();
 			}
 		});
