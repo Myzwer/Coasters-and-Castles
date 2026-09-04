@@ -23,7 +23,24 @@
 	}
 
 	.nav-brand {
-		@apply shrink-0;
+		@apply shrink-0 rounded-md;
+		/* Indicator is on the logo/text child so centered-desktop rail width
+		   doesn't show a huge empty focus box. */
+		@apply focus-visible:outline-none;
+	}
+
+	.nav-brand:focus-visible .nav-brand-logo,
+	.nav-brand:focus-visible .nav-brand-text {
+		/* box-shadow: <img> overflow:clip can hide outlines */
+		box-shadow: 0 0 0 2px var(--color-soft-1), 0 0 0 4px var(--color-secondary);
+	}
+
+	.nav-brand:focus-visible .nav-brand-logo {
+		border-radius: 9999px;
+	}
+
+	.nav-brand:focus-visible .nav-brand-text {
+		border-radius: 0.375rem;
 	}
 
 	.nav-brand-logo {
@@ -38,6 +55,13 @@
 		@apply inline-flex items-center justify-center;
 		@apply rounded-md;
 		@apply p-4;
+	}
+
+	.nav-hamburger:focus-visible {
+		/* Prefer outline over Tailwind ring-* — ring box-shadow compiles without a
+		   space before the color (e.g. 2px#001890) and never paints. */
+		outline: 2px solid var(--color-secondary);
+		outline-offset: 2px;
 	}
 
 	.nav-hamburger-icon {
@@ -203,7 +227,13 @@
 		/* hover state */
 		@apply rounded-md transition;
 		@apply hover:bg-black/10;
-		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+	}
+
+	.nav-link:focus-visible {
+		/* Prefer outline over Tailwind ring-* — ring box-shadow compiles without a
+		   space before the color (e.g. 2px#001890) and never paints. */
+		outline: 2px solid var(--color-secondary);
+		outline-offset: 2px;
 	}
 
 	/* Disclosure button (top-level items that have submenus) */
@@ -221,7 +251,11 @@
 		/* hover state */
 		@apply rounded-md transition;
 		@apply hover:bg-white/10;
-		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+	}
+
+	.nav-disclosure:focus-visible {
+		outline: 2px solid var(--color-secondary);
+		outline-offset: 2px;
 	}
 
 	/* Desktop-only: prevent long top-level labels from wrapping
@@ -341,7 +375,11 @@
 		/* hover state */
 		@apply rounded-md;
 		@apply hover:bg-white/10;
-		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+	}
+
+	.nav-sublink:focus-visible {
+		outline: 2px solid var(--color-secondary);
+		outline-offset: 2px;
 	}
 
 	/* ==========================================================================
@@ -364,7 +402,11 @@
 		/* hover state */
 		@apply transition;
 		@apply hover:brightness-95;
-		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+	}
+
+	.nav-cta-link:focus-visible {
+		outline: 2px solid var(--color-white);
+		outline-offset: 3px;
 	}
 
 	.nav-cta-icon {
