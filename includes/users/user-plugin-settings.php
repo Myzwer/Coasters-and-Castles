@@ -86,6 +86,22 @@
 				'post_types'  => array( 'filter-set', 'filter', 'filter-seo-rule' ),
 				'approved'    => false,
 			),
+			'smush'              => array(
+				'label'       => 'Smush',
+				'parent_slug' => 'smush',
+				'menu_slug'   => 'smush',
+				'pages'       => array(
+					'smush',
+					'smush-lazy-preload',
+					'smush-cdn',
+					'smush-directory',
+					'smush-settings',
+					'smush-bulk',
+					'smush-next-gen',
+					'smush-cross-sell',
+				),
+				'approved'    => false,
+			),
 		);
 	}
 
