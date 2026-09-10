@@ -91,14 +91,18 @@
 				<div class="grid col-span-12 justify-items-center text-center">
 
 					<?php if ( $title ) : ?>
-						<h1 class="max-w-5xl text-3xl font-bold tracking-tight text-white uppercase sm:text-4xl md:text-5xl lg:text-6xl text-balance leading-[0.95]">
+						<h1 class="max-w-5xl text-3xl font-bold tracking-tight text-white uppercase sm:text-4xl md:text-5xl lg:text-6xl text-balance leading-[1.1]">
 							<?php echo esc_html( $title ); ?>
 						</h1>
 					<?php endif; ?>
 
 					<?php if ( $subtitle ) : ?>
 						<p class="mt-5 max-w-4xl text-lg leading-snug text-white sm:text-xl md:text-2xl lg:text-3xl text-balance">
-							<?php echo esc_html( $subtitle ); ?>
+							<?php
+							// Keep hyphenated compounds (e.g. full-service) on one line.
+							$subtitle_display = preg_replace( '/(?<=\p{L})-(?=\p{L})/u', "\u{2011}", $subtitle );
+							echo esc_html( $subtitle_display );
+							?>
 						</p>
 					<?php endif; ?>
 
