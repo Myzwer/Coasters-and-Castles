@@ -269,6 +269,34 @@
 	add_filter( 'user_has_cap', 'prelaunch_filter_credit_role_runtime_caps', 10, 4 );
 
 	/**
+	 * Make Gutenberg's author selector include capability-based authors.
+	 *
+	 * The block editor still requests `/wp/v2/users?who=authors`. That deprecated
+	 * query matches `user_level != 0`, which excludes custom roles like Byline
+	 * Advisor that never receive a legacy user level. Translate those requests to
+	 * a capability query so anyone with edit_posts on their role can be credited.
+	 *
+	 * @param array<string, mixed> $prepared_args WP_User_Query arguments.
+	 * @param WP_REST_Request $request REST request.
+	 *
+	 * @return array<string, mixed>
+	 */
+	function prelaunch_rest_authors_query_by_capability( array $prepared_args, $request ): array {
+		unset( $request );
+
+		if ( empty( $prepared_args['who'] ) || 'authors' !== $prepared_args['who'] ) {
+			return $prepared_args;
+		}
+
+		unset( $prepared_args['who'] );
+		$prepared_args['capability'] = array( 'edit_posts' );
+
+		return $prepared_args;
+	}
+
+	add_filter( 'rest_user_query', 'prelaunch_rest_authors_query_by_capability', 10, 2 );
+
+	/**
 	 * Prevent edit-level roles from publishing or scheduling posts.
 	 *
 	 * Content edits to already-published posts remain published. New or draft
