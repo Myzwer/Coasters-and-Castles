@@ -141,3 +141,90 @@
 	}
 
 	add_action( 'acf/init', 'prelaunch_register_acf_options_pages' );
+
+	/**
+	 * Migrate legacy advisor_gallery gallery values into repeater rows.
+	 *
+	 * The Travel Gallery field used to be an ACF gallery (array of attachment
+	 * IDs). It is now a repeater with photo + photo_title so captions can sit
+	 * under each polaroid. Existing post meta is still stored in the old
+	 * format until an advisor is re-saved — this filter bridges that gap for
+	 * both the admin UI and the front end.
+	 *
+	 * @param mixed                $pre     Short-circuit value, or null to continue.
+	 * @param integer|string       $post_id Post ID being loaded.
+	 * @param array<string, mixed> $field   ACF field array.
+	 *
+	 * @return mixed
+	 */
+	function prelaunch_acf_pre_load_advisor_gallery( $pre, $post_id, array $field ) {
+		if ( ( $field['key'] ?? '' ) !== 'field_advisor_gallery' ) {
+			return $pre;
+		}
+
+		$raw = acf_get_metadata( (string) $post_id, 'advisor_gallery' );
+
+		/*
+		 * Proper repeater storage uses a numeric row count. Let ACF load it.
+		 */
+		if ( is_numeric( $raw ) ) {
+			return $pre;
+		}
+
+		if ( ! is_array( $raw ) || empty( $raw ) ) {
+			return $pre;
+		}
+
+		$sub_fields = is_array( $field['sub_fields'] ?? null ) ? $field['sub_fields'] : [];
+
+		if ( empty( $sub_fields ) ) {
+			return $pre;
+		}
+
+		$photo_key = '';
+		$title_key = '';
+
+		foreach ( $sub_fields as $sub_field ) {
+			$name = (string) ( $sub_field['name'] ?? '' );
+
+			if ( 'photo' === $name ) {
+				$photo_key = (string) ( $sub_field['key'] ?? '' );
+			} elseif ( 'photo_title' === $name ) {
+				$title_key = (string) ( $sub_field['key'] ?? '' );
+			}
+		}
+
+		if ( '' === $photo_key ) {
+			return $pre;
+		}
+
+		$rows = [];
+
+		foreach ( array_values( $raw ) as $item ) {
+			$image_id = 0;
+
+			if ( is_array( $item ) ) {
+				$image_id = absint( $item['ID'] ?? $item['id'] ?? 0 );
+			} else {
+				$image_id = absint( $item );
+			}
+
+			if ( ! $image_id ) {
+				continue;
+			}
+
+			$row = [
+				$photo_key => $image_id,
+			];
+
+			if ( '' !== $title_key ) {
+				$row[ $title_key ] = '';
+			}
+
+			$rows[] = $row;
+		}
+
+		return $rows ?: $pre;
+	}
+
+	add_filter( 'acf/pre_load_value', 'prelaunch_acf_pre_load_advisor_gallery', 10, 3 );

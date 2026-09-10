@@ -4,9 +4,15 @@
 	 * Advisor travel gallery.
 	 *
 	 * Displays between two and six advisor travel images in a controlled
-	 * scrapbook-style arrangement.
+	 * scrapbook-style arrangement. Each photo may include an optional
+	 * polaroid caption (photo_title), matching the List Block pattern.
 	 *
 	 * Background alternation and texture are handled by single-advisor.php.
+	 *
+	 * Expected fields:
+	 * - advisor_gallery: Repeater (max 6)
+	 *   - photo: Image (ID)
+	 *   - photo_title: Text (optional)
 	 */
 
 	if ( ! defined( 'ABSPATH' ) ) {
@@ -19,12 +25,49 @@
 	$gallery = is_array( $gallery ) ? $gallery : [];
 
 	/*
-	 * The ACF field returns attachment IDs, but filter the array defensively
-	 * in case old or imported data contains empty values.
+	 * Normalize repeater rows and legacy gallery ID lists into a consistent
+	 * shape: [ 'photo' => int, 'photo_title' => string ].
 	 */
 	$gallery = array_values(
 		array_filter(
-			array_map( 'absint', $gallery )
+			array_map(
+				static function ( $row ) {
+					if ( is_array( $row ) ) {
+						$image = $row['photo'] ?? null;
+						$title = isset( $row['photo_title'] ) ? (string) $row['photo_title'] : '';
+
+						if ( is_array( $image ) ) {
+							$image_id = absint( $image['ID'] ?? $image['id'] ?? 0 );
+						} else {
+							$image_id = absint( $image );
+						}
+
+						if ( ! $image_id ) {
+							return null;
+						}
+
+						return [
+							'photo'       => $image_id,
+							'photo_title' => $title,
+						];
+					}
+
+					/*
+					 * Legacy gallery storage: bare attachment IDs.
+					 */
+					$image_id = absint( $row );
+
+					if ( ! $image_id ) {
+						return null;
+					}
+
+					return [
+						'photo'       => $image_id,
+						'photo_title' => '',
+					];
+				},
+				$gallery
+			)
 		)
 	);
 
@@ -96,8 +139,26 @@
 		<div class="col-span-12">
 			<div class="grid grid-cols-2 gap-4 md:grid-cols-12 md:gap-x-5 md:gap-y-10 md:py-8">
 
-				<?php foreach ( $gallery as $index => $image_id ) : ?>
+				<?php foreach ( $gallery as $index => $item ) : ?>
 					<?php
+					$image_id    = (int) ( $item['photo'] ?? 0 );
+					$photo_title = (string) ( $item['photo_title'] ?? '' );
+
+					if ( ! $image_id ) {
+						continue;
+					}
+
+					$full_image_url = wp_get_attachment_image_url( $image_id, 'full' );
+					$image_alt      = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+
+					if ( ! $full_image_url ) {
+						continue;
+					}
+
+					if ( '' === $image_alt && $photo_title ) {
+						$image_alt = $photo_title;
+					}
+
 					$mobile_classes = 'col-span-1';
 
 					/*
@@ -115,15 +176,6 @@
 					);
 					?>
 
-					<?php
-					$full_image_url = wp_get_attachment_image_url( $image_id, 'full' );
-					$image_alt      = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
-
-					if ( ! $full_image_url ) {
-						continue;
-					}
-					?>
-
 					<figure
 						class="<?php echo esc_attr( $image_classes ); ?> relative"
 					>
@@ -135,7 +187,7 @@
 							aria-label="<?php esc_attr_e( 'View larger image', 'prelaunch-wp' ); ?>"
 						>
 							<span
-								class="block bg-white p-2 pb-6 shadow-xl transition-shadow hover:shadow-2xl md:p-3 md:pb-9">
+								class="block bg-white p-2 pb-8 shadow-xl transition-shadow hover:shadow-2xl md:p-3 md:pb-10">
 								<?php
 									echo wp_get_attachment_image(
 										$image_id,
@@ -149,6 +201,12 @@
 										]
 									);
 								?>
+
+								<?php if ( $photo_title ) : ?>
+									<span class="mt-2 block px-1 text-center font-display text-sm italic text-black md:text-base">
+										<?php echo esc_html( $photo_title ); ?>
+									</span>
+								<?php endif; ?>
 							</span>
 						</button>
 					</figure>
