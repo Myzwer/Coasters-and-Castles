@@ -8,7 +8,7 @@
             "name": "main_text",
             "aria-label": "",
             "type": "wysiwyg",
-            "instructions": "",
+            "instructions": "Message shown on the 404 page.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -19,8 +19,8 @@
             "default_value": "",
             "allow_in_bindings": 0,
             "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1,
+            "toolbar": "basic",
+            "media_upload": 0,
             "delay": 0
         }
     ],
@@ -33,17 +33,17 @@
             }
         ]
     ],
-    "menu_order": 15,
+    "menu_order": 20,
     "position": "normal",
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "",
+    "description": "Content for the site 404 page.",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787607660
+    "modified": 1788410823
 }

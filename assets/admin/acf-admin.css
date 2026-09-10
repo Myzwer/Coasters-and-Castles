@@ -91,30 +91,3 @@
 .acf-field-flexible-content > .acf-input .acf-fc-empty {
 	color: #646970;
 }
-
-/* =========================
-   Block Repeater Rows
-   ========================= */
-
-/*
- * Block-layout repeaters (Cards, FAQs, etc.) stack densely by default.
- * Separate rows and give each a light panel so items are easier to scan.
- * (td margin is ignored in tables — border-spacing is what creates the gap.)
- */
-.acf-repeater.-block > .acf-table {
-	border-collapse: separate;
-	border-spacing: 0 12px;
-}
-
-.acf-repeater.-block > .acf-table > tbody > .acf-row:not(.acf-clone) > .acf-fields {
-	background: #fff;
-	border: 1px solid #dcdcde;
-	border-radius: 8px;
-	padding: 12px 14px;
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
-}
-
-.acf-repeater.-block > .acf-table > tbody > .acf-row:not(.acf-clone) > .acf-row-handle {
-	vertical-align: top;
-	padding-top: 14px;
-}

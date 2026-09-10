@@ -8,11 +8,11 @@
             "name": "title",
             "aria-label": "",
             "type": "text",
-            "instructions": "",
+            "instructions": "Headline for the Advisors archive page.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "40",
                 "class": "",
                 "id": ""
             },
@@ -29,18 +29,18 @@
             "name": "page_description",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "",
+            "instructions": "Short intro shown under the archive title.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "60",
                 "class": "",
                 "id": ""
             },
             "default_value": "",
             "maxlength": "",
             "allow_in_bindings": 0,
-            "rows": "",
+            "rows": 4,
             "placeholder": "",
             "new_lines": ""
         }
@@ -54,17 +54,17 @@
             }
         ]
     ],
-    "menu_order": 20,
+    "menu_order": 15,
     "position": "normal",
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "",
+    "description": "Content for the Advisors archive page header.",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787607667
+    "modified": 1788410823
 }
