@@ -387,7 +387,10 @@ export function initPrimaryNav(root: Document | HTMLElement = document): void {
 			doc.body.classList.remove("nav-open");
 			void closeAllSubmenus();
 		} else {
-			void setPanelOpen(false);
+			// Mobile first paint: collapse instantly. Do not reuse the
+			// animated close path (that would measure height and slide to 0).
+			hardCloseAllSubmenus();
+			hardClosePanel();
 		}
 	}
 
@@ -403,8 +406,9 @@ export function initPrimaryNav(root: Document | HTMLElement = document): void {
 			doc.body.classList.remove("nav-open");
 			void closeAllSubmenus();
 		} else {
-			// Entering mobile: always start closed.
-			void setPanelOpen(false);
+			// Entering mobile: always start closed, with no close animation.
+			hardCloseAllSubmenus();
+			hardClosePanel();
 		}
 	});
 
