@@ -6,6 +6,12 @@
  */
 
 body.login {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans,
+		Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--color-black);
+	-webkit-font-smoothing: antialiased;
 	display: grid;
 	place-items: center;
 	min-height: 100vh;
@@ -29,6 +35,15 @@ body.login {
 	);
 }
 
+body.login a {
+	color: var(--color-black);
+}
+
+body.login .prelaunch-getpassword-intro a {
+	color: var(--color-secondary);
+	font-weight: 700;
+}
+
 body.login div#login {
 	width: 100%;
 	max-width: 25rem;
@@ -40,12 +55,41 @@ body.login h1 {
 }
 
 body.login h1 a {
+	display: block;
+	overflow: hidden;
 	width: min(100%, 13rem);
 	height: 5rem;
 	margin: 0 auto;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;
+	text-decoration: none;
+}
+
+body.login .screen-reader-text {
+	position: absolute;
+	overflow: hidden;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	word-wrap: normal !important;
+}
+
+body.login form p {
+	margin-top: 0;
+}
+
+body.login form .input,
+body.login form input[type='text'],
+body.login form input[type='password'],
+body.login form input[type='email'] {
+	width: 100%;
+	box-sizing: border-box;
 }
 
 body.login form {
@@ -67,9 +111,12 @@ body.login input[type='text'],
 body.login input[type='password'],
 body.login input[type='email'] {
 	min-height: 2.75rem;
+	padding: 0.3125rem 0.75rem;
 	border: 1px solid color-mix(in oklab, var(--color-black) 14%, transparent);
 	border-radius: 0.75rem;
 	box-shadow: none;
+	font-size: 1.5rem;
+	line-height: 1.33333333;
 }
 
 body.login .input:focus,
@@ -103,11 +150,12 @@ body.login .button-primary {
 }
 
 body.login .button-primary:hover,
-body.login .button-primary:focus {
+body.login .button-primary:focus,
+body.login .button-primary:active {
 	background: var(--color-secondary);
 	filter: brightness(0.93);
 	transform: translateY(-1px);
-	color: var(--color-black);
+	color: var(--color-white);
 }
 
 body.login .admin-email__actions-primary .button:not(.button-primary) {
@@ -180,6 +228,112 @@ body.login #login_error {
 	box-shadow: 0 8px 20px color-mix(in oklab, var(--color-black) 8%, transparent);
 }
 
+body.login #nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.35rem 0.5rem;
+}
+
+body.login #nav .prelaunch-login-nav-sep {
+	color: color-mix(in oklab, var(--color-black) 36%, transparent);
+	font-weight: 500;
+}
+
+body.login.prelaunch-getpassword-screen div#login {
+	max-width: 40rem;
+}
+
+body.login.prelaunch-getpassword-screen h1 {
+	margin-bottom: 1.75rem;
+}
+
+body.login.prelaunch-getpassword-screen h1 a {
+	width: min(100%, 18rem);
+	height: 7rem;
+}
+
+body.login.prelaunch-getpassword-screen .prelaunch-getpassword-panel {
+	padding: 1.75rem;
+	border: 1px solid color-mix(in oklab, var(--color-black) 8%, transparent);
+	border-radius: 1rem;
+	background: color-mix(in oklab, var(--color-white) 94%, transparent);
+	box-shadow: 0 18px 40px color-mix(in oklab, var(--color-black) 12%, transparent);
+}
+
+body.login.prelaunch-getpassword-screen .prelaunch-getpassword-intro {
+	margin-bottom: 1.35rem;
+	padding-bottom: 1.35rem;
+	border-bottom: 1px solid color-mix(in oklab, var(--color-black) 10%, transparent);
+	text-align: center;
+}
+
+body.login .prelaunch-getpassword-intro__eyebrow {
+	margin: 0 0 0.35rem;
+	color: color-mix(in oklab, var(--color-black) 68%, transparent);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+body.login .prelaunch-getpassword-intro__title {
+	margin: 0 0 0.75rem;
+	color: var(--color-black);
+	font-size: 1.5rem;
+	font-weight: 800;
+	line-height: 1.15;
+}
+
+body.login .prelaunch-getpassword-intro__text,
+body.login .prelaunch-getpassword-intro__followup {
+	margin: 0;
+	color: color-mix(in oklab, var(--color-black) 78%, transparent);
+	font-size: 1rem;
+	line-height: 1.45;
+	text-wrap: balance;
+}
+
+body.login .prelaunch-getpassword-intro__followup {
+	margin-top: 0.65rem;
+	font-size: 0.95rem;
+}
+
+body.login.prelaunch-getpassword-screen .prelaunch-getpassword-form {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+body.login.prelaunch-getpassword-screen .prelaunch-getpassword-field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+body.login.prelaunch-getpassword-screen .prelaunch-getpassword-form .submit {
+	margin: 0;
+	padding: 0;
+}
+
+body.login.prelaunch-getpassword-screen .prelaunch-getpassword-form .submit .button-primary {
+	width: 100%;
+}
+
+body.login .prelaunch-password-setup-notice.message {
+	margin-bottom: 1.25rem;
+	text-align: center;
+}
+
+body.login.prelaunch-password-setup #nav .wp-login-lost-password {
+	display: none;
+}
+
 @media (width <= 480px) {
 	body.login {
 		padding: 1.25rem;
@@ -190,7 +344,16 @@ body.login #login_error {
 		height: 4.5rem;
 	}
 
+	body.login.prelaunch-getpassword-screen h1 a {
+		width: min(100%, 14rem);
+		height: 5.5rem;
+	}
+
 	body.login form {
+		padding: 1.25rem;
+	}
+
+	body.login.prelaunch-getpassword-screen .prelaunch-getpassword-panel {
 		padding: 1.25rem;
 	}
 }
