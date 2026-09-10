@@ -181,6 +181,19 @@
 
 					</div>
 
+					<div class="col-span-12">
+						<div class="mx-auto max-w-3xl rounded-xl border-3 border-secondary bg-white px-5 py-4 text-center text-sm text-balance">
+							<p>
+								<?php
+									esc_html_e(
+										'All travel advisors are Independent Contractors affiliated with Coasters & Castles Travel, LLC',
+										'prelaunch-wp'
+									);
+								?>
+							</p>
+						</div>
+					</div>
+
 				</div>
 
 			</div>
