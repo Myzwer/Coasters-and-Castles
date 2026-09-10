@@ -4,7 +4,7 @@
 	 * Advisor travel expertise section.
 	 *
 	 * Displays:
-	 * - Professional Training
+	 * - Professional Training & Accomplishments
 	 * - Firsthand Experience
 	 *
 	 * Background alternation and texture are handled by single-advisor.php.
@@ -60,7 +60,7 @@
 				<div class="h-full rounded-xl bg-white p-6 shadow-lg md:p-8 border-secondary border-3">
 
 					<h3 class="heading-3">
-						<?php esc_html_e( 'Professional Training', 'prelaunch-wp' ); ?>
+						<?php esc_html_e( 'Professional Training & Accomplishments', 'prelaunch-wp' ); ?>
 					</h3>
 
 					<ul class="mt-5 grid gap-3">
