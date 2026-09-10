@@ -15,6 +15,9 @@
 	$booking_url = function_exists( 'prelaunch_get_advisor_booking_url' )
 		? prelaunch_get_advisor_booking_url( $advisor_id )
 		: '';
+
+	$is_duo = function_exists( 'prelaunch_advisor_is_duo' )
+		&& prelaunch_advisor_is_duo( $advisor_id );
 ?>
 
 <section>
@@ -24,12 +27,21 @@
 			<div class="col-span-12 md:col-span-6">
 				<h2 class="text-6xl font-bold uppercase">
 					<?php
-						echo nl2br(
-							esc_html__(
-								"Dream big.\nLet me do the\nrest.",
-								'prelaunch-wp'
-							)
-						);
+						if ( $is_duo ) {
+							echo nl2br(
+								esc_html__(
+									"Dream big.\nLet us do the\nrest.",
+									'prelaunch-wp'
+								)
+							);
+						} else {
+							echo nl2br(
+								esc_html__(
+									"Dream big.\nLet me do the\nrest.",
+									'prelaunch-wp'
+								)
+							);
+						}
 					?>
 				</h2>
 			</div>
@@ -39,10 +51,17 @@
 
 					<p class="max-w-xl text-lg">
 						<?php
-							esc_html_e(
-								'Tell me a little more about your trip, and I’ll create the perfect vacation to make your travel dreams a reality.',
-								'prelaunch-wp'
-							);
+							if ( $is_duo ) {
+								esc_html_e(
+									'Tell us a little more about your trip, and we’ll create the perfect vacation to make your travel dreams a reality.',
+									'prelaunch-wp'
+								);
+							} else {
+								esc_html_e(
+									'Tell me a little more about your trip, and I’ll create the perfect vacation to make your travel dreams a reality.',
+									'prelaunch-wp'
+								);
+							}
 						?>
 					</p>
 
@@ -52,7 +71,13 @@
 							href="<?php echo esc_url( $booking_url ); ?>"
 						>
 							<span>
-								<?php esc_html_e( 'Book with me', 'prelaunch-wp' ); ?>
+								<?php
+									if ( $is_duo ) {
+										esc_html_e( 'Book with us', 'prelaunch-wp' );
+									} else {
+										esc_html_e( 'Book with me', 'prelaunch-wp' );
+									}
+								?>
 							</span>
 
 							<i

@@ -133,6 +133,8 @@
 
 		if ( $advisor_id > 0 ) {
 			$advisor_bio = (string) get_field( 'advisor_bio', $advisor_id );
+			$is_duo      = function_exists( 'prelaunch_advisor_is_duo' )
+				&& prelaunch_advisor_is_duo( $advisor_id );
 
 			return [
 				'type'           => 'advisor',
@@ -152,12 +154,16 @@
 					'url'    => function_exists( 'prelaunch_get_advisor_booking_url' )
 						? prelaunch_get_advisor_booking_url( $advisor_id )
 						: '',
-					'title'  => __( 'Book With Me', 'prelaunch-wp' ),
+					'title'  => $is_duo
+						? __( 'Book With Us', 'prelaunch-wp' )
+						: __( 'Book With Me', 'prelaunch-wp' ),
 					'target' => '',
 				],
 				'secondary_link' => [
 					'url'    => get_permalink( $advisor_id ),
-					'title'  => __( 'View My Profile', 'prelaunch-wp' ),
+					'title'  => $is_duo
+						? __( 'View Our Profile', 'prelaunch-wp' )
+						: __( 'View My Profile', 'prelaunch-wp' ),
 					'target' => '',
 				],
 			];

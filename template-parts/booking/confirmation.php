@@ -134,10 +134,11 @@
 	/*
 	 * Advisor placeholders.
 	 *
-	 * A selected advisor always uses their first name:
+	 * A selected advisor always uses their short name:
 	 *
 	 * {advisor} -> Josh
 	 * {Advisor} -> Josh
+	 * Duo titles become "Leanna & Dusty" (title minus last word, or override).
 	 *
 	 * Generic bookings use:
 	 *
@@ -164,29 +165,21 @@
 	);
 
 	if ( $advisor instanceof WP_Post ) {
-		$advisor_name = trim(
-			wp_strip_all_tags(
-				get_the_title( $advisor )
-			)
-		);
+		$advisor_short_name = function_exists( 'prelaunch_get_advisor_short_name' )
+			? prelaunch_get_advisor_short_name( (int) $advisor->ID )
+			: '';
 
-		if ( '' !== $advisor_name ) {
-			$advisor_first_name = strtok(
-				$advisor_name,
-				' '
+		if ( '' === $advisor_short_name ) {
+			$advisor_short_name = trim(
+				wp_strip_all_tags(
+					get_the_title( $advisor )
+				)
 			);
+		}
 
-			if (
-				false !== $advisor_first_name &&
-				'' !== trim( $advisor_first_name )
-			) {
-				$advisor_first_name = trim(
-					$advisor_first_name
-				);
-
-				$advisor_token_lower = $advisor_first_name;
-				$advisor_token_upper = $advisor_first_name;
-			}
+		if ( '' !== $advisor_short_name ) {
+			$advisor_token_lower = $advisor_short_name;
+			$advisor_token_upper = $advisor_short_name;
 		}
 	}
 
@@ -256,7 +249,7 @@
 			. '" target="_blank" rel="noopener noreferrer">'
 			. esc_html(
 				sprintf(
-					/* translators: %s: advisor first name */
+					/* translators: %s: advisor short name */
 					__(
 						'Schedule a time with %s',
 						'prelaunch-wp'

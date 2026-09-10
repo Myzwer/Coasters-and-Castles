@@ -44,7 +44,7 @@
             "name": "advisor_headshot",
             "aria-label": "",
             "type": "image",
-            "instructions": "Upload a fun, high-quality photo of yourself that feels personal and travel-focused. Photos taken on location while traveling are encouraged. Please avoid selfies, and make sure no other people are prominently featured in the foreground.<br \/><br \/>\r\nNote: The photo will be automatically cropped to fit the polaroid-style image at the top of your profile.",
+            "instructions": "Upload a fun, high-quality photo of yourself that feels personal and travel-focused. Photos taken on location while traveling are encouraged. Please avoid selfies, do not wear sunglasses, and make sure no other people or characters are prominently featured in the foreground.<br \/><br \/>\r\nNote: The photo will be automatically cropped to fit the polaroid-style image at the top of your profile.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -136,24 +136,6 @@
             "toolbar": "basic",
             "media_upload": 0,
             "delay": 0
-        },
-        {
-            "key": "field_advisor_booking_link",
-            "label": "Booking Link",
-            "name": "advisor_booking_link",
-            "aria-label": "",
-            "type": "url",
-            "instructions": "Paste the full URL for your personal scheduling calendar (for example, Calendly). When a traveler chooses you as their preferred advisor on the booking form, this link can appear on the confirmation page so they can schedule a time with you while they wait to hear back. If this field is empty, that extra prompt will not be shown.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "allow_in_bindings": 0,
-            "placeholder": "https://"
         },
         {
             "key": "field_6a697cb1e2165",
@@ -604,8 +586,8 @@
             "label": "Travel Gallery",
             "name": "advisor_gallery",
             "aria-label": "",
-            "type": "gallery",
-            "instructions": "Add a curated set of your personal travel photos. The gallery section will remain hidden when this field is empty.",
+            "type": "repeater",
+            "instructions": "Add a curated set of your personal travel photos. Use 2–6 images. The gallery section will remain hidden with fewer than 2 photos.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -613,19 +595,64 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "id",
-            "library": "all",
+            "layout": "block",
+            "pagination": 0,
             "min": 0,
             "max": 6,
-            "min_width": "",
-            "min_height": "",
-            "min_size": "",
-            "max_width": "",
-            "max_height": "",
-            "max_size": "",
-            "mime_types": "jpg,jpeg,png,webp",
-            "insert": "append",
-            "preview_size": "medium"
+            "collapsed": "field_advisor_gallery_photo_title",
+            "button_label": "Add Photo",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_advisor_gallery_photo",
+                    "label": "Photo",
+                    "name": "photo",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Square images work best. Large images (over 2MB) can slow down your website.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "jpg,jpeg,png,webp",
+                    "allow_in_bindings": 1,
+                    "preview_size": "medium",
+                    "parent_repeater": "field_advisor_gallery"
+                },
+                {
+                    "key": "field_advisor_gallery_photo_title",
+                    "label": "Photo Title",
+                    "name": "photo_title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Optional short caption written on the polaroid, e.g. Carnival.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 1,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_advisor_gallery"
+                }
+            ]
         },
         {
             "key": "field_advisor_tab_agency",
@@ -787,6 +814,48 @@
             "placeholder": "",
             "prepend": "",
             "append": ""
+        },
+        {
+            "key": "field_advisor_is_duo",
+            "label": "Duo \/ Team Profile",
+            "name": "advisor_is_duo",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Enable when this profile represents two (or more) advisors. Switches public copy to plural pronouns (we \/ us \/ our), e.g. “Hey, we’re …” and “Connect with us”. Does not change the short name — that still comes from the title or the override.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "advisor-admin-only",
+                "id": ""
+            },
+            "message": "Use plural pronouns on this profile",
+            "default_value": 0,
+            "allow_in_bindings": 1,
+            "ui_on_text": "Duo",
+            "ui_off_text": "Solo",
+            "ui": 1
+        },
+        {
+            "key": "field_advisor_short_name",
+            "label": "Short Name Override",
+            "name": "advisor_short_name",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional. Used in greetings and booking buttons (for example, “Book with …” and “Hey, I’m …”). Leave blank to auto-generate by dropping the last word of the profile title (e.g. “Mary Jane Foster” → “Mary Jane”, “Josh & Katie Forrester” → “Josh & Katie”). Use this only for odd cases like single-word names or compound surnames.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "advisor-admin-only",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "Name You Want To Display",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -822,5 +891,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787770800
+    "modified": 1789022183
 }

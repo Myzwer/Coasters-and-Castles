@@ -22,11 +22,9 @@
 	$advisor_title = get_field( 'advisor_title', $advisor_id );
 	$headshot_id   = absint( get_field( 'advisor_headshot', $advisor_id ) );
 
-	$advisor_first_name = strtok( $advisor_name, ' ' );
-
-	if ( false === $advisor_first_name ) {
-		$advisor_first_name = $advisor_name;
-	}
+	$advisor_short_name = function_exists( 'prelaunch_get_advisor_short_name' )
+		? prelaunch_get_advisor_short_name( $advisor_id )
+		: $advisor_name;
 
 	$vacation_types = get_the_terms( $advisor_id, 'vacation_type' );
 	$group_types    = get_the_terms( $advisor_id, 'group_type' );
@@ -124,9 +122,9 @@
 			<span>
 				<?php
 					printf(
-					/* translators: %s: Advisor first name. */
+					/* translators: %s: Advisor short name. */
 						esc_html__( 'Book with %s', 'prelaunch-wp' ),
-						esc_html( $advisor_first_name )
+						esc_html( $advisor_short_name )
 					);
 				?>
 			</span>

@@ -18,12 +18,12 @@
 		return;
 	}
 
-	$advisor_name       = get_the_title();
-	$advisor_first_name = strtok( $advisor_name, ' ' );
+	$advisor_short_name = function_exists( 'prelaunch_get_advisor_short_name' )
+		? prelaunch_get_advisor_short_name( $advisor_id )
+		: get_the_title();
 
-	if ( false === $advisor_first_name ) {
-		$advisor_first_name = $advisor_name;
-	}
+	$is_duo = function_exists( 'prelaunch_advisor_is_duo' )
+		&& prelaunch_advisor_is_duo( $advisor_id );
 
 	$facebook  = get_field( 'facebook', $advisor_id );
 	$instagram = get_field( 'instagram', $advisor_id );
@@ -63,11 +63,19 @@
 
 			<h2 class="heading-2 normal-case">
 				<?php
-					printf(
-					/* translators: %s: Advisor first name. */
-						esc_html__( 'Hey, I’m %s', 'prelaunch-wp' ),
-						esc_html( $advisor_first_name )
-					);
+					if ( $is_duo ) {
+						printf(
+						/* translators: %s: Advisor short name. */
+							esc_html__( 'Hey, we’re %s', 'prelaunch-wp' ),
+							esc_html( $advisor_short_name )
+						);
+					} else {
+						printf(
+						/* translators: %s: Advisor short name. */
+							esc_html__( 'Hey, I’m %s', 'prelaunch-wp' ),
+							esc_html( $advisor_short_name )
+						);
+					}
 				?>
 				<span aria-hidden="true">👋</span>
 			</h2>
@@ -79,7 +87,13 @@
 			<?php if ( $social_links ) : ?>
 				<div class="mt-8">
 					<h3 class="text-lg font-semibold">
-						<?php esc_html_e( 'Connect with me', 'prelaunch-wp' ); ?>
+						<?php
+							if ( $is_duo ) {
+								esc_html_e( 'Connect with us', 'prelaunch-wp' );
+							} else {
+								esc_html_e( 'Connect with me', 'prelaunch-wp' );
+							}
+						?>
 					</h3>
 
 					<div class="mt-3 grid w-fit grid-flow-col gap-3">

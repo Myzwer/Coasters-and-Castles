@@ -633,6 +633,8 @@
 			'field_advisor_tab_agency'            => '',
 			'field_advisor_professional_headshot' => 'advisor_professional_headshot',
 			'field_advisor_title'                 => 'advisor_title',
+			'field_advisor_short_name'            => 'advisor_short_name',
+			'field_advisor_is_duo'                => 'advisor_is_duo',
 			'field_6a6fe1054a41a'                 => 'email',
 			'field_advisor_linked_user'           => 'advisor_linked_user',
 			'field_6a6fe28e2433f'                 => 'tln_profile_link',
