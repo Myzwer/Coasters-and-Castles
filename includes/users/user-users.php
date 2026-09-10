@@ -84,38 +84,92 @@
 	add_action( 'init', 'prelaunch_sync_managed_role_users_caps', 30 );
 
 	/**
-	 * Prevent managed roles with Users access from assigning the owner Administrator role.
+	 * Roles available in the Users role dropdown.
 	 *
-	 * Site Administrators can manage users, but they must not escalate accounts to
-	 * the developer-owned Administrator role.
+	 * Core WordPress roles stay registered; they are simply hidden from the UI so
+	 * editors pick from Prelaunch-managed labels only.
+	 *
+	 * @return array<int, string>
+	 */
+	function prelaunch_get_assignable_role_slugs(): array {
+		return prelaunch_get_managed_user_roles();
+	}
+
+	/**
+	 * Resolve the user being created or edited in wp-admin Users screens.
+	 *
+	 * @return int User ID, or 0 on Add New User.
+	 */
+	function prelaunch_get_users_screen_target_user_id(): int {
+		if ( isset( $_REQUEST['user_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return absint( wp_unslash( $_REQUEST['user_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		if ( defined( 'IS_PROFILE_PAGE' ) && IS_PROFILE_PAGE ) {
+			return get_current_user_id();
+		}
+
+		return 0;
+	}
+
+	/**
+	 * Hide default WordPress roles from the role dropdown for everyone.
+	 *
+	 * Keeps only Prelaunch-managed roles visible. When editing a user who still
+	 * holds a hidden role (e.g. Administrator), that current role is preserved in
+	 * the list so saving the profile cannot accidentally demote them.
 	 *
 	 * @param array<string, array<string, mixed>> $roles Editable roles.
 	 *
 	 * @return array<string, array<string, mixed>>
 	 */
-	function prelaunch_filter_editable_roles_for_managed_users( array $roles ): array {
-		if ( ! prelaunch_current_user_has_managed_role() ) {
-			return $roles;
+	function prelaunch_filter_editable_roles( array $roles ): array {
+		$allowed  = array_fill_keys( prelaunch_get_assignable_role_slugs(), true );
+		$filtered = array();
+
+		foreach ( $roles as $role_slug => $role_data ) {
+			if ( isset( $allowed[ $role_slug ] ) ) {
+				$filtered[ $role_slug ] = $role_data;
+			}
 		}
 
-		$access_level = prelaunch_get_current_role_policy_value( 'users', 'profile_only' );
-
-		if ( 'full' !== $access_level ) {
-			return $roles;
+		/*
+		 * Site Administrators must never see or assign the owner Administrator role,
+		 * even when somehow editing an account that has it.
+		 */
+		if ( prelaunch_current_user_has_managed_role() ) {
+			return $filtered;
 		}
 
-		unset( $roles[ PRELAUNCH_OWNER_ROLE ] );
+		$target_user_id = prelaunch_get_users_screen_target_user_id();
 
-		return $roles;
+		if ( $target_user_id <= 0 ) {
+			return $filtered;
+		}
+
+		$target = get_userdata( $target_user_id );
+
+		if ( ! $target instanceof WP_User ) {
+			return $filtered;
+		}
+
+		foreach ( (array) $target->roles as $role_slug ) {
+			if ( ! isset( $filtered[ $role_slug ] ) && isset( $roles[ $role_slug ] ) ) {
+				$filtered[ $role_slug ] = $roles[ $role_slug ];
+			}
+		}
+
+		return $filtered;
 	}
 
-	add_filter( 'editable_roles', 'prelaunch_filter_editable_roles_for_managed_users' );
+	add_filter( 'editable_roles', 'prelaunch_filter_editable_roles' );
 
 	/**
 	 * Block managed roles from editing, deleting, or promoting owner Administrators.
 	 *
 	 * Hiding Administrator from the role dropdown is not enough on its own. This
-	 * also prevents direct edits against existing Administrator accounts.
+	 * also prevents direct edits against existing Administrator accounts, including
+	 * attempts by a Site Administrator to escalate their own account.
 	 *
 	 * @param array<int, string> $caps Primitive capabilities WordPress requires.
 	 * @param string $cap Meta capability being checked.
@@ -157,7 +211,7 @@
 
 		$target_user_id = isset( $args[0] ) ? (int) $args[0] : 0;
 
-		if ( $target_user_id <= 0 || $target_user_id === $user_id ) {
+		if ( $target_user_id <= 0 ) {
 			return $caps;
 		}
 
@@ -167,6 +221,10 @@
 			return $caps;
 		}
 
+		/*
+		 * Never allow Site Admins to act on true Administrator accounts.
+		 * Includes self-escalation attempts if an account somehow holds both roles.
+		 */
 		if ( prelaunch_user_has_role( $target, PRELAUNCH_OWNER_ROLE ) ) {
 			$caps[] = 'do_not_allow';
 		}
